@@ -108,11 +108,15 @@ function update() {
     // 移除屏幕外的障碍物
     gameState.obstacles = gameState.obstacles.filter(obstacle => obstacle.x + 60 > 0);
     
-    // 检测碰撞
-    if (checkCollision()) {
-        gameOver();
-        return;
-    }
+      // 检测碰撞
+      if (checkCollision()) {
+          if (gameState.currentLevel === 3 && gameState.score > 0 && gameState.score % 1024 === 0) {
+              gameOver(true, "哇！你发现了第三关的隐藏通关方法！");
+          } else {
+              gameOver();
+          }
+          return;
+      }
     
       // 更新分数
       if (gameState.currentLevel < 3) {
@@ -131,15 +135,14 @@ function update() {
               gameOver(true, "恭喜通过第二关！");
               return;
           }
-      } else if (gameState.currentLevel === 3 && gameState.score % 1024 === 0) {
-          // 第三关隐藏通关条件
-          gameOver(true, "哇！你发现了第三关的隐藏通关方法！");
-          return;
+      } else if (gameState.currentLevel === 3) {
+          // 第三关无尽模式，不自动通关
+          gameState.score += 1;
     } else {
         // 无尽模式：分数基于存活时间
         gameState.score += 1;
     }
-    scoreDisplay.textContent = `Score: ${gameState.score}`;
+    scoreDisplay.textContent = `分数: ${gameState.score}`;
 }
 
 // 渲染游戏
