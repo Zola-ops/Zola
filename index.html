@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>别笑！你也过不了第三关！</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="start-screen" class="screen">
+            <h1>别笑！你也过不了第三关</h1>
+            <button id="start-btn">开始游戏</button>
+        </div>
+        <div id="level-screen" class="screen hidden">
+            <h2>选择关卡</h2>
+            <div id="level-buttons">
+                <button class="level-btn" data-level="1">第一关</button>
+                <button class="level-btn" data-level="2" disabled>第二关</button>
+                <button class="level-btn" data-level="3" disabled>第三关</button>
+            </div>
+        </div>
+        <div id="game-screen" class="screen hidden">
+            <div id="bird"></div>
+            <div id="score">Score: 0</div>
+        </div>
+        <div id="game-over-screen" class="screen hidden">
+            <h2>游戏结束</h2>
+            <div id="final-score">Score: 0</div>
+            <button id="restart-btn">再玩一次</button>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
