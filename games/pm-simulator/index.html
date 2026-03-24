@@ -19,7 +19,7 @@ body {
 
 /* ══ 开始页面 ══ */
 #startScreen {
-  width: 100%; max-width: 680px;
+  width: 100%; max-width: 720px;
   display: flex; flex-direction: column; align-items: center;
   gap: 20px; padding: 40px 20px;
 }
@@ -52,15 +52,16 @@ body {
 .start-btn.danger { border-color: #aa3333; color: #cc5555; }
 .start-btn.danger:hover { background: rgba(170,50,50,0.1); }
 
-/* ══ 职业选择页面 ══ */
-#classScreen {
-  width: 100%; max-width: 680px;
+/* ══ 职业 & 公司选择 ══ */
+#classScreen, #companyScreen {
+  width: 100%; max-width: 720px;
   display: none; flex-direction: column; gap: 16px;
 }
 .screen-title {
   font-size: 1.1rem; color: #fff; text-align: center;
   letter-spacing: 2px; padding: 10px 0;
 }
+.screen-subtitle { font-size: 0.8rem; color: #666; text-align: center; margin-top: -10px; }
 .class-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
   gap: 12px;
@@ -100,15 +101,48 @@ body {
   transition: opacity 0.2s; width: 100%;
 }
 .confirm-btn:hover { opacity: 0.85; }
+.confirm-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .back-link {
   font-size: 0.8rem; color: #555; text-align: center;
   cursor: pointer; padding: 4px;
 }
 .back-link:hover { color: #888; }
 
+/* ══ 公司卡片 ══ */
+.company-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+}
+.company-card {
+  background: #1a1a1a; border: 2px solid #2a2a2a;
+  border-radius: 14px; padding: 20px 18px;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.company-card:hover { border-color: #555; background: #222; transform: translateY(-2px); }
+.company-card.selected { border-color: #f0c040; background: rgba(240,192,64,0.05); }
+.company-header { display: flex; align-items: center; gap: 12px; }
+.company-logo { font-size: 2rem; }
+.company-info { flex: 1; }
+.company-name { font-size: 1rem; font-weight: bold; color: #fff; }
+.company-slogan { font-size: 0.72rem; color: #666; margin-top: 2px; }
+.company-stock-badge {
+  font-size: 0.72rem; padding: 3px 8px; border-radius: 4px;
+  font-weight: bold;
+}
+.company-desc { font-size: 0.75rem; color: #888; line-height: 1.6; }
+.company-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.company-tag {
+  font-size: 0.62rem; padding: 2px 7px;
+  border-radius: 3px; background: #252525; color: #aaa;
+}
+.company-tag.up { background: #1a2a1a; color: #88ee88; }
+.company-tag.down { background: #2a1a1a; color: #ee8888; }
+.company-tag.gold { background: #2a2000; color: #f0c040; }
+
 /* ══ 存档槽 ══ */
 #saveSlotScreen {
-  width: 100%; max-width: 680px;
+  width: 100%; max-width: 720px;
   display: none; flex-direction: column; gap: 16px;
 }
 .save-slot {
@@ -138,17 +172,29 @@ body {
 .slot-btn.del { border-color: #884444; color: #cc6666; }
 .slot-btn.del:hover { background: rgba(136,68,68,0.15); }
 .slot-empty-text { color: #444; font-size: 0.82rem; }
-.new-game-here {
-  font-size: 0.75rem; color: #f0c040; margin-top: 2px; cursor: pointer;
-}
 
 /* ══ 主游戏 ══ */
 #gameScreen {
-  width: 100%; max-width: 680px;
+  width: 100%; max-width: 720px;
   display: none; flex-direction: column; gap: 14px;
 }
 h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
 .subtitle { font-size: 0.75rem; color: #555; margin-bottom: 20px; }
+
+/* 公司信息栏 */
+.company-bar {
+  background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px;
+  padding: 10px 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.company-bar-logo { font-size: 1.4rem; }
+.company-bar-name { font-size: 0.9rem; color: #fff; font-weight: bold; }
+.company-bar-grade {
+  font-size: 0.72rem; padding: 2px 8px; border-radius: 4px;
+  font-weight: bold; background: #2a2200; color: #f0c040;
+  border: 1px solid #f0c040;
+}
+.company-bar-salary { font-size: 0.78rem; color: #888; margin-left: auto; }
+.company-bar-salary span { color: #88ee88; font-weight: bold; }
 
 /* 状态栏 */
 .status-bar { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 18px; }
@@ -166,19 +212,33 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
   display: inline-block; font-size: 0.7rem;
   border-radius: 4px; padding: 2px 7px; margin-left: 6px;
 }
-.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
 .stat-item { display: flex; flex-direction: column; gap: 4px; }
-.stat-label { font-size: 0.65rem; color: #666; }
+.stat-label { font-size: 0.62rem; color: #666; }
 .stat-bar-bg { height: 6px; background: #2a2a2a; border-radius: 3px; overflow: hidden; }
 .stat-bar { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
 .stat-value { font-size: 0.7rem; color: #ccc; }
-.bar-energy { background: #f0c040; }
-.bar-mood   { background: #66bbff; }
-.bar-focus  { background: #88ee88; }
-.bar-perf   { background: #ff9966; }
-.bar-social { background: #cc88ff; }
-.money-row { margin-top: 10px; display: flex; justify-content: space-between; font-size: 0.8rem; color: #888; flex-wrap: wrap; gap: 4px; }
+.bar-energy  { background: #f0c040; }
+.bar-mood    { background: #66bbff; }
+.bar-focus   { background: #88ee88; }
+.bar-perf    { background: #ff9966; }
+.bar-social  { background: #cc88ff; }
+.bar-health  { background: #ff6688; }
+.money-row { margin-top: 10px; display: flex; justify-content: space-between; font-size: 0.78rem; color: #888; flex-wrap: wrap; gap: 4px; }
 .money-row span { color: #f0c040; font-weight: bold; }
+.health-warn { color: #ff6688 !important; animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+/* OKR进度条 */
+.okr-bar {
+  margin-top: 10px; background: #111; border: 1px solid #2a2a2a;
+  border-radius: 8px; padding: 8px 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.okr-bar-label { font-size: 0.72rem; color: #666; white-space: nowrap; }
+.okr-progress-bg { flex: 1; height: 5px; background: #2a2a2a; border-radius: 3px; overflow: hidden; }
+.okr-progress-fill { height: 100%; background: linear-gradient(90deg, #f0c040, #ff9966); border-radius: 3px; transition: width 0.4s; }
+.okr-bar-right { font-size: 0.68rem; color: #555; white-space: nowrap; }
 
 /* 时段 */
 .time-phase { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 18px; display: flex; align-items: center; gap: 12px; }
@@ -207,6 +267,8 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
 .action-btn .action-fx .down { color: #ee8888; }
 .action-btn.special { border-color: #5a3a8a; }
 .action-btn.special:hover:not(:disabled) { background: rgba(90,58,138,0.2); }
+.action-btn.health-action { border-color: #8a3a4a; }
+.action-btn.health-action:hover:not(:disabled) { background: rgba(138,58,74,0.2); }
 .action-btn .class-only {
   position: absolute; top: 5px; right: 6px;
   font-size: 0.58rem; padding: 1px 5px;
@@ -222,6 +284,7 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
 .narrative-line.warn { color: #f0c040; }
 .narrative-line.system { color: #555; font-style: italic; }
 .narrative-line.special { color: #cc88ff; }
+.narrative-line.health { color: #ff6688; }
 
 /* 按钮行 */
 .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -247,10 +310,10 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
 .game-over-box {
   background: #1a1a1a; border: 1px solid #333;
   border-radius: 16px; padding: 36px; text-align: center;
-  max-width: 440px; width: 90%;
+  max-width: 480px; width: 90%;
 }
 .game-over-box h2 { font-size: 1.4rem; color: #fff; margin-bottom: 8px; }
-.game-over-box p { font-size: 0.85rem; color: #888; margin-bottom: 24px; line-height: 1.6; }
+.game-over-box p { font-size: 0.85rem; color: #888; margin-bottom: 24px; line-height: 1.6; white-space: pre-line; }
 .game-over-box .btn-row { justify-content: center; }
 
 /* 事件弹窗 */
@@ -262,10 +325,15 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
 .event-modal.show { display: flex; }
 .event-box {
   background: #1a1a1a; border: 1px solid #3a3a3a;
-  border-radius: 14px; padding: 28px; max-width: 440px;
+  border-radius: 14px; padding: 28px; max-width: 480px;
   width: 90%; display: flex; flex-direction: column; gap: 14px;
+  max-height: 90vh; overflow-y: auto;
 }
 .event-box h3 { font-size: 1rem; color: #f0c040; }
+.event-box .event-tag {
+  display: inline-block; font-size: 0.68rem; padding: 2px 8px;
+  border-radius: 4px; margin-bottom: 4px;
+}
 .event-box p { font-size: 0.85rem; color: #ccc; line-height: 1.7; }
 .event-choices { display: flex; flex-direction: column; gap: 8px; }
 .event-choice {
@@ -275,6 +343,109 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
 }
 .event-choice:hover { background: #2a2a2a; border-color: #555; color: #fff; }
 .event-fx { font-size: 0.7rem; color: #666; margin-top: 3px; }
+
+/* OKR Review 弹窗 */
+.okr-modal {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88); z-index: 98;
+  align-items: center; justify-content: center;
+}
+.okr-modal.show { display: flex; }
+.okr-box {
+  background: #1a1a1a; border: 1px solid #f0c040;
+  border-radius: 16px; padding: 32px; max-width: 520px;
+  width: 92%; display: flex; flex-direction: column; gap: 16px;
+  max-height: 92vh; overflow-y: auto;
+}
+.okr-box h3 { font-size: 1.1rem; color: #f0c040; letter-spacing: 1px; }
+.okr-summary {
+  background: #111; border-radius: 10px; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.okr-summary-row { display: flex; justify-content: space-between; font-size: 0.8rem; color: #888; }
+.okr-summary-row span { color: #ddd; }
+.okr-grade-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.okr-grade-btn {
+  flex: 1; min-width: 80px; background: #222; border: 2px solid #333;
+  border-radius: 8px; padding: 12px 8px; cursor: pointer;
+  text-align: center; transition: all 0.15s;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.okr-grade-btn:hover { border-color: #555; background: #2a2a2a; }
+.okr-grade-btn.selected { border-color: #f0c040; background: rgba(240,192,64,0.08); }
+.okr-grade-btn .grade-label { font-size: 1rem; font-weight: bold; }
+.okr-grade-btn .grade-desc { font-size: 0.65rem; color: #666; line-height: 1.4; }
+.okr-grade-s .grade-label { color: #ff9966; }
+.okr-grade-a .grade-label { color: #88ee88; }
+.okr-grade-b .grade-label { color: #66bbff; }
+.okr-grade-c .grade-label { color: #f0c040; }
+.okr-grade-d .grade-label { color: #ee8888; }
+
+/* 绩效考核弹窗 */
+.review-modal {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.9); z-index: 97;
+  align-items: center; justify-content: center;
+}
+.review-modal.show { display: flex; }
+.review-box {
+  background: #1a1a1a; border: 1px solid #5a3a8a;
+  border-radius: 16px; padding: 32px; max-width: 540px;
+  width: 92%; display: flex; flex-direction: column; gap: 16px;
+  max-height: 92vh; overflow-y: auto;
+}
+.review-box h3 { font-size: 1.1rem; color: #cc88ff; letter-spacing: 1px; }
+.review-result-big {
+  text-align: center; padding: 20px;
+  background: #111; border-radius: 12px;
+}
+.review-result-big .result-grade {
+  font-size: 3rem; font-weight: bold; margin-bottom: 8px;
+}
+.review-result-big .result-label { font-size: 0.9rem; color: #888; }
+.review-promo-box {
+  background: #1a2a1a; border: 1px solid #2a4a2a;
+  border-radius: 10px; padding: 16px; text-align: center;
+  display: none;
+}
+.review-promo-box.show { display: block; }
+.review-promo-box h4 { color: #88ee88; font-size: 1rem; margin-bottom: 8px; }
+.review-promo-box p { font-size: 0.82rem; color: #aaa; line-height: 1.6; }
+.review-demo-box {
+  background: #2a1a1a; border: 1px solid #4a2a2a;
+  border-radius: 10px; padding: 16px; text-align: center;
+  display: none;
+}
+.review-demo-box.show { display: block; }
+.review-demo-box h4 { color: #ee8888; font-size: 1rem; margin-bottom: 8px; }
+.review-detail { display: flex; flex-direction: column; gap: 8px; }
+.review-detail-row { display: flex; justify-content: space-between; font-size: 0.8rem; color: #666; }
+.review-detail-row span { color: #ccc; }
+
+/* 职级展示 */
+.grade-ladder {
+  display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
+}
+.grade-pip {
+  font-size: 0.68rem; padding: 3px 8px; border-radius: 4px;
+  background: #222; border: 1px solid #333; color: #555;
+  transition: all 0.3s;
+}
+.grade-pip.active {
+  background: #2a1a3a; border-color: #cc88ff; color: #cc88ff;
+  font-weight: bold;
+}
+.grade-pip.done { background: #1a2a1a; border-color: #3a5a3a; color: #4a8a4a; }
+
+/* 健康告警横幅 */
+.health-banner {
+  display: none; background: #2a0a14; border: 1px solid #8a2a3a;
+  border-radius: 8px; padding: 10px 16px; font-size: 0.82rem;
+  color: #ff6688; text-align: center;
+}
+.health-banner.show { display: block; }
 </style>
 </head>
 <body>
@@ -282,7 +453,7 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
 <!-- ══════════ 开始页 ══════════ -->
 <div id="startScreen">
   <div class="game-title">🖥️ 打工模拟器</div>
-  <div class="game-subtitle">互联网人生存指南 · 试玩版</div>
+  <div class="game-subtitle">互联网人生存指南 · Phase 1+2</div>
 
   <div class="start-menu">
     <h2>📁 存档</h2>
@@ -314,7 +485,7 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
       <span class="btn-icon">✨</span>
       <span class="btn-text">
         新游戏
-        <span class="btn-sub">选择职业，开始新的打工人生</span>
+        <span class="btn-sub">选择职业和公司，开始打工人生</span>
       </span>
     </button>
     <button class="start-btn" onclick="showSaveSlots('manage')">
@@ -335,8 +506,17 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
     <label>角色名：</label>
     <input type="text" id="playerNameInput" placeholder="输入你的名字（可留空）" maxlength="10">
   </div>
-  <button class="confirm-btn" id="confirmClassBtn" onclick="startNewGame()" disabled>开始打工 →</button>
+  <button class="confirm-btn" id="confirmClassBtn" onclick="goCompanyScreen()" disabled>下一步：选公司 →</button>
   <div class="back-link" onclick="showScreen('start')">← 返回</div>
+</div>
+
+<!-- ══════════ 公司选择页 ══════════ -->
+<div id="companyScreen">
+  <div class="screen-title">加入哪家公司？</div>
+  <div class="screen-subtitle">公司决定你的薪资风格、股票期权和职场文化</div>
+  <div class="company-grid" id="companyGrid"></div>
+  <button class="confirm-btn" id="confirmCompanyBtn" onclick="startNewGame()" disabled>开始打工 →</button>
+  <div class="back-link" onclick="showScreen('class')">← 返回选职业</div>
 </div>
 
 <!-- ══════════ 存档管理页 ══════════ -->
@@ -355,6 +535,18 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
     </div>
     <button class="game-btn" style="min-width:70px;flex:none;font-size:0.75rem" onclick="showScreen('start')">主菜单</button>
   </div>
+
+  <!-- 公司信息栏 -->
+  <div class="company-bar" id="companyBar">
+    <div class="company-bar-logo" id="companyBarLogo"></div>
+    <div class="company-bar-name" id="companyBarName"></div>
+    <div class="company-bar-grade" id="companyBarGrade">P4</div>
+    <div class="grade-ladder" id="gradeLadder"></div>
+    <div class="company-bar-salary">日薪：<span id="salaryDisplay">0</span> 元</div>
+  </div>
+
+  <!-- 健康告警 -->
+  <div class="health-banner" id="healthBanner">⚠️ 健康值过低，工作效率下降！建议去医院或休息</div>
 
   <!-- 状态栏 -->
   <div class="status-bar">
@@ -392,11 +584,23 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
         <div class="stat-bar-bg"><div class="stat-bar bar-social" id="barSocial"></div></div>
         <div class="stat-value" id="valSocial">50</div>
       </div>
+      <div class="stat-item">
+        <div class="stat-label">❤️ 健康</div>
+        <div class="stat-bar-bg"><div class="stat-bar bar-health" id="barHealth"></div></div>
+        <div class="stat-value" id="valHealth">100</div>
+      </div>
     </div>
     <div class="money-row">
       <div>💰 存款：<span id="moneyDisplay">0</span> 元</div>
       <div>📅 工龄：<span id="tenureDisplay">0</span> 天</div>
-      <div>🏅 等级：<span id="levelDisplay">初级打工人</span></div>
+      <div>🏅 <span id="levelDisplay">初级打工人</span></div>
+      <div id="optionDisplay" style="display:none">📈 期权：<span id="optionVal">0</span> 份</div>
+    </div>
+    <!-- OKR进度 -->
+    <div class="okr-bar">
+      <div class="okr-bar-label">Q<span id="okrQuarter">1</span> OKR</div>
+      <div class="okr-progress-bg"><div class="okr-progress-fill" id="okrProgressFill" style="width:0%"></div></div>
+      <div class="okr-bar-right" id="okrDaysLeft">距Review还有90天</div>
     </div>
   </div>
 
@@ -451,7 +655,111 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
   </div>
 </div>
 
+<!-- OKR Review 弹窗 -->
+<div class="okr-modal" id="okrModal">
+  <div class="okr-box">
+    <h3>📋 季度 OKR Review</h3>
+    <div class="okr-summary" id="okrSummary"></div>
+    <div style="font-size:0.82rem;color:#888">本季度 OKR 完成情况如何？（诚实评估，影响绩效考核）</div>
+    <div class="okr-grade-row" id="okrGradeRow"></div>
+    <button class="confirm-btn" id="okrConfirmBtn" onclick="confirmOKR()" disabled>提交 OKR →</button>
+  </div>
+</div>
+
+<!-- 绩效考核弹窗 -->
+<div class="review-modal" id="reviewModal">
+  <div class="review-box">
+    <h3>🎯 半年绩效考核</h3>
+    <div class="review-result-big" id="reviewResultBig"></div>
+    <div class="review-detail" id="reviewDetail"></div>
+    <div class="review-promo-box" id="reviewPromoBox">
+      <h4>🎉 恭喜晋升！</h4>
+      <p id="reviewPromoMsg"></p>
+    </div>
+    <div class="review-demo-box" id="reviewDemoBox">
+      <h4>📉 绩效不达标</h4>
+      <p id="reviewDemoMsg"></p>
+    </div>
+    <button class="confirm-btn" onclick="confirmReview()">确认，继续打工 →</button>
+  </div>
+</div>
+
 <script>
+// ══════════════════════════════════════════════════════
+// 公司定义
+// ══════════════════════════════════════════════════════
+const COMPANIES = {
+  byteuniverse: {
+    id: 'byteuniverse', name: '字节宇宙', logo: '🚀',
+    slogan: '我们不裁员，我们优化人效',
+    color: '#66bbff', stockColor: '#66bbff',
+    desc: '高压高薪，996是基本操作，但期权多。进来就是顶配MacBook和无限零食，走的时候期权可能刚好归零。',
+    tags: [{t:'薪资+50%',cls:'up'},{t:'加班文化',cls:'down'},{t:'期权丰厚',cls:'gold'},{t:'高波动股',cls:'up'}],
+    salaryMult: 1.5,
+    optionBase: 500,
+    stockVolatility: 0.08,  // 日涨跌幅度
+    initEnergy: -10,        // 初始体力修正
+    overtime_bonus: 1.3,    // 加班收益加成
+  },
+  alimammoth: {
+    id: 'alimammoth', name: '阿里巨头', logo: '🐘',
+    slogan: '让天下没有难做的生意（除了在这里上班）',
+    color: '#ff9966', stockColor: '#ff9966',
+    desc: '体系完整，晋升路径清晰，但政治复杂。P序列职级体系发源地，RSU大户，偶发暴跌。',
+    tags: [{t:'RSU丰厚',cls:'gold'},{t:'体系完善',cls:'up'},{t:'政治复杂',cls:'down'},{t:'稳定股',cls:'up'}],
+    salaryMult: 1.3,
+    optionBase: 800,
+    stockVolatility: 0.04,
+    initEnergy: 0,
+    overtime_bonus: 1.0,
+  },
+  xiaoedu: {
+    id: 'xiaoedu', name: '小鹅在线', logo: '🐣',
+    slogan: '教育改变命运（先从改变你的命运开始）',
+    color: '#88ee88', stockColor: '#88ee88',
+    desc: '教育赛道，受政策影响大。节奏相对慢，但随时可能暴雷。持股需谨慎，说不准哪天就归零了。',
+    tags: [{t:'节奏较慢',cls:'up'},{t:'政策风险',cls:'down'},{t:'股价剧烈',cls:'down'},{t:'心情友好',cls:'up'}],
+    salaryMult: 1.0,
+    optionBase: 1200,
+    stockVolatility: 0.12,
+    initEnergy: 10,
+    overtime_bonus: 0.8,
+  },
+  slacktech: {
+    id: 'slacktech', name: '摸鱼科技', logo: '🐟',
+    slogan: '认真工作，快乐摸鱼',
+    color: '#cc88ff', stockColor: '#cc88ff',
+    desc: '躺平文化，钱少事少，下班准时。股价低波动缓慢增长，不会暴富但也不会暴雷。最适合养生打工。',
+    tags: [{t:'工作轻松',cls:'up'},{t:'薪资偏低',cls:'down'},{t:'低波动股',cls:'up'},{t:'摸鱼加成',cls:'gold'}],
+    salaryMult: 0.85,
+    optionBase: 300,
+    stockVolatility: 0.02,
+    initEnergy: 15,
+    overtime_bonus: 0.6,
+  },
+};
+
+// ══════════════════════════════════════════════════════
+// 职级定义
+// ══════════════════════════════════════════════════════
+const GRADES = [
+  { id:'P4', name:'P4 初级', salaryMult:1.0, optionMult:0,   promoReq:'B', promoCount:1, desc:'入门级，好好干两年能升P5' },
+  { id:'P5', name:'P5 中级', salaryMult:1.4, optionMult:0,   promoReq:'B', promoCount:1, desc:'中级骨干，薪资明显提升' },
+  { id:'P6', name:'P6 高级', salaryMult:1.8, optionMult:0.5, promoReq:'A', promoCount:2, desc:'高级，开始有期权，是大多数人的天花板' },
+  { id:'P7', name:'P7 专家', salaryMult:2.5, optionMult:1.0, promoReq:'A', promoCount:2, desc:'技术/业务专家，期权量级提升' },
+  { id:'P8', name:'P8 总监', salaryMult:3.5, optionMult:2.0, promoReq:'S', promoCount:3, desc:'总监级，RSU股票开始解锁' },
+  { id:'P9', name:'P9 VP',   salaryMult:5.0, optionMult:3.0, promoReq:'S', promoCount:3, desc:'VP/合伙人，财务自由候选人' },
+];
+
+// OKR等级定义
+const OKR_GRADES = [
+  { id:'S', label:'S', desc:'超额完成\n所有目标达成120%+', perfBonus:25, moodBonus:15, reviewScore:4 },
+  { id:'A', label:'A', desc:'全部完成\n100%-120%达成率',   perfBonus:15, moodBonus:8,  reviewScore:3 },
+  { id:'B', label:'B', desc:'基本完成\n80%-100%达成率',    perfBonus:5,  moodBonus:0,  reviewScore:2 },
+  { id:'C', label:'C', desc:'部分完成\n60%-80%达成率',     perfBonus:-8, moodBonus:-5, reviewScore:1 },
+  { id:'D', label:'D', desc:'严重未完成\n低于60%',         perfBonus:-20,moodBonus:-15,reviewScore:0 },
+];
+
 // ══════════════════════════════════════════════════════
 // 职业定义
 // ══════════════════════════════════════════════════════
@@ -534,20 +842,24 @@ const CLASSES = {
 // 通用行动
 // ══════════════════════════════════════════════════════
 const COMMON_ACTIONS = [
-  // 工作类：扣体力，提绩效，心情微降
+  // 工作类：扣体力，提绩效
   { id:'work_hard',   name:'专心工作',  emoji:'💻', cost:{energy:20,mood:-5},   gain:{perf:18,money:80},   desc:'老实干活，不求有功但求无过' },
   { id:'overtime',    name:'主动加班',  emoji:'🌙', cost:{energy:30,mood:-15},  gain:{perf:25,money:150},  desc:'卷是卷了，但工资也多了点' },
   { id:'learn_skill', name:'自我提升',  emoji:'📚', cost:{energy:15,mood:-5},   gain:{focus:12,perf:10},   desc:'利用工作时间学点新东西，提升自己' },
   { id:'1on1_boss',   name:'和老板1on1',emoji:'👔', cost:{energy:12,mood:-8},   gain:{perf:12,social:15},  desc:'汇报工作，刷刷存在感，有时候有惊喜' },
-  // 休息类：体力回复，不扣绩效
+  // 休息类：体力回复
   { id:'coffee',      name:'喝杯咖啡',  emoji:'☕', cost:{money:-18},           gain:{energy:20,focus:15}, desc:'工位旁的咖啡机，打工人续命神器' },
   { id:'nap',         name:'偷偷小睡',  emoji:'😴', cost:{},                    gain:{energy:25,mood:5},   desc:'午休趴一会儿，体力悄悄回来了' },
   { id:'sick_leave',  name:'请病假',    emoji:'🤒', cost:{perf:-15},            gain:{energy:40,mood:20},  desc:'真假病假全凭良心，但确实休息到了' },
-  // 吃饭：花钱回体力，心情提升
+  // 吃饭：花钱回体力
   { id:'lunch',       name:'好好吃饭',  emoji:'🍱', cost:{money:-40},           gain:{mood:20,energy:25},  desc:'点个好饭，精神都为之一振' },
-  // 摸鱼/聊天：体力不变，心情提升，绩效或存款降低
+  // 摸鱼/聊天：体力不变，心情提升，绩效降低
   { id:'slack_off',   name:'摸鱼划水',  emoji:'🐟', cost:{perf:-10},            gain:{mood:15},            desc:'刷刷手机，舒服是舒服，但绩效在悄悄溜走' },
   { id:'team_chat',   name:'和同事聊天',emoji:'💬', cost:{perf:-5,focus:-8},    gain:{mood:18,social:10},  desc:'闲扯几句，心情好多了，但活还没干' },
+  // 医疗类：花钱回健康
+  { id:'clinic',      name:'去诊所',    emoji:'🏥', cost:{money:-80,energy:10}, gain:{health:25},          desc:'挂个普通号，排队两小时，健康值回一些', isHealth:true },
+  { id:'hospital',    name:'去医院',    emoji:'🏨', cost:{money:-300,energy:5}, gain:{health:50,mood:10},  desc:'住院半天，专科检查，大幅恢复健康值', isHealth:true },
+  { id:'rest_home',   name:'在家休息',  emoji:'🛋️', cost:{perf:-8,money:-20},   gain:{health:15,energy:30,mood:10}, desc:'请假在家养病，慢慢恢复', isHealth:true },
 ];
 
 // ══════════════════════════════════════════════════════
@@ -555,7 +867,7 @@ const COMMON_ACTIONS = [
 // ══════════════════════════════════════════════════════
 const EVENTS = [
   {
-    id:'late', title:'⏰ 迟到了！', prob:0.12,
+    id:'late', title:'⏰ 迟到了！', prob:0.10,
     desc:'今天堵车/地铁故障，到公司已经9点半，HR发来了友好提醒……',
     choices:[
       {text:'主动认错，加班补时间', fx:{mood:-10,perf:-5}, fxDesc:'绩效-5，心情-10'},
@@ -567,19 +879,19 @@ const EVENTS = [
     desc:'周会上老板专门点名表扬了你的工作，全组都鼓掌了。',
     choices:[
       {text:'谦虚感谢', fx:{mood:20,social:10,perf:8}, fxDesc:'心情+20，人脉+10，绩效+8'},
-      {text:'顺势提加薪', fx:{mood:15,money:500,perf:-5}, fxDesc:'心情+15，存款+500，绩效-5'},
+      {text:'顺势提加薪', fx:{mood:15,money:500,perf:-5}, fxDesc:'存款+500，心情+15，绩效-5'},
     ]
   },
   {
-    id:'bug_prod', title:'🔥 线上出Bug了！', prob:0.1,
+    id:'bug_prod', title:'🔥 线上出Bug了！', prob:0.09,
     desc:'生产环境出了P0级故障，全组在钉钉群炸锅，CTO也进群了。',
     choices:[
-      {text:'冲上去处理，熬夜修复', fx:{energy:-30,perf:15,social:10}, fxDesc:'体力-30，绩效+15，人脉+10'},
+      {text:'冲上去处理，熬夜修复', fx:{energy:-30,health:-10,perf:15,social:10}, fxDesc:'体力-30，健康-10，绩效+15，人脉+10'},
       {text:'悄悄装作不知道', fx:{perf:-20,mood:-10}, fxDesc:'绩效-20，心情-10'},
     ]
   },
   {
-    id:'new_req', title:'📋 突然新需求', prob:0.15,
+    id:'new_req', title:'📋 突然新需求', prob:0.13,
     desc:'产品经理昨天定稿的需求，今天一早来说要"小改一下"，改动量相当于重写。',
     choices:[
       {text:'接受，硬着头皮改', fx:{energy:-20,mood:-15,perf:10}, fxDesc:'体力-20，心情-15，绩效+10'},
@@ -587,15 +899,15 @@ const EVENTS = [
     ]
   },
   {
-    id:'team_dinner', title:'🍻 团队聚餐', prob:0.08,
+    id:'team_dinner', title:'🍻 团队聚餐', prob:0.07,
     desc:'老板说今晚团建吃饭，顺便聊聊Q3规划。去还是不去？',
     choices:[
-      {text:'积极参与，多喝两杯', fx:{social:20,mood:10,energy:-20}, fxDesc:'人脉+20，心情+10，体力-20'},
+      {text:'积极参与，多喝两杯', fx:{social:20,mood:10,energy:-20,health:-5}, fxDesc:'人脉+20，心情+10，体力-20，健康-5'},
       {text:'借故推辞，早点回家', fx:{energy:15,mood:5,social:-10}, fxDesc:'体力+15，心情+5，人脉-10'},
     ]
   },
   {
-    id:'salary_day', title:'💰 发工资了！', prob:0.06,
+    id:'salary_day', title:'💰 发工资了！', prob:0.05,
     desc:'薪资到账，短信提示的叮声是打工人最美的声音。',
     choices:[
       {text:'存起来，继续奋斗', fx:{money:3000,mood:20}, fxDesc:'存款+3000，心情+20'},
@@ -611,11 +923,27 @@ const EVENTS = [
     ]
   },
   {
-    id:'weekend_work', title:'📱 周末被拉工作群', prob:0.09,
+    id:'weekend_work', title:'📱 周末被拉工作群', prob:0.08,
     desc:'好不容易周末，群消息却一直@你，说是有个紧急需求要周一上线。',
     choices:[
-      {text:'开电脑处理，责任感爆棚', fx:{energy:-25,mood:-20,perf:18}, fxDesc:'体力-25，心情-20，绩效+18'},
+      {text:'开电脑处理，责任感爆棚', fx:{energy:-25,mood:-20,health:-8,perf:18}, fxDesc:'体力-25，心情-20，健康-8，绩效+18'},
       {text:'假装没看见', fx:{mood:10,energy:10,perf:-12}, fxDesc:'心情+10，体力+10，绩效-12'},
+    ]
+  },
+  {
+    id:'health_check', title:'🩺 公司体检', prob:0.06,
+    desc:'公司安排了年度体检，查出你有点亚健康。医生建议注意休息。',
+    choices:[
+      {text:'认真对待，调整作息', fx:{health:20,energy:10,perf:-5}, fxDesc:'健康+20，体力+10，绩效-5'},
+      {text:'无所谓，继续卷', fx:{health:-10,perf:5}, fxDesc:'健康-10，绩效+5'},
+    ]
+  },
+  {
+    id:'colleague_leave', title:'😢 同事离职', prob:0.07,
+    desc:'关系不错的同事突然递了辞职信，工作要你来接手一部分。',
+    choices:[
+      {text:'欣然接受，展示实力', fx:{energy:-15,perf:12,social:5}, fxDesc:'体力-15，绩效+12，人脉+5'},
+      {text:'婉拒，保持边界', fx:{perf:-8,social:-8,mood:10}, fxDesc:'绩效-8，人脉-8，心情+10'},
     ]
   },
 ];
@@ -665,9 +993,11 @@ function slotMetaText(data) {
   if (!data) return '暂无记录';
   const cls = CLASSES[data.classId];
   const clsName = cls ? cls.name : '未知职业';
+  const co = COMPANIES[data.companyId] || {};
   const d = new Date(data._savedAt || 0);
   const timeStr = `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-  return `${data.playerName||'打工人'} · ${clsName} · 第${data.day}天 · ${timeStr}`;
+  const grade = GRADES[data.gradeIdx||0];
+  return `${data.playerName||'打工人'} · ${clsName} · ${co.name||''} · ${grade?grade.id:'P4'} · 第${data.day}天 · ${timeStr}`;
 }
 
 // ══════════════════════════════════════════════════════
@@ -675,30 +1005,44 @@ function slotMetaText(data) {
 // ══════════════════════════════════════════════════════
 function defaultState() {
   return {
-    playerName: '打工人', classId: 'pm',
+    playerName: '打工人', classId: 'pm', companyId: 'byteuniverse',
     day: 1, quarter: 1, phase: 0,
-    energy: 75, mood: 70, focus: 75, perf: 60, social: 50,
+    energy: 75, mood: 70, focus: 75, perf: 60, social: 50, health: 100,
     money: 0, tenure: 0, actionDone: false,
     currentSlot: null, level: 0,
+    // 职级系统
+    gradeIdx: 0,          // 当前职级索引
+    // OKR & 考核系统
+    okrHistory: [],       // [{quarter, grade, score}]
+    reviewHistory: [],    // [{halfYear, grade, promoted}]
+    pendingOKR: false,    // 是否需要做OKR
+    pendingReview: false, // 是否需要做绩效考核
+    quarterPerfSum: 0,    // 本季度绩效累计（用于OKR参考）
+    quarterPerfCount: 0,
+    lastOKRScore: 0,      // 上次OKR分数
+    options: 0,           // 期权份数
+    adaptDays: 0,         // 新入职/跳槽适应期天数
   };
 }
 let STATE = defaultState();
 let pendingSlot = null;
 let pendingMode = 'load';
 let selectedClass = null;
+let selectedCompany = null;
 let _currentEvent = null;
+let _selectedOKRGrade = null;
 
 const PHASE_NAMES = ['上午','下午','傍晚'];
-const LEVELS = [
+const LEGACY_LEVELS = [
   {min:0,  name:'初级打工人'},
   {min:10, name:'资深打工人'},
   {min:30, name:'老油条'},
   {min:60, name:'社畜精英'},
   {min:90, name:'职场老鸟'},
 ];
-function getLevel(day) {
-  for (let i = LEVELS.length-1; i >= 0; i--) {
-    if (day >= LEVELS[i].min) return { lv: i+1, name: LEVELS[i].name };
+function getLegacyLevel(day) {
+  for (let i = LEGACY_LEVELS.length-1; i >= 0; i--) {
+    if (day >= LEGACY_LEVELS[i].min) return { lv: i+1, name: LEGACY_LEVELS[i].name };
   }
   return { lv:1, name:'初级打工人' };
 }
@@ -707,7 +1051,7 @@ function getLevel(day) {
 // 屏幕切换
 // ══════════════════════════════════════════════════════
 function showScreen(name) {
-  ['startScreen','classScreen','saveSlotScreen','gameScreen'].forEach(id => {
+  ['startScreen','classScreen','companyScreen','saveSlotScreen','gameScreen'].forEach(id => {
     document.getElementById(id).style.display = 'none';
   });
   const el = document.getElementById(name + 'Screen');
@@ -721,7 +1065,7 @@ function refreshStartScreen() {
     const nameEl = document.getElementById(`slot${s.idx}Name`);
     const metaEl = document.getElementById(`slot${s.idx}Meta`);
     if (s.data) {
-      nameEl.textContent = slotMetaText(s.data).split('·')[0].trim();
+      nameEl.textContent = (s.data.playerName||'打工人');
       metaEl.textContent = slotMetaText(s.data);
     } else {
       nameEl.textContent = '— 空存档 —';
@@ -734,8 +1078,9 @@ function refreshStartScreen() {
 // 职业选择
 // ══════════════════════════════════════════════════════
 function showClassScreen(targetSlot) {
-  pendingSlot = targetSlot; // -1=新游戏选槽，否则写入指定槽
+  pendingSlot = targetSlot;
   selectedClass = null;
+  selectedCompany = null;
   document.getElementById('confirmClassBtn').disabled = true;
   renderClassGrid();
   showScreen('class');
@@ -760,23 +1105,68 @@ function selectClass(id) {
   document.getElementById('confirmClassBtn').disabled = false;
 }
 
+function goCompanyScreen() {
+  if (!selectedClass) return;
+  renderCompanyGrid();
+  showScreen('company');
+}
+
+// ══════════════════════════════════════════════════════
+// 公司选择
+// ══════════════════════════════════════════════════════
+function renderCompanyGrid() {
+  const grid = document.getElementById('companyGrid');
+  grid.innerHTML = Object.values(COMPANIES).map(c => {
+    const stockLabel = `股票波动: ±${(c.stockVolatility*100).toFixed(0)}%/天`;
+    return `
+    <div class="company-card" id="co_${c.id}" onclick="selectCompany('${c.id}')">
+      <div class="company-header">
+        <div class="company-logo">${c.logo}</div>
+        <div class="company-info">
+          <div class="company-name">${c.name}</div>
+          <div class="company-slogan">${c.slogan}</div>
+        </div>
+        <div class="company-stock-badge" style="color:${c.stockColor};border:1px solid ${c.stockColor};background:rgba(0,0,0,0.3)">
+          ${stockLabel}
+        </div>
+      </div>
+      <div class="company-desc">${c.desc}</div>
+      <div class="company-tags">${c.tags.map(t=>`<span class="company-tag ${t.cls}">${t.t}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectCompany(id) {
+  selectedCompany = id;
+  document.querySelectorAll('.company-card').forEach(el => el.classList.remove('selected'));
+  document.getElementById('co_'+id).classList.add('selected');
+  document.getElementById('confirmCompanyBtn').disabled = false;
+}
+
 // ══════════════════════════════════════════════════════
 // 新游戏
 // ══════════════════════════════════════════════════════
 function startNewGame() {
-  if (!selectedClass) return;
+  if (!selectedClass || !selectedCompany) return;
   const cls = CLASSES[selectedClass];
+  const co = COMPANIES[selectedCompany];
   const nameInput = document.getElementById('playerNameInput').value.trim();
   const playerName = nameInput || cls.emoji + cls.name;
 
   STATE = defaultState();
   STATE.classId = selectedClass;
+  STATE.companyId = selectedCompany;
   STATE.playerName = playerName;
   Object.assign(STATE, cls.initStats);
+  STATE.health = 100;
   // 职业加成
   Object.entries(cls.bonus).forEach(([k,v]) => { if(STATE[k]!==undefined) STATE[k] = Math.min(100, STATE[k]+v); });
+  // 公司初始体力修正
+  STATE.energy = cap(STATE.energy + co.initEnergy);
+  // 初始期权（P4无期权，但记录公司分配）
+  STATE.options = 0;
+  STATE.adaptDays = 3; // 新入职适应期3天
 
-  // 如果 pendingSlot=-1，先选槽
   if (pendingSlot === -1) {
     showSaveSlots('new');
   } else {
@@ -815,7 +1205,7 @@ function renderSaveSlotList(mode) {
             ${!hasData && mode==='manage' ? `<span class="slot-empty-text">空</span>` : ''}
           </div>
         </div>`;
-    } else { // new: 选择写入槽
+    } else {
       return `
         <div class="save-slot" onclick="doNewGameToSlot(${s.idx})" style="cursor:pointer">
           <div class="slot-num">${s.idx}</div>
@@ -858,7 +1248,11 @@ function enterGame() {
   showScreen('game');
   document.getElementById('narrativePanel').innerHTML = `<div class="narrative-line system">── 游戏开始 ──</div>`;
   const cls = CLASSES[STATE.classId];
-  addNarrative(`你是一名${cls.name}，${cls.desc}`, 'system');
+  const co = COMPANIES[STATE.companyId] || COMPANIES.byteuniverse;
+  addNarrative(`你是一名${cls.name}，加入了${co.name}。`, 'system');
+  if (STATE.adaptDays > 0) {
+    addNarrative(`入职适应期还有 ${STATE.adaptDays} 天，先熟悉一下环境。`, 'warn');
+  }
   addNarrative(`加油，${STATE.playerName}！`, 'good');
   updateUI();
   renderActions();
@@ -872,10 +1266,19 @@ function enterGame() {
 // ══════════════════════════════════════════════════════
 function cap(v){ return Math.max(0, Math.min(100, v)); }
 
+function calcDailySalary() {
+  const co = COMPANIES[STATE.companyId] || COMPANIES.byteuniverse;
+  const grade = GRADES[STATE.gradeIdx] || GRADES[0];
+  const base = 80 + Math.floor(STATE.perf * 1.5);
+  return Math.floor(base * co.salaryMult * grade.salaryMult);
+}
+
 function updateUI() {
   const S = STATE;
   const cls = CLASSES[S.classId] || CLASSES.pm;
-  const lv = getLevel(S.day);
+  const co = COMPANIES[S.companyId] || COMPANIES.byteuniverse;
+  const grade = GRADES[S.gradeIdx] || GRADES[0];
+  const lv = getLegacyLevel(S.day);
 
   document.getElementById('playerNameDisplay').textContent = S.playerName;
   document.getElementById('dayDisplay').textContent = S.day;
@@ -884,6 +1287,23 @@ function updateUI() {
   document.getElementById('tenureDisplay').textContent = S.tenure;
   document.getElementById('levelDisplay').textContent = lv.name;
   document.getElementById('levelBadge').textContent = `Lv.${lv.lv}`;
+  document.getElementById('salaryDisplay').textContent = calcDailySalary();
+
+  // 公司栏
+  document.getElementById('companyBarLogo').textContent = co.logo;
+  document.getElementById('companyBarName').textContent = co.name;
+  document.getElementById('companyBarGrade').textContent = grade.id;
+  document.getElementById('companyBarGrade').style.color = co.color;
+  document.getElementById('companyBarGrade').style.borderColor = co.color;
+
+  // 职级阶梯
+  const ladder = document.getElementById('gradeLadder');
+  ladder.innerHTML = GRADES.map((g, i) => {
+    let cls2 = 'grade-pip';
+    if (i < S.gradeIdx) cls2 += ' done';
+    else if (i === S.gradeIdx) cls2 += ' active';
+    return `<span class="${cls2}">${g.id}</span>`;
+  }).join('→');
 
   const badge = document.getElementById('classBadge');
   badge.textContent = cls.emoji + cls.name;
@@ -891,11 +1311,28 @@ function updateUI() {
   badge.style.border = `1px solid ${cls.color}`;
   badge.style.color = cls.color;
 
-  ['energy','mood','focus','perf','social'].forEach(k => {
+  // 属性条
+  ['energy','mood','focus','perf','social','health'].forEach(k => {
     const v = cap(S[k]);
-    document.getElementById('bar'+k.charAt(0).toUpperCase()+k.slice(1)).style.width = v+'%';
-    document.getElementById('val'+k.charAt(0).toUpperCase()+k.slice(1)).textContent = v;
+    const barEl = document.getElementById('bar'+k.charAt(0).toUpperCase()+k.slice(1));
+    const valEl = document.getElementById('val'+k.charAt(0).toUpperCase()+k.slice(1));
+    if (barEl) barEl.style.width = v+'%';
+    if (valEl) {
+      valEl.textContent = v;
+      if (k === 'health') {
+        valEl.className = v < 40 ? 'stat-value health-warn' : 'stat-value';
+      }
+    }
   });
+
+  // 期权显示
+  const optDiv = document.getElementById('optionDisplay');
+  if (S.gradeIdx >= 2 || S.options > 0) {
+    optDiv.style.display = 'inline';
+    document.getElementById('optionVal').textContent = S.options;
+  } else {
+    optDiv.style.display = 'none';
+  }
 
   // 时段点
   PHASE_NAMES.forEach((_,i) => {
@@ -903,6 +1340,27 @@ function updateUI() {
     dot.className = 'phase-dot' + (i < S.phase ? ' done' : i === S.phase ? ' active' : '');
   });
   document.getElementById('phaseLabel').textContent = PHASE_NAMES[S.phase] || '休息';
+
+  // OKR进度
+  const daysIntoQuarter = ((S.day - 1) % 90) + 1;
+  const progress = Math.min(100, (daysIntoQuarter / 90) * 100);
+  document.getElementById('okrProgressFill').style.width = progress + '%';
+  document.getElementById('okrQuarter').textContent = S.quarter;
+  const daysLeft = 90 - daysIntoQuarter;
+  document.getElementById('okrDaysLeft').textContent = daysLeft > 0 ? `距Review还有${daysLeft}天` : 'Review时间到！';
+
+  // 健康告警横幅
+  const banner = document.getElementById('healthBanner');
+  if (S.health < 40) {
+    banner.classList.add('show');
+    if (S.health < 20) {
+      banner.textContent = '🚨 健康危机！无法正常工作，必须立即就医或休息！';
+    } else {
+      banner.textContent = '⚠️ 健康值过低，工作效率下降！建议去医院或休息';
+    }
+  } else {
+    banner.classList.remove('show');
+  }
 }
 
 // ══════════════════════════════════════════════════════
@@ -911,7 +1369,7 @@ function updateUI() {
 function fxStr(cost, gain) {
   const parts = [];
   const all = Object.assign({}, cost, gain);
-  const labels = {energy:'体力',mood:'心情',focus:'专注',perf:'绩效',social:'人脉',money:'存款'};
+  const labels = {energy:'体力',mood:'心情',focus:'专注',perf:'绩效',social:'人脉',money:'存款',health:'健康'};
   Object.entries(all).forEach(([k,v]) => {
     if (v === 0) return;
     const sign = v > 0 ? '+' : '';
@@ -931,16 +1389,41 @@ function mergeEffect(cost, gain) {
 
 function renderActions() {
   const cls = CLASSES[STATE.classId] || CLASSES.pm;
+  const co = COMPANIES[STATE.companyId] || COMPANIES.byteuniverse;
   const allActions = [...COMMON_ACTIONS, ...cls.specialActions.map(a => ({...a, isSpecial:true}))];
   const grid = document.getElementById('actionsGrid');
+  const healthCritical = STATE.health < 20;
+
   grid.innerHTML = allActions.map(a => {
-    const cost = a.cost || {};
-    const gain = a.gain || {};
-    const disabled = STATE.actionDone ? 'disabled' : '';
-    const specialCls = a.isSpecial ? ' special' : '';
+    const cost = {...(a.cost || {})};
+    const gain = {...(a.gain || {})};
+    let disabled = STATE.actionDone;
+
+    // 健康危机时只能选医疗/休息类行动
+    if (healthCritical && !a.isHealth && a.id !== 'sick_leave' && a.id !== 'nap') {
+      disabled = true;
+    }
+
+    // 适应期绩效收益打折
+    if (STATE.adaptDays > 0 && gain.perf) gain.perf = Math.floor(gain.perf * 0.7);
+
+    // 公司加班bonus
+    if (a.id === 'overtime' && co.overtime_bonus !== 1.0) {
+      if (gain.money) gain.money = Math.floor(gain.money * co.overtime_bonus);
+      if (gain.perf) gain.perf = Math.floor(gain.perf * co.overtime_bonus);
+    }
+
+    // 摸鱼科技摸鱼加成
+    if (STATE.companyId === 'slacktech' && a.id === 'slack_off') {
+      gain.mood = (gain.mood||0) + 5;
+      cost.perf = (cost.perf||0) + 3; // 摸鱼更不扣绩效
+    }
+
+    const specialCls = a.isSpecial ? ' special' : (a.isHealth ? ' health-action' : '');
     const badge = a.isSpecial ? `<span class="class-only">${cls.emoji}</span>` : '';
     const fx = fxStr(cost, gain);
-    return `<button class="action-btn${specialCls}" ${disabled} onclick="doAction('${a.id}')" title="${a.desc}">
+    const disabledAttr = disabled ? 'disabled' : '';
+    return `<button class="action-btn${specialCls}" ${disabledAttr} onclick="doAction('${a.id}')" title="${a.desc}">
       ${badge}
       <span class="action-name">${a.emoji} ${a.name}</span>
       <span class="action-fx">${fx}</span>
@@ -953,23 +1436,61 @@ function renderActions() {
 // ══════════════════════════════════════════════════════
 function doAction(id) {
   const cls = CLASSES[STATE.classId] || CLASSES.pm;
+  const co = COMPANIES[STATE.companyId] || COMPANIES.byteuniverse;
   const allActions = [...COMMON_ACTIONS, ...cls.specialActions];
   const action = allActions.find(a => a.id === id);
   if (!action) return;
 
-  const fx = mergeEffect(action.cost || {}, action.gain || {});
+  const cost = {...(action.cost || {})};
+  const gain = {...(action.gain || {})};
+
+  // 适应期绩效打折
+  if (STATE.adaptDays > 0 && gain.perf) gain.perf = Math.floor(gain.perf * 0.7);
+  // 公司加班bonus
+  if (id === 'overtime') {
+    if (gain.money) gain.money = Math.floor(gain.money * co.overtime_bonus);
+    if (gain.perf) gain.perf = Math.floor(gain.perf * co.overtime_bonus);
+  }
+  // 摸鱼科技摸鱼加成
+  if (STATE.companyId === 'slacktech' && id === 'slack_off') {
+    gain.mood = (gain.mood||0) + 5;
+    if (cost.perf) cost.perf = Math.floor(cost.perf * 0.6);
+  }
+
+  // 健康值影响工作效率
+  let healthPenalty = 1.0;
+  if (STATE.health < 70 && STATE.health >= 40) healthPenalty = 0.75;
+  else if (STATE.health < 40) healthPenalty = 0.45;
+
+  const fx = mergeEffect(cost, gain);
   Object.entries(fx).forEach(([k,v]) => {
-    if (k === 'money') STATE.money = Math.max(0, STATE.money + v);
-    else if (STATE[k] !== undefined) STATE[k] = cap(STATE[k] + v);
+    let val = v;
+    // 工作类绩效收益受健康影响
+    if (k === 'perf' && v > 0 && !action.isHealth) val = Math.floor(v * healthPenalty);
+    if (k === 'money') STATE.money = Math.max(0, STATE.money + val);
+    else if (STATE[k] !== undefined) STATE[k] = cap(STATE[k] + val);
   });
 
+  // 记录本季度绩效累计
+  if (fx.perf) {
+    STATE.quarterPerfSum += (fx.perf > 0 ? fx.perf : 0);
+    STATE.quarterPerfCount++;
+  }
+
+  const labels = {energy:'体力',mood:'心情',focus:'专注',perf:'绩效',social:'人脉',money:'存款',health:'健康'};
   const fxDesc = Object.entries(fx).map(([k,v])=>{
-    const labels = {energy:'体力',mood:'心情',focus:'专注',perf:'绩效',social:'人脉',money:'存款'};
     return v!==0 ? `${labels[k]||k}${v>0?'+':''}${v}` : null;
   }).filter(Boolean).join('，');
 
-  addNarrative(`【${action.emoji}${action.name}】${action.desc}`, 'good');
+  const lineType = action.isHealth ? 'health' : 'good';
+  addNarrative(`【${action.emoji}${action.name}】${action.desc}`, lineType);
+  if (healthPenalty < 1.0 && !action.isHealth) {
+    addNarrative(`⚠️ 健康不佳，效率下降至 ${Math.floor(healthPenalty*100)}%`, 'bad');
+  }
   addNarrative(`效果：${fxDesc}`, STATE.perf < 30 ? 'bad' : 'system');
+  if (STATE.adaptDays > 0) {
+    addNarrative(`（适应期还有 ${STATE.adaptDays} 天，绩效收益打7折）`, 'system');
+  }
 
   STATE.actionDone = true;
   updateUI();
@@ -978,7 +1499,6 @@ function doAction(id) {
   document.getElementById('nextPhaseBtn').disabled = false;
   document.getElementById('nextPhaseBtn2').disabled = false;
 
-  // 随机事件检测
   maybeFireEvent();
   checkGameOver();
 }
@@ -991,23 +1511,43 @@ function nextPhase() {
   STATE.actionDone = false;
 
   if (STATE.phase >= 3) {
-    // 一天结束
     STATE.phase = 0;
     STATE.day++;
     STATE.tenure++;
     STATE.quarter = Math.ceil(STATE.day / 90);
 
-    // 自然恢复
+    // 适应期倒计时
+    if (STATE.adaptDays > 0) STATE.adaptDays--;
+
+    // 自然恢复（每天）
     STATE.energy = cap(STATE.energy - 10 + 20);
-    STATE.mood   = cap(STATE.mood + 5);
+    STATE.mood   = cap(STATE.mood + 3);
     STATE.focus  = cap(STATE.focus - 5);
+    // 健康自然衰减（工作压力）
+    const healthDecay = calcHealthDecay();
+    STATE.health = cap(STATE.health - healthDecay);
 
     addNarrative(`──── 第 ${STATE.day} 天开始 ────`, 'system');
 
-    // 日常随机收入
-    const dailyPay = 80 + Math.floor(STATE.perf * 1.5) + Math.floor(Math.random()*50);
+    // 日常薪资结算
+    const dailyPay = calcDailySalary();
     STATE.money += dailyPay;
-    addNarrative(`今日薪资结算：+${dailyPay} 元（绩效加成）`, 'good');
+    addNarrative(`今日薪资：+${dailyPay} 元`, 'good');
+
+    // 健康衰减提示
+    if (healthDecay > 0) {
+      addNarrative(`😮‍💨 今日健康-${healthDecay}（工作压力/疲劳）`, STATE.health < 40 ? 'health' : 'system');
+    }
+
+    // OKR Review 触发（每季度末：第90、180、270、360天）
+    if (STATE.day % 90 === 1 && STATE.day > 1) {
+      STATE.pendingOKR = true;
+    }
+
+    // 绩效考核触发（每半年：第181、361天）
+    if (STATE.day % 180 === 1 && STATE.day > 1) {
+      STATE.pendingReview = true;
+    }
 
     // 自动存档
     if (STATE.currentSlot) {
@@ -1022,12 +1562,262 @@ function nextPhase() {
   updateUI();
   renderActions();
   checkGameOver();
+
+  // 处理待触发弹窗
+  if (STATE.pendingOKR && !STATE.pendingReview) {
+    setTimeout(() => showOKRModal(), 300);
+  } else if (STATE.pendingReview) {
+    // 先OKR再考核
+    if (STATE.pendingOKR) {
+      setTimeout(() => showOKRModal(), 300);
+    } else {
+      setTimeout(() => showReviewModal(), 300);
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// 健康衰减计算
+// ══════════════════════════════════════════════════════
+function calcHealthDecay() {
+  let decay = 1; // 基础每天-1
+  const grade = GRADES[STATE.gradeIdx] || GRADES[0];
+  // 职级越高压力越大
+  decay += STATE.gradeIdx * 0.5;
+  // 公司加班文化
+  if (STATE.companyId === 'byteuniverse') decay += 1;
+  if (STATE.companyId === 'slacktech') decay -= 0.5;
+  // 体力/心情过低加速衰减
+  if (STATE.energy < 30) decay += 2;
+  if (STATE.mood < 30) decay += 1;
+  // 摸鱼科技天花板
+  decay = Math.max(0, Math.min(5, Math.round(decay)));
+  return decay;
+}
+
+// ══════════════════════════════════════════════════════
+// OKR Review 系统
+// ══════════════════════════════════════════════════════
+function showOKRModal() {
+  _selectedOKRGrade = null;
+  document.getElementById('okrConfirmBtn').disabled = true;
+
+  // 本季度表现摘要
+  const avgPerf = STATE.quarterPerfCount > 0
+    ? Math.round(STATE.quarterPerfSum / STATE.quarterPerfCount)
+    : STATE.perf;
+  const quarter = Math.ceil((STATE.day - 1) / 90);
+
+  const summaryEl = document.getElementById('okrSummary');
+  summaryEl.innerHTML = `
+    <div class="okr-summary-row">季度 <span>Q${quarter}</span></div>
+    <div class="okr-summary-row">当前绩效 <span>${cap(STATE.perf)}</span></div>
+    <div class="okr-summary-row">本季度绩效积累 <span>+${STATE.quarterPerfSum}</span></div>
+    <div class="okr-summary-row">当前职级 <span>${GRADES[STATE.gradeIdx].id}</span></div>
+    <div class="okr-summary-row">健康状态 <span style="color:${STATE.health<40?'#ff6688':'#88ee88'}">${STATE.health < 40 ? '亚健康' : '正常'}</span></div>
+  `;
+
+  // 渲染等级选择
+  const gradeRow = document.getElementById('okrGradeRow');
+  gradeRow.innerHTML = OKR_GRADES.map(g => `
+    <div class="okr-grade-btn okr-grade-${g.id.toLowerCase()}" onclick="selectOKRGrade('${g.id}')">
+      <div class="grade-label">${g.label}</div>
+      <div class="grade-desc">${g.desc}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('okrModal').classList.add('show');
+}
+
+function selectOKRGrade(id) {
+  _selectedOKRGrade = id;
+  document.querySelectorAll('.okr-grade-btn').forEach(el => el.classList.remove('selected'));
+  document.querySelector(`.okr-grade-${id.toLowerCase()}`).classList.add('selected');
+  document.getElementById('okrConfirmBtn').disabled = false;
+}
+
+function confirmOKR() {
+  if (!_selectedOKRGrade) return;
+  document.getElementById('okrModal').classList.remove('show');
+
+  const gradeData = OKR_GRADES.find(g => g.id === _selectedOKRGrade);
+  const quarter = Math.ceil((STATE.day - 1) / 90);
+
+  STATE.okrHistory.push({
+    quarter: quarter,
+    grade: _selectedOKRGrade,
+    score: gradeData.reviewScore,
+    perfAtTime: STATE.perf,
+  });
+
+  // 应用OKR效果
+  STATE.perf = cap(STATE.perf + gradeData.perfBonus);
+  STATE.mood = cap(STATE.mood + gradeData.moodBonus);
+
+  // 重置季度统计
+  STATE.quarterPerfSum = 0;
+  STATE.quarterPerfCount = 0;
+  STATE.pendingOKR = false;
+
+  addNarrative(`📋 Q${quarter} OKR Review 完成：评级 ${_selectedOKRGrade}`, gradeData.reviewScore >= 2 ? 'good' : 'bad');
+  addNarrative(`绩效${gradeData.perfBonus >= 0 ? '+' : ''}${gradeData.perfBonus}，心情${gradeData.moodBonus >= 0 ? '+' : ''}${gradeData.moodBonus}`, 'system');
+
+  updateUI();
+  checkGameOver();
+
+  // 如果同时有绩效考核待处理
+  if (STATE.pendingReview) {
+    setTimeout(() => showReviewModal(), 400);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// 绩效考核系统
+// ══════════════════════════════════════════════════════
+function showReviewModal() {
+  const halfYear = Math.ceil(STATE.day / 180);
+
+  // 综合最近两次OKR评分
+  const recentOKR = STATE.okrHistory.slice(-2);
+  const avgScore = recentOKR.length > 0
+    ? recentOKR.reduce((s,o) => s + o.score, 0) / recentOKR.length
+    : 1;
+
+  // 综合当前绩效值
+  const perfFactor = STATE.perf / 100;
+  const combinedScore = (avgScore * 0.6 + perfFactor * 4 * 0.4);
+
+  // 评级
+  let reviewGrade, gradeColor, gradeDesc, bonusMult;
+  if (combinedScore >= 3.5) {
+    reviewGrade = 'S'; gradeColor = '#ff9966'; bonusMult = 3.0;
+    gradeDesc = '卓越表现，超越所有预期';
+  } else if (combinedScore >= 2.5) {
+    reviewGrade = 'A+'; gradeColor = '#88ee88'; bonusMult = 2.0;
+    gradeDesc = '优秀，明显超出目标';
+  } else if (combinedScore >= 1.8) {
+    reviewGrade = 'A'; gradeColor = '#66bbff'; bonusMult = 1.5;
+    gradeDesc = '良好，达成主要目标';
+  } else if (combinedScore >= 1.2) {
+    reviewGrade = 'B+'; gradeColor = '#f0c040'; bonusMult = 1.0;
+    gradeDesc = '基本达标，有提升空间';
+  } else if (combinedScore >= 0.8) {
+    reviewGrade = 'B'; gradeColor = '#aaa'; bonusMult = 0.7;
+    gradeDesc = '勉强达标，需要改进';
+  } else {
+    reviewGrade = 'C'; gradeColor = '#ee8888'; bonusMult = 0;
+    gradeDesc = '未达标，面临风险';
+  }
+
+  // 年终奖计算（半年考核时同步发）
+  const co = COMPANIES[STATE.companyId] || COMPANIES.byteuniverse;
+  const grade = GRADES[STATE.gradeIdx] || GRADES[0];
+  const monthSalary = calcDailySalary() * 30;
+  const bonus = Math.floor(monthSalary * bonusMult * co.salaryMult);
+
+  // 升降职判断
+  const currentGrade = GRADES[STATE.gradeIdx];
+  const nextGrade = GRADES[STATE.gradeIdx + 1];
+  const prevGrade = GRADES[STATE.gradeIdx - 1];
+
+  // 计算符合晋升条件的OKR次数
+  const promoScoreNeeded = currentGrade ? (currentGrade.promoReq === 'S' ? 4 : currentGrade.promoReq === 'A' ? 3 : 2) : 99;
+  const recentHighScores = STATE.okrHistory.filter(o => o.score >= promoScoreNeeded).length;
+  const canPromote = nextGrade && recentHighScores >= (currentGrade ? currentGrade.promoCount : 99);
+  const shouldDemote = ['C'].includes(reviewGrade) && STATE.gradeIdx > 0;
+
+  // 期权发放（P6+）
+  let newOptions = 0;
+  if (STATE.gradeIdx >= 2) {
+    newOptions = Math.floor(co.optionBase * grade.optionMult);
+  }
+
+  // 渲染弹窗
+  const resultEl = document.getElementById('reviewResultBig');
+  resultEl.innerHTML = `
+    <div class="result-grade" style="color:${gradeColor}">${reviewGrade}</div>
+    <div class="result-label">${gradeDesc}</div>
+  `;
+
+  const detailEl = document.getElementById('reviewDetail');
+  detailEl.innerHTML = `
+    <div class="review-detail-row">考核期 <span>第 ${(halfYear-1)*180+1}-${halfYear*180} 天</span></div>
+    <div class="review-detail-row">OKR综合得分 <span>${avgScore.toFixed(1)} / 4.0</span></div>
+    <div class="review-detail-row">当前绩效值 <span>${STATE.perf}</span></div>
+    <div class="review-detail-row">综合评分 <span>${combinedScore.toFixed(2)}</span></div>
+    <div class="review-detail-row">年终奖/半年奖 <span style="color:#f0c040">+${bonus} 元</span></div>
+    ${newOptions > 0 ? `<div class="review-detail-row">期权发放 <span style="color:#cc88ff">+${newOptions} 份</span></div>` : ''}
+  `;
+
+  // 晋升框
+  const promoBox = document.getElementById('reviewPromoBox');
+  const demoBox = document.getElementById('reviewDemoBox');
+  promoBox.classList.remove('show');
+  demoBox.classList.remove('show');
+
+  if (canPromote) {
+    promoBox.classList.add('show');
+    document.getElementById('reviewPromoMsg').textContent =
+      `恭喜从 ${currentGrade.id} 晋升至 ${nextGrade.id}！\n${nextGrade.desc}\n薪资倍率提升至 ${nextGrade.salaryMult}x`;
+  } else if (shouldDemote) {
+    demoBox.classList.add('show');
+    document.getElementById('reviewDemoMsg').textContent =
+      `本次考核评级 C，绩效不达标。\n职级从 ${currentGrade.id} 降至 ${prevGrade.id}，请重新审视工作状态。`;
+  }
+
+  // 存储结果供确认时应用
+  document.getElementById('reviewModal')._reviewData = {
+    bonus, newOptions, canPromote, shouldDemote, reviewGrade, halfYear
+  };
+
+  document.getElementById('reviewModal').classList.add('show');
+}
+
+function confirmReview() {
+  const modal = document.getElementById('reviewModal');
+  const data = modal._reviewData;
+  if (!data) { modal.classList.remove('show'); return; }
+
+  // 应用奖金
+  STATE.money += data.bonus;
+  STATE.options += data.newOptions;
+
+  // 升降职
+  if (data.canPromote && STATE.gradeIdx < GRADES.length - 1) {
+    STATE.gradeIdx++;
+    addNarrative(`🎉 晋升！你现在是 ${GRADES[STATE.gradeIdx].id}！`, 'special');
+    if (STATE.gradeIdx >= 2) {
+      addNarrative(`🔑 解锁期权资格，期权已发放 ${data.newOptions} 份`, 'special');
+    }
+  } else if (data.shouldDemote) {
+    STATE.gradeIdx = Math.max(0, STATE.gradeIdx - 1);
+    addNarrative(`📉 绩效不达标，降职至 ${GRADES[STATE.gradeIdx].id}`, 'bad');
+  }
+
+  STATE.reviewHistory.push({
+    halfYear: data.halfYear,
+    grade: data.reviewGrade,
+    promoted: data.canPromote,
+    demoted: data.shouldDemote,
+  });
+
+  STATE.pendingReview = false;
+  modal._reviewData = null;
+  modal.classList.remove('show');
+
+  addNarrative(`💰 半年奖/年终奖发放：+${data.bonus} 元`, 'good');
+  if (data.newOptions > 0) addNarrative(`📈 期权 +${data.newOptions} 份`, 'special');
+  addNarrative(`绩效考核等级：${data.reviewGrade}`, 'system');
+
+  updateUI();
+  checkGameOver();
 }
 
 // ══════════════════════════════════════════════════════
 // 随机事件
 // ══════════════════════════════════════════════════════
 function maybeFireEvent() {
+  if (Math.random() > 0.35) return; // 35%概率触发
   const roll = Math.random();
   let cumProb = 0;
   for (const ev of EVENTS) {
@@ -1083,19 +1873,24 @@ function resolveEvent(idx) {
 // ══════════════════════════════════════════════════════
 function checkGameOver() {
   let over = false, title = '', msg = '';
+  const grade = GRADES[STATE.gradeIdx];
 
-  if (STATE.energy <= 0) {
+  if (STATE.health <= 0) {
+    over = true; title = '🏥 健康崩溃';
+    msg = `坚持了 ${STATE.day} 天，健康值彻底耗尽，住进了ICU。\n存款剩余 ${STATE.money} 元，期权 ${STATE.options} 份。\n身体是革命的本钱，这次真的倒下了。`;
+  } else if (STATE.energy <= 0) {
     over = true; title = '😵 过劳倒下了';
-    msg = `坚持了 ${STATE.day} 天，体力耗尽，终于倒在了工位上。\n存款剩余 ${STATE.money} 元，职场生涯暂告一段落。`;
+    msg = `坚持了 ${STATE.day} 天，体力耗尽，终于倒在了工位上。\n存款剩余 ${STATE.money} 元，最终职级 ${grade.id}。`;
   } else if (STATE.mood <= 0) {
     over = true; title = '😞 心态崩了';
-    msg = `工作 ${STATE.day} 天后，你的心情降到了谷底，决定裸辞疗伤。\n这段经历让你更了解自己。`;
+    msg = `工作 ${STATE.day} 天后，心情降到谷底，决定裸辞疗伤。\n存款 ${STATE.money} 元，职级 ${grade.id}，期权 ${STATE.options} 份。`;
   } else if (STATE.perf <= 0) {
     over = true; title = '📉 被优化了';
-    msg = `绩效连续垫底，HR约谈后发来了"优化"通知。\n在职 ${STATE.day} 天，存款 ${STATE.money} 元，下一站再出发。`;
+    msg = `绩效连续垫底，HR约谈后发来了"优化"通知。\n在职 ${STATE.day} 天，存款 ${STATE.money} 元，职级 ${grade.id}。\n下一站再出发。`;
   } else if (STATE.day > 365) {
-    over = true; title = '🎉 一年整！';
-    msg = `恭喜！坚持工作整整一年！\n最终存款：${STATE.money} 元，绩效：${STATE.perf}，人脉：${STATE.social}。\n你已成为真正的职场老兵！`;
+    over = true; title = '🎉 坚持一年！';
+    const bonusStr = STATE.options > 0 ? `，期权 ${STATE.options} 份` : '';
+    msg = `恭喜坚持工作整整一年！\n最终职级：${grade.id} · ${grade.name}\n总存款：${STATE.money} 元${bonusStr}\n绩效：${STATE.perf}，人脉：${STATE.social}，健康：${STATE.health}\n你已成为真正的职场老兵！`;
   }
 
   if (over) {
