@@ -446,6 +446,128 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
   color: #ff6688; text-align: center;
 }
 .health-banner.show { display: block; }
+
+/* ══ Phase 3 面板标签切换 ══ */
+.p3-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.p3-tab {
+  padding: 6px 14px; border-radius: 6px; border: 1px solid #333;
+  background: #1a1a1a; color: #666; font-size: 0.78rem; cursor: pointer;
+  transition: all 0.15s;
+}
+.p3-tab:hover { border-color: #555; color: #aaa; }
+.p3-tab.active { border-color: #f0c040; color: #f0c040; background: rgba(240,192,64,0.08); }
+.p3-panel { display: none; }
+.p3-panel.active { display: block; }
+
+/* ══ 商城 ══ */
+.shop-panel { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 18px; }
+.shop-cats { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.shop-cat-btn {
+  padding: 4px 12px; border-radius: 4px; font-size: 0.72rem;
+  border: 1px solid #333; background: #222; color: #888; cursor: pointer;
+}
+.shop-cat-btn.active { border-color: #f0c040; color: #f0c040; }
+.shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.shop-item {
+  background: #222; border: 1px solid #2e2e2e; border-radius: 8px;
+  padding: 10px 12px; cursor: pointer; transition: all 0.15s;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.shop-item:hover:not(.disabled) { border-color: #444; background: #2a2a2a; }
+.shop-item.disabled { opacity: 0.4; cursor: not-allowed; }
+.shop-item-header { display: flex; justify-content: space-between; align-items: center; }
+.shop-item-name { font-size: 0.82rem; font-weight: bold; color: #ddd; }
+.shop-item-price { font-size: 0.72rem; color: #f0c040; }
+.shop-item-desc { font-size: 0.68rem; color: #666; line-height: 1.4; }
+.shop-item-fx { font-size: 0.65rem; color: #88ee88; }
+.buff-list { margin-top: 10px; display: flex; flex-direction: column; gap: 5px; }
+.buff-tag {
+  display: flex; justify-content: space-between; align-items: center;
+  background: #1e1a2a; border: 1px solid #3a2a5a; border-radius: 5px;
+  padding: 5px 10px; font-size: 0.72rem;
+}
+.buff-tag-name { color: #cc88ff; }
+.buff-tag-days { color: #666; }
+
+/* ══ 银行 ══ */
+.bank-panel { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 18px; }
+.bank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.bank-card {
+  background: #111; border: 1px solid #2a2a2a; border-radius: 8px;
+  padding: 14px; display: flex; flex-direction: column; gap: 10px;
+}
+.bank-card h4 { font-size: 0.82rem; color: #888; }
+.bank-card .bank-amount { font-size: 1.3rem; font-weight: bold; color: #f0c040; }
+.bank-card .bank-rate { font-size: 0.68rem; color: #555; }
+.bank-input-row { display: flex; gap: 6px; align-items: center; }
+.bank-input {
+  flex: 1; background: #1a1a1a; border: 1px solid #333; border-radius: 5px;
+  color: #fff; padding: 6px 10px; font-size: 0.8rem; outline: none;
+}
+.bank-input:focus { border-color: #f0c040; }
+.bank-btn {
+  padding: 6px 12px; border-radius: 5px; border: 1px solid #444;
+  background: #222; color: #aaa; font-size: 0.75rem; cursor: pointer;
+}
+.bank-btn:hover { background: #2a2a2a; color: #fff; }
+.bank-btn.confirm { border-color: #88ee88; color: #88ee88; }
+.bank-btn.warn { border-color: #ee8888; color: #ee8888; }
+
+/* ══ 股市 ══ */
+.stock-panel { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 18px; }
+.stock-list { display: flex; flex-direction: column; gap: 10px; }
+.stock-row {
+  background: #111; border: 1px solid #222; border-radius: 8px;
+  padding: 12px 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.stock-info { flex: 1; min-width: 120px; }
+.stock-name { font-size: 0.85rem; font-weight: bold; color: #ddd; }
+.stock-ticker { font-size: 0.65rem; color: #555; }
+.stock-price-block { text-align: right; min-width: 80px; }
+.stock-price { font-size: 1.1rem; font-weight: bold; }
+.stock-change { font-size: 0.7rem; }
+.stock-change.up { color: #ee4444; }
+.stock-change.down { color: #44bb44; }
+.stock-price.up-price { color: #ee4444; }
+.stock-price.down-price { color: #44bb44; }
+.stock-price.flat-price { color: #aaa; }
+.stock-holding { font-size: 0.72rem; color: #666; }
+.stock-holding.has-stock { color: #cc88ff; }
+.stock-trade { display: flex; gap: 6px; align-items: center; }
+.trade-input {
+  width: 60px; background: #1a1a1a; border: 1px solid #333; border-radius: 4px;
+  color: #fff; padding: 4px 8px; font-size: 0.78rem; outline: none;
+}
+.trade-btn {
+  padding: 5px 10px; border-radius: 4px; font-size: 0.72rem; cursor: pointer; border: 1px solid;
+}
+.trade-buy  { border-color: #ee4444; color: #ee4444; background: rgba(238,68,68,0.08); }
+.trade-buy:hover  { background: rgba(238,68,68,0.2); }
+.trade-sell { border-color: #44bb44; color: #44bb44; background: rgba(68,187,68,0.08); }
+.trade-sell:hover { background: rgba(68,187,68,0.2); }
+.stock-chart { display: flex; align-items: flex-end; gap: 1px; height: 28px; margin-top: 4px; }
+.chart-bar { width: 4px; border-radius: 1px; min-height: 2px; }
+
+/* ══ 期权/RSU ══ */
+.option-panel { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 18px; }
+.option-list { display: flex; flex-direction: column; gap: 10px; }
+.option-row {
+  background: #111; border: 1px solid #2a2a2a; border-radius: 8px;
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;
+}
+.option-row-header { display: flex; justify-content: space-between; align-items: center; }
+.option-title { font-size: 0.82rem; color: #cc88ff; font-weight: bold; }
+.option-status { font-size: 0.7rem; color: #555; }
+.option-progress-bg { height: 5px; background: #2a2a2a; border-radius: 3px; overflow: hidden; }
+.option-progress-fill { height: 100%; background: linear-gradient(90deg, #cc88ff, #f0c040); border-radius: 3px; transition: width 0.4s; }
+.option-detail-row { display: flex; justify-content: space-between; font-size: 0.72rem; color: #666; }
+.option-detail-row span { color: #aaa; }
+.vest-btn {
+  padding: 6px 14px; border-radius: 5px; border: 1px solid #cc88ff;
+  background: rgba(204,136,255,0.1); color: #cc88ff; font-size: 0.75rem; cursor: pointer;
+}
+.vest-btn:hover { background: rgba(204,136,255,0.2); }
+.vest-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -621,6 +743,77 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
     <div class="actions-grid" id="actionsGrid"></div>
   </div>
 
+  <!-- Phase 3 面板区 -->
+  <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:14px 18px;">
+    <div class="p3-tabs">
+      <div class="p3-tab active" onclick="switchP3Tab('shop')">🛒 商城</div>
+      <div class="p3-tab" onclick="switchP3Tab('bank')">🏦 银行</div>
+      <div class="p3-tab" onclick="switchP3Tab('stock')">📈 股市</div>
+      <div class="p3-tab" onclick="switchP3Tab('option')">🔑 期权/RSU</div>
+    </div>
+
+    <!-- 商城 -->
+    <div class="p3-panel active" id="p3-shop">
+      <div class="shop-panel">
+        <div class="shop-cats">
+          <div class="shop-cat-btn active" onclick="filterShop('all')">全部</div>
+          <div class="shop-cat-btn" onclick="filterShop('food')">🍱 食品</div>
+          <div class="shop-cat-btn" onclick="filterShop('medicine')">💊 药品</div>
+          <div class="shop-cat-btn" onclick="filterShop('durable')">🖥️ 耐用品</div>
+        </div>
+        <div class="shop-grid" id="shopGrid"></div>
+        <div class="buff-list" id="buffList" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <!-- 银行 -->
+    <div class="p3-panel" id="p3-bank">
+      <div class="bank-panel">
+        <div class="bank-grid">
+          <div class="bank-card">
+            <h4>💰 存款账户</h4>
+            <div class="bank-amount" id="bankDepositDisplay">¥0</div>
+            <div class="bank-rate" id="bankRateDisplay">日利率 0.03%（年化约10%）</div>
+            <div class="bank-input-row">
+              <input type="number" class="bank-input" id="depositInput" placeholder="存入金额" min="100">
+              <button class="bank-btn confirm" onclick="doDeposit()">存入</button>
+            </div>
+            <div class="bank-input-row">
+              <input type="number" class="bank-input" id="withdrawInput" placeholder="取出金额" min="100">
+              <button class="bank-btn warn" onclick="doWithdraw()">取出</button>
+            </div>
+          </div>
+          <div class="bank-card">
+            <h4>💳 贷款账户</h4>
+            <div class="bank-amount" id="bankLoanDisplay" style="color:#ee8888">¥0</div>
+            <div class="bank-rate" id="loanRateDisplay">日利率 0.08%（年化约30%）</div>
+            <div id="loanInfo" style="font-size:0.72rem;color:#666">暂无贷款</div>
+            <div class="bank-input-row">
+              <input type="number" class="bank-input" id="loanInput" placeholder="贷款金额" min="500">
+              <button class="bank-btn confirm" onclick="doLoan()">申请贷款</button>
+            </div>
+            <button class="bank-btn warn" style="width:100%" onclick="doRepayLoan()">还款（全部）</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 股市 -->
+    <div class="p3-panel" id="p3-stock">
+      <div class="stock-panel">
+        <div class="stock-list" id="stockList"></div>
+        <div style="font-size:0.68rem;color:#444;margin-top:8px">⚠️ 股票交易存在风险，入市须谨慎。涨红跌绿（A股规则）</div>
+      </div>
+    </div>
+
+    <!-- 期权/RSU -->
+    <div class="p3-panel" id="p3-option">
+      <div class="option-panel">
+        <div id="optionPanelContent"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- 叙事 -->
   <div class="narrative-panel" id="narrativePanel">
     <div class="narrative-line system">── 游戏开始 ──</div>
@@ -740,6 +933,34 @@ const COMPANIES = {
 };
 
 // ══════════════════════════════════════════════════════
+// 股市定义（4只虚拟股票）
+// ══════════════════════════════════════════════════════
+const STOCKS = {
+  byteuniverse: { id:'byteuniverse', name:'字节宇宙',  ticker:'BYU',  initPrice:120, color:'#66bbff', volatility:0.08, trend:0.001,  desc:'高成长高波动，有涨停也有跌停' },
+  alimammoth:   { id:'alimammoth',   name:'阿里巨头',  ticker:'ALI',  initPrice:85,  color:'#ff9966', volatility:0.04, trend:0.0005, desc:'价值蓝筹，波动小，适合长期持有' },
+  xiaoedu:      { id:'xiaoedu',      name:'小鹅在线',  ticker:'XEO',  initPrice:45,  color:'#88ee88', volatility:0.12, trend:-0.001, desc:'教育赛道，政策风险大，暴涨暴跌' },
+  slacktech:    { id:'slacktech',    name:'摸鱼科技',  ticker:'SLK',  initPrice:30,  color:'#cc88ff', volatility:0.02, trend:0.002,  desc:'低波动缓慢增长，摸鱼股中的战斗机' },
+};
+
+// ══════════════════════════════════════════════════════
+// 商城商品定义
+// ══════════════════════════════════════════════════════
+const SHOP_ITEMS = [
+  // 食品饮料
+  { id:'energy_drink',   name:'功能饮料',   emoji:'⚡', price:25,  category:'food',    effect:{energy:15},              desc:'红牛加持，短暂续命' },
+  { id:'good_meal',      name:'高档外卖',   emoji:'🍣', price:80,  category:'food',    effect:{energy:20,mood:20},      desc:'精致打工人必备，心情+体力双收' },
+  { id:'meal_prep',      name:'健康便当',   emoji:'🥗', price:50,  category:'food',    effect:{energy:15,health:5},     desc:'自制低卡便当，健康加持' },
+  { id:'vitamin',        name:'维生素套餐', emoji:'💊', price:120, category:'medicine',effect:{health:10},              buffDays:7, buffEffect:{health:2}, desc:'每日补充，持续7天每天健康+2' },
+  { id:'painkiller',     name:'止痛药',     emoji:'🩹', price:30,  category:'medicine',effect:{health:8,mood:5},        desc:'头痛感冒应急，治标不治本' },
+  { id:'melatonin',      name:'褪黑素',     emoji:'🌙', price:60,  category:'medicine',effect:{energy:10,mood:8},       buffDays:3, buffEffect:{energy:3}, desc:'改善睡眠，持续3天体力+3' },
+  // 耐用品（buff持续多天）
+  { id:'standing_desk',  name:'升降桌',     emoji:'🖥️', price:800, category:'durable', buffDays:30, buffEffect:{perf:2,health:1}, desc:'站立办公，持续30天绩效+2、健康+1', oneTime:true },
+  { id:'ergonomic_chair',name:'人体工学椅', emoji:'🪑', price:600, category:'durable', buffDays:60, buffEffect:{health:2,mood:1},  desc:'腰不再酸了，持续60天健康+2、心情+1', oneTime:true },
+  { id:'noise_cancel',   name:'降噪耳机',   emoji:'🎧', price:400, category:'durable', buffDays:90, buffEffect:{focus:2},          desc:'隔绝噪音，持续90天专注+2', oneTime:true },
+  { id:'coffee_machine', name:'咖啡机',     emoji:'☕', price:300, category:'durable', buffDays:30, buffEffect:{energy:5},         desc:'自备咖啡机，持续30天体力+5', oneTime:true },
+];
+
+// ══════════════════════════════════════════════════════
 // 职级定义
 // ══════════════════════════════════════════════════════
 const GRADES = [
@@ -772,8 +993,8 @@ const CLASSES = {
     initStats: { energy:75, mood:65, focus:80, perf:60, social:70 },
     bonus: { perf: 8, social: 5 },
     specialActions: [
-      { id:'write_prd', name:'写PRD', emoji:'📝', cost:{energy:18,mood:-8}, gain:{perf:22}, desc:'憋一份需求文档，绩效提升但体力和心情都在消耗' },
-      { id:'demand_meeting', name:'需求评审', emoji:'🗣️', cost:{energy:12,mood:-10}, gain:{perf:15,social:10}, desc:'组织需求评审会，体力和心情都要搭进去换绩效和人脉' },
+      { id:'write_prd', name:'写PRD', emoji:'📝', cost:{energy:-18,mood:-8}, gain:{perf:22}, desc:'憋一份需求文档，绩效提升但体力和心情都在消耗', isWork:true },
+      { id:'demand_meeting', name:'需求评审', emoji:'🗣️', cost:{energy:-12,mood:-10}, gain:{perf:15,social:10}, desc:'组织需求评审会，体力和心情都要搭进去换绩效和人脉', isWork:true },
     ]
   },
   fe: {
@@ -784,8 +1005,8 @@ const CLASSES = {
     initStats: { energy:80, mood:70, focus:85, perf:55, social:50 },
     bonus: { focus: 8, perf: 5 },
     specialActions: [
-      { id:'write_component', name:'写组件库', emoji:'🧩', cost:{energy:22,mood:-5}, gain:{perf:25,focus:8}, desc:'封装通用组件，体力消耗大，但绩效和专注度都有收益' },
-      { id:'debug_ui', name:'Debug样式', emoji:'🔍', cost:{energy:12,mood:-12}, gain:{perf:12,focus:8}, desc:'在浏览器控制台苦苦排查像素偏移，心情堪忧' },
+      { id:'write_component', name:'写组件库', emoji:'🧩', cost:{energy:-22,mood:-5}, gain:{perf:25,focus:8}, desc:'封装通用组件，体力消耗大，但绩效和专注度都有收益', isWork:true },
+      { id:'debug_ui', name:'Debug样式', emoji:'🔍', cost:{energy:-12,mood:-12}, gain:{perf:12,focus:8}, desc:'在浏览器控制台苦苦排查像素偏移，心情堪忧', isWork:true },
     ]
   },
   be: {
@@ -796,8 +1017,8 @@ const CLASSES = {
     initStats: { energy:85, mood:60, focus:80, perf:65, social:40 },
     bonus: { energy: 8, perf: 6 },
     specialActions: [
-      { id:'optimize_sql', name:'SQL调优', emoji:'🗄️', cost:{energy:18,mood:-5}, gain:{perf:28,focus:8}, desc:'把慢查询从3秒优化到30ms，体力消耗大但满满成就感' },
-      { id:'write_api', name:'写接口文档', emoji:'📄', cost:{energy:10,mood:-8}, gain:{perf:15,social:8}, desc:'认认真真写Swagger，前端同事对你刮目相看' },
+      { id:'optimize_sql', name:'SQL调优', emoji:'🗄️', cost:{energy:-18,mood:-5}, gain:{perf:28,focus:8}, desc:'把慢查询从3秒优化到30ms，体力消耗大但满满成就感', isWork:true },
+      { id:'write_api', name:'写接口文档', emoji:'📄', cost:{energy:-10,mood:-8}, gain:{perf:15,social:8}, desc:'认认真真写Swagger，前端同事对你刮目相看', isWork:true },
     ]
   },
   qa: {
@@ -808,8 +1029,8 @@ const CLASSES = {
     initStats: { energy:75, mood:75, focus:75, perf:58, social:55 },
     bonus: { mood: 8, focus: 5 },
     specialActions: [
-      { id:'write_cases', name:'写测试用例', emoji:'📋', cost:{energy:15,mood:-5}, gain:{perf:22,focus:8}, desc:'用例写得越全，上线越有底气，但体力在悄悄流失' },
-      { id:'find_bug', name:'蹲Bug专项', emoji:'🐞', cost:{energy:20,mood:-8}, gain:{perf:30,social:5}, desc:'死磕某个模块，找到隐藏Bug，绩效爆炸但体力告急' },
+      { id:'write_cases', name:'写测试用例', emoji:'📋', cost:{energy:-15,mood:-5}, gain:{perf:22,focus:8}, desc:'用例写得越全，上线越有底气，但体力在悄悄流失', isWork:true },
+      { id:'find_bug', name:'蹲Bug专项', emoji:'🐞', cost:{energy:-20,mood:-8}, gain:{perf:30,social:5}, desc:'死磕某个模块，找到隐藏Bug，绩效爆炸但体力告急', isWork:true },
     ]
   },
   design: {
@@ -820,8 +1041,8 @@ const CLASSES = {
     initStats: { energy:70, mood:80, focus:70, perf:55, social:65 },
     bonus: { mood: 10, social: 5 },
     specialActions: [
-      { id:'design_ui', name:'出UI方案', emoji:'🖼️', cost:{energy:22,mood:-5}, gain:{perf:25,social:8}, desc:'出三套方案，总有一款能过稿，体力消耗不小' },
-      { id:'design_review', name:'设计走查', emoji:'✏️', cost:{energy:10,mood:-10}, gain:{perf:18,social:12}, desc:'和开发对齐实现，心情受损但绩效和人脉有收益' },
+      { id:'design_ui', name:'出UI方案', emoji:'🖼️', cost:{energy:-22,mood:-5}, gain:{perf:25,social:8}, desc:'出三套方案，总有一款能过稿，体力消耗不小', isWork:true },
+      { id:'design_review', name:'设计走查', emoji:'✏️', cost:{energy:-10,mood:-10}, gain:{perf:18,social:12}, desc:'和开发对齐实现，心情受损但绩效和人脉有收益', isWork:true },
     ]
   },
   ops: {
@@ -832,8 +1053,8 @@ const CLASSES = {
     initStats: { energy:65, mood:75, focus:60, perf:60, social:85 },
     bonus: { social: 12, mood: 3 },
     specialActions: [
-      { id:'plan_event', name:'策划活动', emoji:'🎉', cost:{energy:28,mood:-8}, gain:{perf:28,social:15}, desc:'策划一场用户活动，体力消耗巨大，但KPI直接拉满' },
-      { id:'write_copy', name:'写文案', emoji:'✍️', cost:{energy:12,mood:-5}, gain:{perf:18,social:8}, desc:'憋出一篇10万+文案，绩效和人脉双收' },
+      { id:'plan_event', name:'策划活动', emoji:'🎉', cost:{energy:-28,mood:-8}, gain:{perf:28,social:15}, desc:'策划一场用户活动，体力消耗巨大，但KPI直接拉满', isWork:true },
+      { id:'write_copy', name:'写文案', emoji:'✍️', cost:{energy:-12,mood:-5}, gain:{perf:18,social:8}, desc:'憋出一篇10万+文案，绩效和人脉双收', isWork:true },
     ]
   },
 };
@@ -842,11 +1063,11 @@ const CLASSES = {
 // 通用行动
 // ══════════════════════════════════════════════════════
 const COMMON_ACTIONS = [
-  // 工作类：扣体力，提绩效
-  { id:'work_hard',   name:'专心工作',  emoji:'💻', cost:{energy:20,mood:-5},   gain:{perf:18,money:80},   desc:'老实干活，不求有功但求无过' },
-  { id:'overtime',    name:'主动加班',  emoji:'🌙', cost:{energy:30,mood:-15},  gain:{perf:25,money:150},  desc:'卷是卷了，但工资也多了点' },
-  { id:'learn_skill', name:'自我提升',  emoji:'📚', cost:{energy:15,mood:-5},   gain:{focus:12,perf:10},   desc:'利用工作时间学点新东西，提升自己' },
-  { id:'1on1_boss',   name:'和老板1on1',emoji:'👔', cost:{energy:12,mood:-8},   gain:{perf:12,social:15},  desc:'汇报工作，刷刷存在感，有时候有惊喜' },
+  // 工作类：消耗体力+心情，提绩效
+  { id:'work_hard',   name:'专心工作',  emoji:'💻', cost:{energy:-20,mood:-5},  gain:{perf:18,money:80},   desc:'老实干活，不求有功但求无过', isWork:true },
+  { id:'overtime',    name:'主动加班',  emoji:'🌙', cost:{energy:-30,mood:-15}, gain:{perf:25,money:150},  desc:'卷是卷了，但工资也多了点', isWork:true },
+  { id:'learn_skill', name:'自我提升',  emoji:'📚', cost:{energy:-15,mood:-5},  gain:{focus:12,perf:10},   desc:'利用工作时间学点新东西，提升自己', isWork:true },
+  { id:'1on1_boss',   name:'和老板1on1',emoji:'👔', cost:{energy:-12,mood:-8},  gain:{perf:12,social:15},  desc:'汇报工作，刷刷存在感，有时候有惊喜', isWork:true },
   // 休息类：体力回复
   { id:'coffee',      name:'喝杯咖啡',  emoji:'☕', cost:{money:-18},           gain:{energy:20,focus:15}, desc:'工位旁的咖啡机，打工人续命神器' },
   { id:'nap',         name:'偷偷小睡',  emoji:'😴', cost:{},                    gain:{energy:25,mood:5},   desc:'午休趴一会儿，体力悄悄回来了' },
@@ -857,8 +1078,8 @@ const COMMON_ACTIONS = [
   { id:'slack_off',   name:'摸鱼划水',  emoji:'🐟', cost:{perf:-10},            gain:{mood:15},            desc:'刷刷手机，舒服是舒服，但绩效在悄悄溜走' },
   { id:'team_chat',   name:'和同事聊天',emoji:'💬', cost:{perf:-5,focus:-8},    gain:{mood:18,social:10},  desc:'闲扯几句，心情好多了，但活还没干' },
   // 医疗类：花钱回健康
-  { id:'clinic',      name:'去诊所',    emoji:'🏥', cost:{money:-80,energy:10}, gain:{health:25},          desc:'挂个普通号，排队两小时，健康值回一些', isHealth:true },
-  { id:'hospital',    name:'去医院',    emoji:'🏨', cost:{money:-300,energy:5}, gain:{health:50,mood:10},  desc:'住院半天，专科检查，大幅恢复健康值', isHealth:true },
+  { id:'clinic',      name:'去诊所',    emoji:'🏥', cost:{money:-80,energy:-10},gain:{health:25},          desc:'挂个普通号，排队两小时，健康值回一些', isHealth:true },
+  { id:'hospital',    name:'去医院',    emoji:'🏨', cost:{money:-300,energy:-5},gain:{health:50,mood:10},  desc:'住院半天，专科检查，大幅恢复健康值', isHealth:true },
   { id:'rest_home',   name:'在家休息',  emoji:'🛋️', cost:{perf:-8,money:-20},   gain:{health:15,energy:30,mood:10}, desc:'请假在家养病，慢慢恢复', isHealth:true },
 ];
 
@@ -1011,17 +1232,32 @@ function defaultState() {
     money: 0, tenure: 0, actionDone: false,
     currentSlot: null, level: 0,
     // 职级系统
-    gradeIdx: 0,          // 当前职级索引
+    gradeIdx: 0,
     // OKR & 考核系统
-    okrHistory: [],       // [{quarter, grade, score}]
-    reviewHistory: [],    // [{halfYear, grade, promoted}]
-    pendingOKR: false,    // 是否需要做OKR
-    pendingReview: false, // 是否需要做绩效考核
-    quarterPerfSum: 0,    // 本季度绩效累计（用于OKR参考）
-    quarterPerfCount: 0,
-    lastOKRScore: 0,      // 上次OKR分数
-    options: 0,           // 期权份数
-    adaptDays: 0,         // 新入职/跳槽适应期天数
+    okrHistory: [], reviewHistory: [],
+    pendingOKR: false, pendingReview: false,
+    quarterPerfSum: 0, quarterPerfCount: 0,
+    lastOKRScore: 0,
+    options: 0,
+    adaptDays: 0,
+    // ── Phase 3 ──
+    // 银行系统
+    bankDeposit: 0,        // 银行存款
+    bankLoan: 0,           // 贷款余额
+    bankLoanDays: 0,       // 贷款剩余天数
+    bankDepositRate: 0.0003, // 日利率（约10%/年）
+    bankLoanRate: 0.0008,  // 贷款日利率
+    // 股市系统
+    stocks: {},            // { stockId: { shares, avgCost } }
+    stockPrices: {},       // { stockId: currentPrice }
+    stockHistory: {},      // { stockId: [最近30天价格] }
+    // 商城系统
+    inventory: {},         // { itemId: count }
+    activeBuffs: [],       // [{ id, name, effect, daysLeft }]
+    // 期权/RSU
+    vestingSchedule: [],   // [{ grantDay, total, vested, strikePrice }]
+    optionStrikePrice: 0,  // 期权行权价
+    rsus: 0,               // RSU已解锁份数
   };
 }
 let STATE = defaultState();
@@ -1163,9 +1399,18 @@ function startNewGame() {
   Object.entries(cls.bonus).forEach(([k,v]) => { if(STATE[k]!==undefined) STATE[k] = Math.min(100, STATE[k]+v); });
   // 公司初始体力修正
   STATE.energy = cap(STATE.energy + co.initEnergy);
-  // 初始期权（P4无期权，但记录公司分配）
+  // Phase 3 初始化
   STATE.options = 0;
-  STATE.adaptDays = 3; // 新入职适应期3天
+  STATE.bankDeposit = 0;
+  STATE.bankLoan = 0;
+  STATE.bankLoanDays = 0;
+  STATE.stocks = {};
+  STATE.stockPrices = {};
+  STATE.stockHistory = {};
+  STATE.inventory = {};
+  STATE.activeBuffs = [];
+  STATE.vestingSchedule = [];
+  STATE.adaptDays = 3;
 
   if (pendingSlot === -1) {
     showSaveSlots('new');
@@ -1254,7 +1499,16 @@ function enterGame() {
     addNarrative(`入职适应期还有 ${STATE.adaptDays} 天，先熟悉一下环境。`, 'warn');
   }
   addNarrative(`加油，${STATE.playerName}！`, 'good');
+
+  // Phase 3 初始化
+  initStocks();
+  if (!STATE.bankDepositRate) STATE.bankDepositRate = 0.0003;
+  if (!STATE.bankLoanRate) STATE.bankLoanRate = 0.0008;
+  if (!STATE.activeBuffs) STATE.activeBuffs = [];
+  if (!STATE.vestingSchedule) STATE.vestingSchedule = [];
+
   updateUI();
+  updateP3UI();
   renderActions();
   document.getElementById('nextPhaseBtn').disabled = true;
   document.getElementById('nextPhaseBtn2').disabled = true;
@@ -1368,7 +1622,11 @@ function updateUI() {
 // ══════════════════════════════════════════════════════
 function fxStr(cost, gain) {
   const parts = [];
-  const all = Object.assign({}, cost, gain);
+  // 用累加合并（与mergeEffect保持一致）
+  const all = {};
+  [cost, gain].forEach(obj => {
+    Object.entries(obj).forEach(([k,v]) => { all[k] = (all[k]||0) + v; });
+  });
   const labels = {energy:'体力',mood:'心情',focus:'专注',perf:'绩效',social:'人脉',money:'存款',health:'健康'};
   Object.entries(all).forEach(([k,v]) => {
     if (v === 0) return;
@@ -1416,7 +1674,8 @@ function renderActions() {
     // 摸鱼科技摸鱼加成
     if (STATE.companyId === 'slacktech' && a.id === 'slack_off') {
       gain.mood = (gain.mood||0) + 5;
-      cost.perf = (cost.perf||0) + 3; // 摸鱼更不扣绩效
+      // perf扣减减半（cost是负数，加上绝对值的一半让扣减变小）
+      if (cost.perf) cost.perf = Math.round(cost.perf * 0.5);
     }
 
     const specialCls = a.isSpecial ? ' special' : (a.isHealth ? ' health-action' : '');
@@ -1454,7 +1713,7 @@ function doAction(id) {
   // 摸鱼科技摸鱼加成
   if (STATE.companyId === 'slacktech' && id === 'slack_off') {
     gain.mood = (gain.mood||0) + 5;
-    if (cost.perf) cost.perf = Math.floor(cost.perf * 0.6);
+    if (cost.perf) cost.perf = Math.round(cost.perf * 0.5);
   }
 
   // 健康值影响工作效率
@@ -1538,6 +1797,13 @@ function nextPhase() {
     if (healthDecay > 0) {
       addNarrative(`😮‍💨 今日健康-${healthDecay}（工作压力/疲劳）`, STATE.health < 40 ? 'health' : 'system');
     }
+
+    // Phase 3 每日 tick
+    tickStocks();
+    tickBank();
+    tickBuffs();
+    tickOptions();
+    updateP3UI();
 
     // OKR Review 触发（每季度末：第90、180、270、360天）
     if (STATE.day % 90 === 1 && STATE.day > 1) {
@@ -1780,18 +2046,22 @@ function confirmReview() {
 
   // 应用奖金
   STATE.money += data.bonus;
-  STATE.options += data.newOptions;
 
   // 升降职
   if (data.canPromote && STATE.gradeIdx < GRADES.length - 1) {
     STATE.gradeIdx++;
     addNarrative(`🎉 晋升！你现在是 ${GRADES[STATE.gradeIdx].id}！`, 'special');
-    if (STATE.gradeIdx >= 2) {
-      addNarrative(`🔑 解锁期权资格，期权已发放 ${data.newOptions} 份`, 'special');
+    if (STATE.gradeIdx >= 2 && data.newOptions > 0) {
+      grantOptions(data.newOptions);
     }
   } else if (data.shouldDemote) {
     STATE.gradeIdx = Math.max(0, STATE.gradeIdx - 1);
     addNarrative(`📉 绩效不达标，降职至 ${GRADES[STATE.gradeIdx].id}`, 'bad');
+  }
+
+  // 非晋升时也发放期权（P6+）
+  if (!data.canPromote && STATE.gradeIdx >= 2 && data.newOptions > 0) {
+    grantOptions(data.newOptions);
   }
 
   STATE.reviewHistory.push({
@@ -1866,6 +2136,439 @@ function resolveEvent(idx) {
   _currentEvent = null;
   updateUI();
   checkGameOver();
+}
+
+// ══════════════════════════════════════════════════════
+// Phase 3：股市系统
+// ══════════════════════════════════════════════════════
+function initStocks() {
+  Object.values(STOCKS).forEach(s => {
+    if (!STATE.stockPrices[s.id]) STATE.stockPrices[s.id] = s.initPrice;
+    if (!STATE.stockHistory[s.id]) STATE.stockHistory[s.id] = [s.initPrice];
+    if (!STATE.stocks[s.id]) STATE.stocks[s.id] = { shares: 0, avgCost: 0 };
+  });
+}
+
+function tickStocks() {
+  Object.values(STOCKS).forEach(s => {
+    const cur = STATE.stockPrices[s.id] || s.initPrice;
+    // 随机游走 + 趋势
+    const rnd = (Math.random() - 0.5) * 2;
+    const change = cur * (s.volatility * rnd + s.trend);
+    const newPrice = Math.max(1, +(cur + change).toFixed(2));
+    STATE.stockPrices[s.id] = newPrice;
+    const hist = STATE.stockHistory[s.id] || [];
+    hist.push(newPrice);
+    if (hist.length > 30) hist.shift();
+    STATE.stockHistory[s.id] = hist;
+  });
+}
+
+function buyStock(stockId, shares) {
+  const s = STOCKS[stockId];
+  if (!s) return;
+  const price = STATE.stockPrices[stockId];
+  const cost = Math.ceil(price * shares);
+  if (STATE.money < cost) { addNarrative('💸 余额不足，买不起！', 'bad'); return; }
+  STATE.money -= cost;
+  const holding = STATE.stocks[stockId] || { shares:0, avgCost:0 };
+  const totalCost = holding.shares * holding.avgCost + cost;
+  holding.shares += shares;
+  holding.avgCost = totalCost / holding.shares;
+  STATE.stocks[stockId] = holding;
+  addNarrative(`📈 买入 ${s.name}(${s.ticker}) × ${shares}股，成交价 ¥${price}，花费 ¥${cost}`, 'good');
+  updateP3UI();
+}
+
+function sellStock(stockId, shares) {
+  const s = STOCKS[stockId];
+  if (!s) return;
+  const holding = STATE.stocks[stockId];
+  if (!holding || holding.shares < shares) { addNarrative('❌ 持仓不足！', 'bad'); return; }
+  const price = STATE.stockPrices[stockId];
+  const revenue = Math.floor(price * shares);
+  const cost = Math.floor(holding.avgCost * shares);
+  const pnl = revenue - cost;
+  STATE.money += revenue;
+  holding.shares -= shares;
+  if (holding.shares === 0) holding.avgCost = 0;
+  STATE.stocks[stockId] = holding;
+  const pnlStr = pnl >= 0 ? `盈利 +¥${pnl}` : `亏损 ¥${pnl}`;
+  const lineType = pnl >= 0 ? 'good' : 'bad';
+  addNarrative(`📉 卖出 ${s.name}(${s.ticker}) × ${shares}股，成交价 ¥${price}，${pnlStr}`, lineType);
+  updateP3UI();
+}
+
+function renderStockList() {
+  const list = document.getElementById('stockList');
+  if (!list) return;
+  list.innerHTML = Object.values(STOCKS).map(s => {
+    const price = STATE.stockPrices[s.id] || s.initPrice;
+    const hist = STATE.stockHistory[s.id] || [price];
+    const prevPrice = hist.length >= 2 ? hist[hist.length - 2] : price;
+    const change = price - prevPrice;
+    const changePct = prevPrice > 0 ? (change / prevPrice * 100).toFixed(2) : '0.00';
+    const changeClass = change > 0 ? 'up' : change < 0 ? 'down' : '';
+    const priceClass = change > 0 ? 'up-price' : change < 0 ? 'down-price' : 'flat-price';
+    const holding = STATE.stocks[s.id] || { shares:0, avgCost:0 };
+    const pnl = holding.shares > 0 ? Math.floor((price - holding.avgCost) * holding.shares) : 0;
+    const holdingClass = holding.shares > 0 ? 'has-stock' : '';
+
+    // 迷你K线
+    const minP = Math.min(...hist);
+    const maxP = Math.max(...hist);
+    const chartBars = hist.slice(-15).map((p,i,arr) => {
+      const h = maxP > minP ? Math.max(2, Math.round((p - minP) / (maxP - minP) * 26)) : 14;
+      const isUp = i > 0 ? p >= arr[i-1] : true;
+      return `<div class="chart-bar" style="height:${h}px;background:${isUp?'#ee4444':'#44bb44'}"></div>`;
+    }).join('');
+
+    return `
+    <div class="stock-row">
+      <div class="stock-info">
+        <div class="stock-name">${s.name}</div>
+        <div class="stock-ticker">${s.ticker} · ${s.desc}</div>
+        <div class="stock-chart">${chartBars}</div>
+      </div>
+      <div class="stock-price-block">
+        <div class="stock-price ${priceClass}">¥${price.toFixed(2)}</div>
+        <div class="stock-change ${changeClass}">${change>=0?'+':''}${change.toFixed(2)} (${changePct}%)</div>
+      </div>
+      <div>
+        <div class="stock-holding ${holdingClass}">
+          ${holding.shares > 0
+            ? `持有 ${holding.shares}股 均价¥${holding.avgCost.toFixed(2)}<br>浮盈亏: ${pnl>=0?'+':''}¥${pnl}`
+            : '未持有'}
+        </div>
+      </div>
+      <div class="stock-trade">
+        <input type="number" class="trade-input" id="tradeQty_${s.id}" value="1" min="1" max="9999">
+        <button class="trade-btn trade-buy" onclick="tradeStock('${s.id}','buy')">买入</button>
+        <button class="trade-btn trade-sell" onclick="tradeStock('${s.id}','sell')">卖出</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function tradeStock(stockId, type) {
+  const input = document.getElementById('tradeQty_' + stockId);
+  const qty = input ? Math.max(1, parseInt(input.value) || 1) : 1;
+  if (type === 'buy') buyStock(stockId, qty);
+  else sellStock(stockId, qty);
+}
+
+// ══════════════════════════════════════════════════════
+// Phase 3：银行系统
+// ══════════════════════════════════════════════════════
+function doDeposit() {
+  const input = document.getElementById('depositInput');
+  const amount = Math.floor(parseFloat(input.value) || 0);
+  if (amount < 100) { addNarrative('最少存入 ¥100', 'bad'); return; }
+  if (STATE.money < amount) { addNarrative('余额不足！', 'bad'); return; }
+  STATE.money -= amount;
+  STATE.bankDeposit += amount;
+  input.value = '';
+  addNarrative(`🏦 存入银行 ¥${amount}，活期存款 ¥${STATE.bankDeposit}`, 'good');
+  updateP3UI(); updateUI();
+}
+
+function doWithdraw() {
+  const input = document.getElementById('withdrawInput');
+  const amount = Math.floor(parseFloat(input.value) || 0);
+  if (amount < 100) { addNarrative('最少取出 ¥100', 'bad'); return; }
+  if (STATE.bankDeposit < amount) { addNarrative('存款不足！', 'bad'); return; }
+  STATE.bankDeposit -= amount;
+  STATE.money += amount;
+  input.value = '';
+  addNarrative(`🏦 从银行取出 ¥${amount}，当前存款 ¥${STATE.bankDeposit}`, 'good');
+  updateP3UI(); updateUI();
+}
+
+function doLoan() {
+  const input = document.getElementById('loanInput');
+  const amount = Math.floor(parseFloat(input.value) || 0);
+  if (amount < 500) { addNarrative('贷款最低 ¥500', 'bad'); return; }
+  if (STATE.bankLoan > 0) { addNarrative('还有未还清的贷款，请先还款', 'bad'); return; }
+  STATE.bankLoan = amount;
+  STATE.bankLoanDays = Math.floor(amount / 100) + 30; // 还款期限
+  STATE.money += amount;
+  input.value = '';
+  addNarrative(`💳 贷款 ¥${amount} 到账，需在 ${STATE.bankLoanDays} 天内还清`, 'warn');
+  updateP3UI(); updateUI();
+}
+
+function doRepayLoan() {
+  if (STATE.bankLoan <= 0) { addNarrative('没有未还的贷款', 'system'); return; }
+  if (STATE.money < STATE.bankLoan) { addNarrative(`余额不足，还需 ¥${STATE.bankLoan}`, 'bad'); return; }
+  STATE.money -= STATE.bankLoan;
+  addNarrative(`✅ 已还清贷款 ¥${STATE.bankLoan}`, 'good');
+  STATE.bankLoan = 0;
+  STATE.bankLoanDays = 0;
+  updateP3UI(); updateUI();
+}
+
+function tickBank() {
+  // 存款生息
+  if (STATE.bankDeposit > 0) {
+    const interest = Math.floor(STATE.bankDeposit * STATE.bankDepositRate);
+    if (interest > 0) {
+      STATE.bankDeposit += interest;
+      // 每7天通知一次
+      if (STATE.day % 7 === 0) {
+        addNarrative(`🏦 银行利息到账 +¥${interest}（存款共 ¥${STATE.bankDeposit}）`, 'good');
+      }
+    }
+  }
+  // 贷款利息
+  if (STATE.bankLoan > 0) {
+    const interest = Math.ceil(STATE.bankLoan * STATE.bankLoanRate);
+    STATE.bankLoan += interest;
+    STATE.bankLoanDays--;
+    if (STATE.bankLoanDays <= 0) {
+      // 逾期：强制扣款或影响心情
+      if (STATE.money >= STATE.bankLoan) {
+        STATE.money -= STATE.bankLoan;
+        addNarrative(`⚠️ 贷款到期自动还款 ¥${STATE.bankLoan}`, 'warn');
+        STATE.bankLoan = 0;
+      } else {
+        // 没钱还：心情大降，绩效受损
+        STATE.mood = cap(STATE.mood - 20);
+        STATE.perf = cap(STATE.perf - 10);
+        addNarrative(`🚨 贷款逾期！信用受损，心情-20，绩效-10`, 'bad');
+        STATE.bankLoanDays = 10; // 再给10天
+      }
+    }
+  }
+}
+
+function renderBankPanel() {
+  const depEl = document.getElementById('bankDepositDisplay');
+  const loanEl = document.getElementById('bankLoanDisplay');
+  const loanInfo = document.getElementById('loanInfo');
+  if (depEl) depEl.textContent = `¥${STATE.bankDeposit.toLocaleString()}`;
+  if (loanEl) loanEl.textContent = `¥${STATE.bankLoan.toLocaleString()}`;
+  if (loanInfo) {
+    loanInfo.textContent = STATE.bankLoan > 0
+      ? `贷款余额 ¥${STATE.bankLoan}，剩余 ${STATE.bankLoanDays} 天`
+      : '暂无贷款';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// Phase 3：商城系统
+// ══════════════════════════════════════════════════════
+let _shopCategory = 'all';
+function filterShop(cat) {
+  _shopCategory = cat;
+  document.querySelectorAll('.shop-cat-btn').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+  renderShopGrid();
+}
+
+function renderShopGrid() {
+  const grid = document.getElementById('shopGrid');
+  if (!grid) return;
+  const items = _shopCategory === 'all' ? SHOP_ITEMS : SHOP_ITEMS.filter(i => i.category === _shopCategory);
+  grid.innerHTML = items.map(item => {
+    const canAfford = STATE.money >= item.price;
+    const alreadyOwned = item.oneTime && STATE.activeBuffs.some(b => b.id === item.id);
+    const disabled = !canAfford || alreadyOwned;
+    const fxParts = [];
+    if (item.effect) Object.entries(item.effect).forEach(([k,v]) => {
+      fxParts.push(`${{energy:'体力',mood:'心情',focus:'专注',perf:'绩效',health:'健康'}[k]||k}+${v}`);
+    });
+    if (item.buffEffect) Object.entries(item.buffEffect).forEach(([k,v]) => {
+      fxParts.push(`每天${{energy:'体力',mood:'心情',focus:'专注',perf:'绩效',health:'健康'}[k]||k}+${v}×${item.buffDays}天`);
+    });
+    return `
+    <div class="shop-item${disabled?' disabled':''}" onclick="${disabled?'':'buyShopItem(\''+item.id+'\')'}">
+      <div class="shop-item-header">
+        <div class="shop-item-name">${item.emoji} ${item.name}</div>
+        <div class="shop-item-price">¥${item.price}</div>
+      </div>
+      <div class="shop-item-desc">${item.desc}</div>
+      <div class="shop-item-fx">${fxParts.join(' · ')}${alreadyOwned?' (已装备)':''}</div>
+    </div>`;
+  }).join('');
+
+  // Buff列表
+  renderBuffList();
+}
+
+function renderBuffList() {
+  const buffList = document.getElementById('buffList');
+  if (!buffList) return;
+  if (STATE.activeBuffs.length === 0) {
+    buffList.innerHTML = '<div style="font-size:0.72rem;color:#444">暂无生效中的装备/药品</div>';
+    return;
+  }
+  buffList.innerHTML = '<div style="font-size:0.72rem;color:#666;margin-bottom:4px">生效中的 Buff：</div>' +
+    STATE.activeBuffs.map(b => {
+      const fxDesc = Object.entries(b.effect).map(([k,v]) => `${k}+${v}`).join(' ');
+      return `<div class="buff-tag"><span class="buff-tag-name">${b.emoji} ${b.name}</span><span class="buff-tag-days">${fxDesc}/天 · 剩余${b.daysLeft}天</span></div>`;
+    }).join('');
+}
+
+function buyShopItem(itemId) {
+  const item = SHOP_ITEMS.find(i => i.id === itemId);
+  if (!item) return;
+  if (STATE.money < item.price) { addNarrative('💸 余额不足！', 'bad'); return; }
+  if (item.oneTime && STATE.activeBuffs.some(b => b.id === item.id)) {
+    addNarrative('该装备已在使用中', 'system'); return;
+  }
+  STATE.money -= item.price;
+
+  // 立即效果
+  if (item.effect) {
+    Object.entries(item.effect).forEach(([k, v]) => {
+      if (k === 'money') STATE.money += v;
+      else STATE[k] = cap(STATE[k] + v);
+    });
+  }
+
+  // Buff效果
+  if (item.buffDays && item.buffEffect) {
+    STATE.activeBuffs.push({
+      id: item.id, name: item.name, emoji: item.emoji,
+      effect: item.buffEffect, daysLeft: item.buffDays
+    });
+  }
+
+  const fxDesc = item.effect ? Object.entries(item.effect).map(([k,v])=>`${k}+${v}`).join('，') : '';
+  addNarrative(`🛒 购买【${item.emoji}${item.name}】¥${item.price}${fxDesc?'，'+fxDesc:''}`, 'good');
+  if (item.buffDays) addNarrative(`✨ Buff已激活，持续 ${item.buffDays} 天`, 'special');
+
+  updateUI();
+  updateP3UI();
+}
+
+function tickBuffs() {
+  // 每天应用并倒计时 Buff
+  STATE.activeBuffs = STATE.activeBuffs.filter(b => {
+    Object.entries(b.effect).forEach(([k,v]) => {
+      STATE[k] = cap(STATE[k] + v);
+    });
+    b.daysLeft--;
+    if (b.daysLeft <= 0) {
+      addNarrative(`⏰ ${b.emoji}${b.name} 效果结束`, 'system');
+      return false;
+    }
+    return true;
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// Phase 3：期权/RSU 行权系统
+// ══════════════════════════════════════════════════════
+function grantOptions(amount) {
+  const co = COMPANIES[STATE.companyId] || COMPANIES.byteuniverse;
+  const strikePrice = STATE.stockPrices[STATE.companyId] || STOCKS[STATE.companyId]?.initPrice || 50;
+  STATE.vestingSchedule.push({
+    grantDay: STATE.day,
+    total: amount,
+    vested: 0,
+    strikePrice: strikePrice,
+    vestPeriod: 180, // 每180天归属25%
+  });
+  STATE.optionStrikePrice = strikePrice;
+  addNarrative(`🔑 获得期权 ${amount} 份，行权价 ¥${strikePrice.toFixed(2)}`, 'special');
+}
+
+function tickOptions() {
+  // 检查每个归属计划的归属情况
+  STATE.vestingSchedule.forEach(plan => {
+    const daysElapsed = STATE.day - plan.grantDay;
+    const vestBatch = Math.floor(daysElapsed / plan.vestPeriod);
+    const newVested = Math.min(plan.total, Math.floor(plan.total * vestBatch * 0.25));
+    if (newVested > plan.vested) {
+      const delta = newVested - plan.vested;
+      plan.vested = newVested;
+      STATE.options += delta;
+      addNarrative(`🎉 期权归属 +${delta} 份（共持有 ${STATE.options} 份）`, 'special');
+    }
+  });
+}
+
+function exerciseOptions(planIdx, amount) {
+  const plan = STATE.vestingSchedule[planIdx];
+  if (!plan) return;
+  const available = plan.vested - (plan.exercised || 0);
+  if (amount > available) { addNarrative('可行权份数不足', 'bad'); return; }
+  const currentPrice = STATE.stockPrices[STATE.companyId] || plan.strikePrice;
+  if (currentPrice <= plan.strikePrice) {
+    addNarrative(`📉 当前股价 ¥${currentPrice.toFixed(2)} 低于行权价 ¥${plan.strikePrice.toFixed(2)}，行权亏损，已取消`, 'bad');
+    return;
+  }
+  const profit = Math.floor((currentPrice - plan.strikePrice) * amount);
+  STATE.money += profit;
+  plan.exercised = (plan.exercised || 0) + amount;
+  STATE.options -= amount;
+  addNarrative(`💰 行权 ${amount} 份期权！股价 ¥${currentPrice.toFixed(2)} vs 行权价 ¥${plan.strikePrice.toFixed(2)}，获利 ¥${profit}`, 'special');
+  updateUI(); updateP3UI();
+}
+
+function renderOptionPanel() {
+  const el = document.getElementById('optionPanelContent');
+  if (!el) return;
+  const grade = GRADES[STATE.gradeIdx];
+  const coStock = STATE.stockPrices[STATE.companyId] || STOCKS[STATE.companyId]?.initPrice || 0;
+
+  if (STATE.gradeIdx < 2 && STATE.vestingSchedule.length === 0) {
+    el.innerHTML = `<div style="color:#555;font-size:0.82rem;text-align:center;padding:20px">晋升至 P6 后解锁期权</div>`;
+    return;
+  }
+
+  const plansHTML = STATE.vestingSchedule.length === 0
+    ? '<div style="color:#555;font-size:0.78rem">暂无期权归属计划</div>'
+    : STATE.vestingSchedule.map((plan, i) => {
+      const available = plan.vested - (plan.exercised || 0);
+      const progress = plan.total > 0 ? (plan.vested / plan.total * 100) : 0;
+      const profitPer = coStock - plan.strikePrice;
+      const totalProfit = Math.floor(profitPer * available);
+      return `
+      <div class="option-row">
+        <div class="option-row-header">
+          <div class="option-title">第 ${plan.grantDay} 天授予 · 共 ${plan.total} 份</div>
+          <div class="option-status">已归属 ${plan.vested} 份 · 可行权 ${available} 份</div>
+        </div>
+        <div class="option-progress-bg"><div class="option-progress-fill" style="width:${progress}%"></div></div>
+        <div class="option-detail-row">行权价 <span>¥${plan.strikePrice.toFixed(2)}</span></div>
+        <div class="option-detail-row">当前股价 <span>¥${coStock.toFixed(2)}</span></div>
+        <div class="option-detail-row">行权利润/份 <span style="color:${profitPer>=0?'#ee4444':'#44bb44'}">${profitPer>=0?'+':''}¥${profitPer.toFixed(2)}</span></div>
+        <div class="option-detail-row">预计总收益 <span style="color:${totalProfit>=0?'#ee4444':'#44bb44'}">${totalProfit>=0?'+':''}¥${totalProfit}</span></div>
+        ${available > 0 && profitPer > 0 ? `<button class="vest-btn" onclick="exerciseOptions(${i}, ${available})">行权全部 (${available} 份) → +¥${totalProfit}</button>` : ''}
+        ${available > 0 && profitPer <= 0 ? `<div style="font-size:0.72rem;color:#555">当前行权价高于市价，建议等待</div>` : ''}
+        ${available === 0 ? `<div style="font-size:0.72rem;color:#555">暂无可行权份额</div>` : ''}
+      </div>`;
+    }).join('');
+
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:#888;margin-bottom:10px">
+      <span>总期权份数：<strong style="color:#cc88ff">${STATE.options}</strong> 份</span>
+      <span>${COMPANIES[STATE.companyId]?.name || ''} 当前股价：<strong style="color:#f0c040">¥${coStock.toFixed(2)}</strong></span>
+    </div>
+    <div class="option-list">${plansHTML}</div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// Phase 3：统一 UI 更新
+// ══════════════════════════════════════════════════════
+function switchP3Tab(tab) {
+  document.querySelectorAll('.p3-tab').forEach((el,i) => {
+    const tabs = ['shop','bank','stock','option'];
+    el.classList.toggle('active', tabs[i] === tab);
+  });
+  document.querySelectorAll('.p3-panel').forEach(el => el.classList.remove('active'));
+  const panel = document.getElementById('p3-' + tab);
+  if (panel) panel.classList.add('active');
+  updateP3UI();
+}
+
+function updateP3UI() {
+  renderShopGrid();
+  renderBankPanel();
+  renderStockList();
+  renderOptionPanel();
 }
 
 // ══════════════════════════════════════════════════════
