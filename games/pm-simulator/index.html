@@ -464,8 +464,8 @@ const CLASSES = {
     initStats: { energy:75, mood:65, focus:80, perf:60, social:70 },
     bonus: { perf: 8, social: 5 },
     specialActions: [
-      { id:'write_prd', name:'写PRD', emoji:'📝', cost:{energy:15,focus:10}, gain:{perf:20,mood:-5}, desc:'憋一份需求文档，绩效+20但容易掉心情' },
-      { id:'demand_meeting', name:'需求评审', emoji:'🗣️', cost:{energy:10,mood:-8}, gain:{perf:15,social:10}, desc:'组织需求评审会，绩效和人脉都有收益' },
+      { id:'write_prd', name:'写PRD', emoji:'📝', cost:{energy:18,mood:-8}, gain:{perf:22}, desc:'憋一份需求文档，绩效提升但体力和心情都在消耗' },
+      { id:'demand_meeting', name:'需求评审', emoji:'🗣️', cost:{energy:12,mood:-10}, gain:{perf:15,social:10}, desc:'组织需求评审会，体力和心情都要搭进去换绩效和人脉' },
     ]
   },
   fe: {
@@ -476,8 +476,8 @@ const CLASSES = {
     initStats: { energy:80, mood:70, focus:85, perf:55, social:50 },
     bonus: { focus: 8, perf: 5 },
     specialActions: [
-      { id:'write_component', name:'写组件库', emoji:'🧩', cost:{energy:20,focus:15}, gain:{perf:25,mood:5}, desc:'封装通用组件，绩效大涨，还有成就感' },
-      { id:'debug_ui', name:'Debug样式', emoji:'🔍', cost:{energy:10,mood:-10}, gain:{perf:12,focus:8}, desc:'在浏览器控制台苦苦排查像素偏移' },
+      { id:'write_component', name:'写组件库', emoji:'🧩', cost:{energy:22,mood:-5}, gain:{perf:25,focus:8}, desc:'封装通用组件，体力消耗大，但绩效和专注度都有收益' },
+      { id:'debug_ui', name:'Debug样式', emoji:'🔍', cost:{energy:12,mood:-12}, gain:{perf:12,focus:8}, desc:'在浏览器控制台苦苦排查像素偏移，心情堪忧' },
     ]
   },
   be: {
@@ -488,8 +488,8 @@ const CLASSES = {
     initStats: { energy:85, mood:60, focus:80, perf:65, social:40 },
     bonus: { energy: 8, perf: 6 },
     specialActions: [
-      { id:'optimize_sql', name:'SQL调优', emoji:'🗄️', cost:{energy:15,focus:20}, gain:{perf:28,mood:8}, desc:'把慢查询从3秒优化到30ms，满满成就感' },
-      { id:'write_api', name:'写接口文档', emoji:'📄', cost:{energy:8,mood:-5}, gain:{perf:15,social:8}, desc:'认认真真写Swagger，前端同事对你刮目相看' },
+      { id:'optimize_sql', name:'SQL调优', emoji:'🗄️', cost:{energy:18,mood:-5}, gain:{perf:28,focus:8}, desc:'把慢查询从3秒优化到30ms，体力消耗大但满满成就感' },
+      { id:'write_api', name:'写接口文档', emoji:'📄', cost:{energy:10,mood:-8}, gain:{perf:15,social:8}, desc:'认认真真写Swagger，前端同事对你刮目相看' },
     ]
   },
   qa: {
@@ -500,8 +500,8 @@ const CLASSES = {
     initStats: { energy:75, mood:75, focus:75, perf:58, social:55 },
     bonus: { mood: 8, focus: 5 },
     specialActions: [
-      { id:'write_cases', name:'写测试用例', emoji:'📋', cost:{energy:12,focus:15}, gain:{perf:22,mood:5}, desc:'用例写得越全，上线越有底气' },
-      { id:'find_bug', name:'蹲Bug专项', emoji:'🐞', cost:{energy:18,mood:-5}, gain:{perf:30,social:5}, desc:'死磕某个模块，找到隐藏Bug，绩效爆炸' },
+      { id:'write_cases', name:'写测试用例', emoji:'📋', cost:{energy:15,mood:-5}, gain:{perf:22,focus:8}, desc:'用例写得越全，上线越有底气，但体力在悄悄流失' },
+      { id:'find_bug', name:'蹲Bug专项', emoji:'🐞', cost:{energy:20,mood:-8}, gain:{perf:30,social:5}, desc:'死磕某个模块，找到隐藏Bug，绩效爆炸但体力告急' },
     ]
   },
   design: {
@@ -512,8 +512,8 @@ const CLASSES = {
     initStats: { energy:70, mood:80, focus:70, perf:55, social:65 },
     bonus: { mood: 10, social: 5 },
     specialActions: [
-      { id:'design_ui', name:'出UI方案', emoji:'🖼️', cost:{energy:20,focus:15}, gain:{perf:25,mood:10}, desc:'出三套方案，总有一款能过稿' },
-      { id:'design_review', name:'设计走查', emoji:'✏️', cost:{energy:8,mood:-8}, gain:{perf:18,social:12}, desc:'和开发对齐实现，争取像素级还原' },
+      { id:'design_ui', name:'出UI方案', emoji:'🖼️', cost:{energy:22,mood:-5}, gain:{perf:25,social:8}, desc:'出三套方案，总有一款能过稿，体力消耗不小' },
+      { id:'design_review', name:'设计走查', emoji:'✏️', cost:{energy:10,mood:-10}, gain:{perf:18,social:12}, desc:'和开发对齐实现，心情受损但绩效和人脉有收益' },
     ]
   },
   ops: {
@@ -524,8 +524,8 @@ const CLASSES = {
     initStats: { energy:65, mood:75, focus:60, perf:60, social:85 },
     bonus: { social: 12, mood: 3 },
     specialActions: [
-      { id:'plan_event', name:'策划活动', emoji:'🎉', cost:{energy:25,focus:15}, gain:{perf:28,social:15}, desc:'策划一场用户活动，数据好的话KPI直接拉满' },
-      { id:'write_copy', name:'写文案', emoji:'✍️', cost:{energy:10,mood:-5}, gain:{perf:18,mood:8}, desc:'憋出一篇10万+文案，心情和绩效双收' },
+      { id:'plan_event', name:'策划活动', emoji:'🎉', cost:{energy:28,mood:-8}, gain:{perf:28,social:15}, desc:'策划一场用户活动，体力消耗巨大，但KPI直接拉满' },
+      { id:'write_copy', name:'写文案', emoji:'✍️', cost:{energy:12,mood:-5}, gain:{perf:18,social:8}, desc:'憋出一篇10万+文案，绩效和人脉双收' },
     ]
   },
 };
@@ -534,16 +534,20 @@ const CLASSES = {
 // 通用行动
 // ══════════════════════════════════════════════════════
 const COMMON_ACTIONS = [
-  { id:'work_hard',   name:'专心工作',  emoji:'💻', cost:{energy:20,mood:-5},  gain:{perf:18,money:80},  desc:'老实干活，不求有功但求无过' },
-  { id:'slack_off',   name:'摸鱼划水',  emoji:'🐟', cost:{energy:-5,mood:10},  gain:{perf:-8},           desc:'刷刷手机，舒服是舒服，就是有点亏心' },
-  { id:'coffee',      name:'喝杯咖啡',  emoji:'☕', cost:{money:-18},          gain:{energy:20,focus:15},desc:'工位旁的咖啡机，打工人续命神器' },
-  { id:'lunch',       name:'好好吃饭',  emoji:'🍱', cost:{money:-35,energy:-5},gain:{mood:20,energy:30}, desc:'点个好饭，精神都为之一振' },
-  { id:'team_chat',   name:'和同事聊天',emoji:'💬', cost:{energy:-5,focus:-8}, gain:{mood:15,social:8},  desc:'闲扯几句，说不定有什么小道消息' },
-  { id:'learn_skill', name:'自我提升',  emoji:'📚', cost:{energy:15,mood:-5},  gain:{focus:12,perf:10},  desc:'利用工作时间学点新东西，滑不滑在乎自己' },
-  { id:'nap',         name:'偷偷小睡',  emoji:'😴', cost:{focus:-10,mood:5},   gain:{energy:25},         desc:'午休趴一会儿，体力回回' },
-  { id:'overtime',    name:'主动加班',  emoji:'🌙', cost:{energy:25,mood:-15}, gain:{perf:22,money:120}, desc:'卷是卷了，但工资也多了点' },
-  { id:'1on1_boss',   name:'和老板1on1',emoji:'👔', cost:{mood:-10,energy:10}, gain:{perf:12,social:15}, desc:'汇报工作，刷刷存在感，有时候有惊喜' },
-  { id:'sick_leave',  name:'请病假',    emoji:'🤒', cost:{perf:-15,mood:20},   gain:{energy:40},         desc:'真假病假全凭良心，但确实休息到了' },
+  // 工作类：扣体力，提绩效，心情微降
+  { id:'work_hard',   name:'专心工作',  emoji:'💻', cost:{energy:20,mood:-5},   gain:{perf:18,money:80},   desc:'老实干活，不求有功但求无过' },
+  { id:'overtime',    name:'主动加班',  emoji:'🌙', cost:{energy:30,mood:-15},  gain:{perf:25,money:150},  desc:'卷是卷了，但工资也多了点' },
+  { id:'learn_skill', name:'自我提升',  emoji:'📚', cost:{energy:15,mood:-5},   gain:{focus:12,perf:10},   desc:'利用工作时间学点新东西，提升自己' },
+  { id:'1on1_boss',   name:'和老板1on1',emoji:'👔', cost:{energy:12,mood:-8},   gain:{perf:12,social:15},  desc:'汇报工作，刷刷存在感，有时候有惊喜' },
+  // 休息类：体力回复，不扣绩效
+  { id:'coffee',      name:'喝杯咖啡',  emoji:'☕', cost:{money:-18},           gain:{energy:20,focus:15}, desc:'工位旁的咖啡机，打工人续命神器' },
+  { id:'nap',         name:'偷偷小睡',  emoji:'😴', cost:{},                    gain:{energy:25,mood:5},   desc:'午休趴一会儿，体力悄悄回来了' },
+  { id:'sick_leave',  name:'请病假',    emoji:'🤒', cost:{perf:-15},            gain:{energy:40,mood:20},  desc:'真假病假全凭良心，但确实休息到了' },
+  // 吃饭：花钱回体力，心情提升
+  { id:'lunch',       name:'好好吃饭',  emoji:'🍱', cost:{money:-40},           gain:{mood:20,energy:25},  desc:'点个好饭，精神都为之一振' },
+  // 摸鱼/聊天：体力不变，心情提升，绩效或存款降低
+  { id:'slack_off',   name:'摸鱼划水',  emoji:'🐟', cost:{perf:-10},            gain:{mood:15},            desc:'刷刷手机，舒服是舒服，但绩效在悄悄溜走' },
+  { id:'team_chat',   name:'和同事聊天',emoji:'💬', cost:{perf:-5,focus:-8},    gain:{mood:18,social:10},  desc:'闲扯几句，心情好多了，但活还没干' },
 ];
 
 // ══════════════════════════════════════════════════════
