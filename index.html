@@ -1,35 +1,1142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>别笑！你也过不了第三关！</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>打工模拟器 · 互联网人版</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0d0d0d;
+  color: #e0e0e0;
+  font-family: 'PingFang SC', 'Microsoft YaHei', monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* ══ 开始页面 ══ */
+#startScreen {
+  width: 100%; max-width: 680px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 20px; padding: 40px 20px;
+}
+.game-title {
+  font-size: 2.2rem; font-weight: bold;
+  color: #fff; letter-spacing: 4px;
+  text-shadow: 0 0 30px rgba(240,192,64,0.5);
+  text-align: center;
+}
+.game-subtitle { font-size: 0.85rem; color: #666; text-align: center; letter-spacing: 2px; }
+.start-menu {
+  width: 100%; background: #1a1a1a;
+  border: 1px solid #2a2a2a; border-radius: 12px;
+  padding: 24px; display: flex; flex-direction: column; gap: 12px;
+}
+.start-menu h2 { font-size: 0.9rem; color: #888; margin-bottom: 4px; }
+.start-btn {
+  background: #1e1e1e; border: 1px solid #333; border-radius: 8px;
+  color: #ddd; padding: 13px 18px; cursor: pointer;
+  font-size: 0.9rem; text-align: left; transition: all 0.2s;
+  display: flex; align-items: center; gap: 10px;
+}
+.start-btn:hover { background: #2a2a2a; border-color: #555; color: #fff; }
+.start-btn.primary { border-color: #f0c040; color: #f0c040; }
+.start-btn.primary:hover { background: rgba(240,192,64,0.1); }
+.start-btn .btn-icon { font-size: 1.2rem; width: 28px; text-align: center; }
+.start-btn .btn-text { flex: 1; }
+.start-btn .btn-sub { font-size: 0.7rem; color: #555; display: block; margin-top: 2px; }
+.start-btn.has-save .btn-sub { color: #888; }
+.start-btn.danger { border-color: #aa3333; color: #cc5555; }
+.start-btn.danger:hover { background: rgba(170,50,50,0.1); }
+
+/* ══ 职业选择页面 ══ */
+#classScreen {
+  width: 100%; max-width: 680px;
+  display: none; flex-direction: column; gap: 16px;
+}
+.screen-title {
+  font-size: 1.1rem; color: #fff; text-align: center;
+  letter-spacing: 2px; padding: 10px 0;
+}
+.class-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+}
+.class-card {
+  background: #1a1a1a; border: 2px solid #2a2a2a;
+  border-radius: 12px; padding: 18px 14px;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.class-card:hover { border-color: #555; background: #222; transform: translateY(-2px); }
+.class-card.selected { border-color: #f0c040; background: rgba(240,192,64,0.05); }
+.class-emoji { font-size: 2rem; text-align: center; }
+.class-name { font-size: 1rem; font-weight: bold; color: #fff; text-align: center; }
+.class-desc { font-size: 0.72rem; color: #888; line-height: 1.5; text-align: center; }
+.class-tags { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 4px; }
+.class-tag {
+  font-size: 0.62rem; padding: 2px 7px;
+  border-radius: 3px; background: #252525; color: #aaa;
+}
+.class-tag.up { background: #1a2a1a; color: #88ee88; }
+.class-tag.down { background: #2a1a1a; color: #ee8888; }
+.name-input-row {
+  display: flex; gap: 10px; align-items: center;
+}
+.name-input-row label { font-size: 0.85rem; color: #888; white-space: nowrap; }
+.name-input-row input {
+  flex: 1; background: #1a1a1a; border: 1px solid #333;
+  border-radius: 6px; color: #fff; padding: 8px 12px;
+  font-size: 0.9rem; outline: none;
+}
+.name-input-row input:focus { border-color: #f0c040; }
+.confirm-btn {
+  background: #f0c040; color: #000; border: none;
+  border-radius: 8px; padding: 12px 24px;
+  font-size: 1rem; font-weight: bold; cursor: pointer;
+  transition: opacity 0.2s; width: 100%;
+}
+.confirm-btn:hover { opacity: 0.85; }
+.back-link {
+  font-size: 0.8rem; color: #555; text-align: center;
+  cursor: pointer; padding: 4px;
+}
+.back-link:hover { color: #888; }
+
+/* ══ 存档槽 ══ */
+#saveSlotScreen {
+  width: 100%; max-width: 680px;
+  display: none; flex-direction: column; gap: 16px;
+}
+.save-slot {
+  background: #1a1a1a; border: 1px solid #2a2a2a;
+  border-radius: 10px; padding: 16px 18px;
+  display: flex; align-items: center; gap: 14px; cursor: pointer;
+  transition: all 0.2s;
+}
+.save-slot:hover { border-color: #444; background: #222; }
+.save-slot.empty { cursor: default; }
+.save-slot .slot-num {
+  font-size: 1.4rem; color: #444; font-weight: bold;
+  width: 32px; text-align: center; flex-shrink: 0;
+}
+.save-slot .slot-info { flex: 1; }
+.save-slot .slot-name { font-size: 0.9rem; color: #ddd; font-weight: bold; }
+.save-slot .slot-meta { font-size: 0.72rem; color: #666; margin-top: 3px; }
+.save-slot .slot-actions { display: flex; gap: 8px; }
+.slot-btn {
+  font-size: 0.72rem; padding: 4px 10px;
+  border-radius: 4px; cursor: pointer; border: 1px solid #333;
+  background: #222; color: #aaa; transition: all 0.15s;
+}
+.slot-btn:hover { background: #2a2a2a; color: #fff; }
+.slot-btn.load { border-color: #4488aa; color: #88ccee; }
+.slot-btn.load:hover { background: rgba(68,136,170,0.15); }
+.slot-btn.del { border-color: #884444; color: #cc6666; }
+.slot-btn.del:hover { background: rgba(136,68,68,0.15); }
+.slot-empty-text { color: #444; font-size: 0.82rem; }
+.new-game-here {
+  font-size: 0.75rem; color: #f0c040; margin-top: 2px; cursor: pointer;
+}
+
+/* ══ 主游戏 ══ */
+#gameScreen {
+  width: 100%; max-width: 680px;
+  display: none; flex-direction: column; gap: 14px;
+}
+h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
+.subtitle { font-size: 0.75rem; color: #555; margin-bottom: 20px; }
+
+/* 状态栏 */
+.status-bar { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 18px; }
+.status-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.player-name { font-size: 0.9rem; color: #aaa; }
+.player-name span { color: #fff; font-weight: bold; }
+.day-info { font-size: 0.8rem; color: #555; }
+.day-info span { color: #f0c040; }
+.level-badge {
+  display: inline-block; font-size: 0.7rem;
+  background: #2a1a3a; border: 1px solid #5a3a8a;
+  color: #cc88ff; border-radius: 4px; padding: 2px 7px; margin-left: 6px;
+}
+.class-badge {
+  display: inline-block; font-size: 0.7rem;
+  border-radius: 4px; padding: 2px 7px; margin-left: 6px;
+}
+.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.stat-item { display: flex; flex-direction: column; gap: 4px; }
+.stat-label { font-size: 0.65rem; color: #666; }
+.stat-bar-bg { height: 6px; background: #2a2a2a; border-radius: 3px; overflow: hidden; }
+.stat-bar { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+.stat-value { font-size: 0.7rem; color: #ccc; }
+.bar-energy { background: #f0c040; }
+.bar-mood   { background: #66bbff; }
+.bar-focus  { background: #88ee88; }
+.bar-perf   { background: #ff9966; }
+.bar-social { background: #cc88ff; }
+.money-row { margin-top: 10px; display: flex; justify-content: space-between; font-size: 0.8rem; color: #888; flex-wrap: wrap; gap: 4px; }
+.money-row span { color: #f0c040; font-weight: bold; }
+
+/* 时段 */
+.time-phase { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 18px; display: flex; align-items: center; gap: 12px; }
+.phase-dots { display: flex; gap: 6px; }
+.phase-dot { width: 10px; height: 10px; border-radius: 50%; background: #2a2a2a; }
+.phase-dot.active { background: #f0c040; }
+.phase-dot.done { background: #3a3a3a; }
+.phase-label { font-size: 0.8rem; color: #888; flex: 1; }
+.phase-label span { color: #f0c040; }
+
+/* 行动 */
+.actions-panel { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 18px; }
+.actions-title { font-size: 0.8rem; color: #555; margin-bottom: 12px; letter-spacing: 1px; }
+.actions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.action-btn {
+  background: #222; border: 1px solid #2e2e2e; border-radius: 8px;
+  color: #ccc; padding: 10px 12px; cursor: pointer;
+  font-size: 0.8rem; text-align: left; transition: all 0.15s;
+  display: flex; flex-direction: column; gap: 4px; position: relative;
+}
+.action-btn:hover:not(:disabled) { background: #2a2a2a; border-color: #444; color: #fff; }
+.action-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.action-btn .action-name { font-weight: bold; font-size: 0.82rem; }
+.action-btn .action-fx { font-size: 0.68rem; color: #666; }
+.action-btn .action-fx .up { color: #88ee88; }
+.action-btn .action-fx .down { color: #ee8888; }
+.action-btn.special { border-color: #5a3a8a; }
+.action-btn.special:hover:not(:disabled) { background: rgba(90,58,138,0.2); }
+.action-btn .class-only {
+  position: absolute; top: 5px; right: 6px;
+  font-size: 0.58rem; padding: 1px 5px;
+  border-radius: 2px; background: #2a1a3a; color: #cc88ff;
+}
+
+/* 叙事面板 */
+.narrative-panel { background: #111; border: 1px solid #1e1e1e; border-radius: 10px; padding: 14px 18px; max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+.narrative-line { font-size: 0.8rem; line-height: 1.6; padding: 4px 0; border-bottom: 1px solid #1a1a1a; }
+.narrative-line:last-child { border-bottom: none; }
+.narrative-line.good { color: #88ee88; }
+.narrative-line.bad { color: #ee8888; }
+.narrative-line.warn { color: #f0c040; }
+.narrative-line.system { color: #555; font-style: italic; }
+.narrative-line.special { color: #cc88ff; }
+
+/* 按钮行 */
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.game-btn {
+  flex: 1; min-width: 120px; background: #1a1a1a;
+  border: 1px solid #333; border-radius: 8px; color: #aaa;
+  padding: 10px 16px; cursor: pointer; font-size: 0.82rem;
+  transition: all 0.15s;
+}
+.game-btn:hover:not(:disabled) { background: #222; border-color: #555; color: #fff; }
+.game-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.game-btn.primary { border-color: #f0c040; color: #f0c040; }
+.game-btn.primary:hover:not(:disabled) { background: rgba(240,192,64,0.1); }
+#saveHint { font-size: 0.72rem; color: #88ee88; text-align: right; min-height: 1rem; }
+
+/* 游戏结束 */
+.game-over {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85); z-index: 100;
+  align-items: center; justify-content: center;
+}
+.game-over.show { display: flex; }
+.game-over-box {
+  background: #1a1a1a; border: 1px solid #333;
+  border-radius: 16px; padding: 36px; text-align: center;
+  max-width: 440px; width: 90%;
+}
+.game-over-box h2 { font-size: 1.4rem; color: #fff; margin-bottom: 8px; }
+.game-over-box p { font-size: 0.85rem; color: #888; margin-bottom: 24px; line-height: 1.6; }
+.game-over-box .btn-row { justify-content: center; }
+
+/* 事件弹窗 */
+.event-modal {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.82); z-index: 99;
+  align-items: center; justify-content: center;
+}
+.event-modal.show { display: flex; }
+.event-box {
+  background: #1a1a1a; border: 1px solid #3a3a3a;
+  border-radius: 14px; padding: 28px; max-width: 440px;
+  width: 90%; display: flex; flex-direction: column; gap: 14px;
+}
+.event-box h3 { font-size: 1rem; color: #f0c040; }
+.event-box p { font-size: 0.85rem; color: #ccc; line-height: 1.7; }
+.event-choices { display: flex; flex-direction: column; gap: 8px; }
+.event-choice {
+  background: #222; border: 1px solid #333; border-radius: 8px;
+  padding: 10px 14px; cursor: pointer; font-size: 0.82rem;
+  color: #ccc; transition: all 0.15s; text-align: left;
+}
+.event-choice:hover { background: #2a2a2a; border-color: #555; color: #fff; }
+.event-fx { font-size: 0.7rem; color: #666; margin-top: 3px; }
+</style>
 </head>
 <body>
-    <div id="game-container">
-        <div id="start-screen" class="screen">
-            <h1>别笑！你也过不了第三关</h1>
-            <button id="start-btn">开始游戏</button>
-        </div>
-        <div id="level-screen" class="screen hidden">
-            <h2>选择关卡</h2>
-            <div id="level-buttons">
-                <button class="level-btn" data-level="1">第一关</button>
-                <button class="level-btn" data-level="2" disabled>第二关</button>
-                <button class="level-btn" data-level="3" disabled>第三关</button>
-            </div>
-        </div>
-        <div id="game-screen" class="screen hidden">
-            <div id="bird"></div>
-            <div id="score">Score: 0</div>
-        </div>
-        <div id="game-over-screen" class="screen hidden">
-            <h2>游戏结束</h2>
-            <div id="final-score">Score: 0</div>
-            <button id="restart-btn">再玩一次</button>
-        </div>
+
+<!-- ══════════ 开始页 ══════════ -->
+<div id="startScreen">
+  <div class="game-title">🖥️ 打工模拟器</div>
+  <div class="game-subtitle">互联网人生存指南 · 试玩版</div>
+
+  <div class="start-menu">
+    <h2>📁 存档</h2>
+    <button class="start-btn has-save" id="slot1Btn" onclick="showSaveSlots('load')">
+      <span class="btn-icon">1</span>
+      <span class="btn-text">
+        <span id="slot1Name">— 空存档 —</span>
+        <span class="btn-sub" id="slot1Meta">暂无记录</span>
+      </span>
+    </button>
+    <button class="start-btn has-save" id="slot2Btn" onclick="showSaveSlots('load')">
+      <span class="btn-icon">2</span>
+      <span class="btn-text">
+        <span id="slot2Name">— 空存档 —</span>
+        <span class="btn-sub" id="slot2Meta">暂无记录</span>
+      </span>
+    </button>
+    <button class="start-btn has-save" id="slot3Btn" onclick="showSaveSlots('load')">
+      <span class="btn-icon">3</span>
+      <span class="btn-text">
+        <span id="slot3Name">— 空存档 —</span>
+        <span class="btn-sub" id="slot3Meta">暂无记录</span>
+      </span>
+    </button>
+  </div>
+
+  <div class="start-menu">
+    <button class="start-btn primary" onclick="showClassScreen(-1)">
+      <span class="btn-icon">✨</span>
+      <span class="btn-text">
+        新游戏
+        <span class="btn-sub">选择职业，开始新的打工人生</span>
+      </span>
+    </button>
+    <button class="start-btn" onclick="showSaveSlots('manage')">
+      <span class="btn-icon">📦</span>
+      <span class="btn-text">
+        管理存档
+        <span class="btn-sub">读取、删除存档</span>
+      </span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════ 职业选择页 ══════════ -->
+<div id="classScreen">
+  <div class="screen-title">选择你的职业</div>
+  <div class="class-grid" id="classGrid"></div>
+  <div class="name-input-row">
+    <label>角色名：</label>
+    <input type="text" id="playerNameInput" placeholder="输入你的名字（可留空）" maxlength="10">
+  </div>
+  <button class="confirm-btn" id="confirmClassBtn" onclick="startNewGame()" disabled>开始打工 →</button>
+  <div class="back-link" onclick="showScreen('start')">← 返回</div>
+</div>
+
+<!-- ══════════ 存档管理页 ══════════ -->
+<div id="saveSlotScreen">
+  <div class="screen-title" id="saveSlotTitle">选择存档</div>
+  <div id="saveSlotList"></div>
+  <div class="back-link" onclick="showScreen('start')">← 返回</div>
+</div>
+
+<!-- ══════════ 主游戏界面 ══════════ -->
+<div id="gameScreen">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div>
+      <h1>🖥️ 打工模拟器</h1>
+      <div class="subtitle">互联网人生存指南</div>
     </div>
-    <script src="game.js"></script>
+    <button class="game-btn" style="min-width:70px;flex:none;font-size:0.75rem" onclick="showScreen('start')">主菜单</button>
+  </div>
+
+  <!-- 状态栏 -->
+  <div class="status-bar">
+    <div class="status-header">
+      <div class="player-name">
+        <span id="playerNameDisplay">打工人</span>
+        <span class="class-badge" id="classBadge"></span>
+        <span class="level-badge" id="levelBadge">Lv.1</span>
+      </div>
+      <div class="day-info">第 <span id="dayDisplay">1</span> 天 · Q<span id="quarterDisplay">1</span></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-label">⚡ 体力</div>
+        <div class="stat-bar-bg"><div class="stat-bar bar-energy" id="barEnergy"></div></div>
+        <div class="stat-value" id="valEnergy">80</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">😊 心情</div>
+        <div class="stat-bar-bg"><div class="stat-bar bar-mood" id="barMood"></div></div>
+        <div class="stat-value" id="valMood">70</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">🎯 专注</div>
+        <div class="stat-bar-bg"><div class="stat-bar bar-focus" id="barFocus"></div></div>
+        <div class="stat-value" id="valFocus">75</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">📊 绩效</div>
+        <div class="stat-bar-bg"><div class="stat-bar bar-perf" id="barPerf"></div></div>
+        <div class="stat-value" id="valPerf">60</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">🤝 人脉</div>
+        <div class="stat-bar-bg"><div class="stat-bar bar-social" id="barSocial"></div></div>
+        <div class="stat-value" id="valSocial">50</div>
+      </div>
+    </div>
+    <div class="money-row">
+      <div>💰 存款：<span id="moneyDisplay">0</span> 元</div>
+      <div>📅 工龄：<span id="tenureDisplay">0</span> 天</div>
+      <div>🏅 等级：<span id="levelDisplay">初级打工人</span></div>
+    </div>
+  </div>
+
+  <!-- 时段 -->
+  <div class="time-phase">
+    <div class="phase-dots">
+      <div class="phase-dot" id="dot0"></div>
+      <div class="phase-dot" id="dot1"></div>
+      <div class="phase-dot" id="dot2"></div>
+    </div>
+    <div class="phase-label">当前时段：<span id="phaseLabel">上午</span></div>
+    <button class="game-btn primary" style="flex:none;min-width:90px" id="nextPhaseBtn" onclick="nextPhase()" disabled>下一时段 →</button>
+  </div>
+
+  <!-- 行动 -->
+  <div class="actions-panel">
+    <div class="actions-title">— 选择本时段的行动 —</div>
+    <div class="actions-grid" id="actionsGrid"></div>
+  </div>
+
+  <!-- 叙事 -->
+  <div class="narrative-panel" id="narrativePanel">
+    <div class="narrative-line system">── 游戏开始 ──</div>
+  </div>
+
+  <!-- 按钮行 -->
+  <div class="btn-row">
+    <button class="game-btn" onclick="manualSave()">💾 存档</button>
+    <button class="game-btn" id="nextPhaseBtn2" onclick="nextPhase()" disabled>⏩ 跳过时段</button>
+  </div>
+  <div id="saveHint"></div>
+</div>
+
+<!-- 游戏结束 -->
+<div class="game-over" id="gameOver">
+  <div class="game-over-box">
+    <h2 id="gameOverTitle">游戏结束</h2>
+    <p id="gameOverMsg"></p>
+    <div class="btn-row">
+      <button class="game-btn primary" onclick="restartGame()">🔄 再来一局</button>
+      <button class="game-btn" onclick="showScreen('start')">🏠 主菜单</button>
+    </div>
+  </div>
+</div>
+
+<!-- 事件弹窗 -->
+<div class="event-modal" id="eventModal">
+  <div class="event-box">
+    <h3 id="eventTitle">突发事件</h3>
+    <p id="eventDesc"></p>
+    <div class="event-choices" id="eventChoices"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// 职业定义
+// ══════════════════════════════════════════════════════
+const CLASSES = {
+  pm: {
+    id: 'pm', name: '产品经理', emoji: '📋',
+    color: '#f0c040', bgColor: '#2a2200',
+    desc: '需求永远改不完，PRD写了又写，但你掌握着产品方向。',
+    tags: [{t:'需求分析+',cls:'up'},{t:'绩效+',cls:'up'},{t:'被怼概率↑',cls:'down'}],
+    initStats: { energy:75, mood:65, focus:80, perf:60, social:70 },
+    bonus: { perf: 8, social: 5 },
+    specialActions: [
+      { id:'write_prd', name:'写PRD', emoji:'📝', cost:{energy:15,focus:10}, gain:{perf:20,mood:-5}, desc:'憋一份需求文档，绩效+20但容易掉心情' },
+      { id:'demand_meeting', name:'需求评审', emoji:'🗣️', cost:{energy:10,mood:-8}, gain:{perf:15,social:10}, desc:'组织需求评审会，绩效和人脉都有收益' },
+    ]
+  },
+  fe: {
+    id: 'fe', name: '前端工程师', emoji: '🎨',
+    color: '#66bbff', bgColor: '#001a2a',
+    desc: '像素级还原设计稿，兼容IE到最新Chrome，CSS大法好。',
+    tags: [{t:'专注+',cls:'up'},{t:'技术成长+',cls:'up'},{t:'需求变更-',cls:'down'}],
+    initStats: { energy:80, mood:70, focus:85, perf:55, social:50 },
+    bonus: { focus: 8, perf: 5 },
+    specialActions: [
+      { id:'write_component', name:'写组件库', emoji:'🧩', cost:{energy:20,focus:15}, gain:{perf:25,mood:5}, desc:'封装通用组件，绩效大涨，还有成就感' },
+      { id:'debug_ui', name:'Debug样式', emoji:'🔍', cost:{energy:10,mood:-10}, gain:{perf:12,focus:8}, desc:'在浏览器控制台苦苦排查像素偏移' },
+    ]
+  },
+  be: {
+    id: 'be', name: '后端工程师', emoji: '⚙️',
+    color: '#88ee88', bgColor: '#001a00',
+    desc: '接口稳如老狗，数据库调优，服务不宕机就是胜利。',
+    tags: [{t:'体力+',cls:'up'},{t:'绩效稳定',cls:'up'},{t:'社交-',cls:'down'}],
+    initStats: { energy:85, mood:60, focus:80, perf:65, social:40 },
+    bonus: { energy: 8, perf: 6 },
+    specialActions: [
+      { id:'optimize_sql', name:'SQL调优', emoji:'🗄️', cost:{energy:15,focus:20}, gain:{perf:28,mood:8}, desc:'把慢查询从3秒优化到30ms，满满成就感' },
+      { id:'write_api', name:'写接口文档', emoji:'📄', cost:{energy:8,mood:-5}, gain:{perf:15,social:8}, desc:'认认真真写Swagger，前端同事对你刮目相看' },
+    ]
+  },
+  qa: {
+    id: 'qa', name: '测试工程师', emoji: '🐛',
+    color: '#ff9966', bgColor: '#2a1000',
+    desc: '找bug是艺术，每个问题背后都是人品。你让产品更好。',
+    tags: [{t:'找Bug+',cls:'up'},{t:'心情稳定',cls:'up'},{t:'被催上线-',cls:'down'}],
+    initStats: { energy:75, mood:75, focus:75, perf:58, social:55 },
+    bonus: { mood: 8, focus: 5 },
+    specialActions: [
+      { id:'write_cases', name:'写测试用例', emoji:'📋', cost:{energy:12,focus:15}, gain:{perf:22,mood:5}, desc:'用例写得越全，上线越有底气' },
+      { id:'find_bug', name:'蹲Bug专项', emoji:'🐞', cost:{energy:18,mood:-5}, gain:{perf:30,social:5}, desc:'死磕某个模块，找到隐藏Bug，绩效爆炸' },
+    ]
+  },
+  design: {
+    id: 'design', name: '设计师', emoji: '🎭',
+    color: '#cc88ff', bgColor: '#1a0a2a',
+    desc: '用视觉传达价值，但甲方总说"再改改"，你已习以为常。',
+    tags: [{t:'心情+',cls:'up'},{t:'创意加成',cls:'up'},{t:'被改稿-',cls:'down'}],
+    initStats: { energy:70, mood:80, focus:70, perf:55, social:65 },
+    bonus: { mood: 10, social: 5 },
+    specialActions: [
+      { id:'design_ui', name:'出UI方案', emoji:'🖼️', cost:{energy:20,focus:15}, gain:{perf:25,mood:10}, desc:'出三套方案，总有一款能过稿' },
+      { id:'design_review', name:'设计走查', emoji:'✏️', cost:{energy:8,mood:-8}, gain:{perf:18,social:12}, desc:'和开发对齐实现，争取像素级还原' },
+    ]
+  },
+  ops: {
+    id: 'ops', name: '运营', emoji: '📣',
+    color: '#ff88aa', bgColor: '#2a0a12',
+    desc: '数据、活动、用户增长，每个指标都是你的KPI。',
+    tags: [{t:'人脉+',cls:'up'},{t:'活动策划+',cls:'up'},{t:'体力消耗↑',cls:'down'}],
+    initStats: { energy:65, mood:75, focus:60, perf:60, social:85 },
+    bonus: { social: 12, mood: 3 },
+    specialActions: [
+      { id:'plan_event', name:'策划活动', emoji:'🎉', cost:{energy:25,focus:15}, gain:{perf:28,social:15}, desc:'策划一场用户活动，数据好的话KPI直接拉满' },
+      { id:'write_copy', name:'写文案', emoji:'✍️', cost:{energy:10,mood:-5}, gain:{perf:18,mood:8}, desc:'憋出一篇10万+文案，心情和绩效双收' },
+    ]
+  },
+};
+
+// ══════════════════════════════════════════════════════
+// 通用行动
+// ══════════════════════════════════════════════════════
+const COMMON_ACTIONS = [
+  { id:'work_hard',   name:'专心工作',  emoji:'💻', cost:{energy:20,mood:-5},  gain:{perf:18,money:80},  desc:'老实干活，不求有功但求无过' },
+  { id:'slack_off',   name:'摸鱼划水',  emoji:'🐟', cost:{energy:-5,mood:10},  gain:{perf:-8},           desc:'刷刷手机，舒服是舒服，就是有点亏心' },
+  { id:'coffee',      name:'喝杯咖啡',  emoji:'☕', cost:{money:-18},          gain:{energy:20,focus:15},desc:'工位旁的咖啡机，打工人续命神器' },
+  { id:'lunch',       name:'好好吃饭',  emoji:'🍱', cost:{money:-35,energy:-5},gain:{mood:20,energy:30}, desc:'点个好饭，精神都为之一振' },
+  { id:'team_chat',   name:'和同事聊天',emoji:'💬', cost:{energy:-5,focus:-8}, gain:{mood:15,social:8},  desc:'闲扯几句，说不定有什么小道消息' },
+  { id:'learn_skill', name:'自我提升',  emoji:'📚', cost:{energy:15,mood:-5},  gain:{focus:12,perf:10},  desc:'利用工作时间学点新东西，滑不滑在乎自己' },
+  { id:'nap',         name:'偷偷小睡',  emoji:'😴', cost:{focus:-10,mood:5},   gain:{energy:25},         desc:'午休趴一会儿，体力回回' },
+  { id:'overtime',    name:'主动加班',  emoji:'🌙', cost:{energy:25,mood:-15}, gain:{perf:22,money:120}, desc:'卷是卷了，但工资也多了点' },
+  { id:'1on1_boss',   name:'和老板1on1',emoji:'👔', cost:{mood:-10,energy:10}, gain:{perf:12,social:15}, desc:'汇报工作，刷刷存在感，有时候有惊喜' },
+  { id:'sick_leave',  name:'请病假',    emoji:'🤒', cost:{perf:-15,mood:20},   gain:{energy:40},         desc:'真假病假全凭良心，但确实休息到了' },
+];
+
+// ══════════════════════════════════════════════════════
+// 随机事件
+// ══════════════════════════════════════════════════════
+const EVENTS = [
+  {
+    id:'late', title:'⏰ 迟到了！', prob:0.12,
+    desc:'今天堵车/地铁故障，到公司已经9点半，HR发来了友好提醒……',
+    choices:[
+      {text:'主动认错，加班补时间', fx:{mood:-10,perf:-5}, fxDesc:'绩效-5，心情-10'},
+      {text:'装作若无其事', fx:{mood:-5,perf:-10}, fxDesc:'绩效-10，心情-5'},
+    ]
+  },
+  {
+    id:'praise', title:'🌟 老板当众表扬', prob:0.08,
+    desc:'周会上老板专门点名表扬了你的工作，全组都鼓掌了。',
+    choices:[
+      {text:'谦虚感谢', fx:{mood:20,social:10,perf:8}, fxDesc:'心情+20，人脉+10，绩效+8'},
+      {text:'顺势提加薪', fx:{mood:15,money:500,perf:-5}, fxDesc:'心情+15，存款+500，绩效-5'},
+    ]
+  },
+  {
+    id:'bug_prod', title:'🔥 线上出Bug了！', prob:0.1,
+    desc:'生产环境出了P0级故障，全组在钉钉群炸锅，CTO也进群了。',
+    choices:[
+      {text:'冲上去处理，熬夜修复', fx:{energy:-30,perf:15,social:10}, fxDesc:'体力-30，绩效+15，人脉+10'},
+      {text:'悄悄装作不知道', fx:{perf:-20,mood:-10}, fxDesc:'绩效-20，心情-10'},
+    ]
+  },
+  {
+    id:'new_req', title:'📋 突然新需求', prob:0.15,
+    desc:'产品经理昨天定稿的需求，今天一早来说要"小改一下"，改动量相当于重写。',
+    choices:[
+      {text:'接受，硬着头皮改', fx:{energy:-20,mood:-15,perf:10}, fxDesc:'体力-20，心情-15，绩效+10'},
+      {text:'据理力争，推迟排期', fx:{mood:5,perf:-8,social:-5}, fxDesc:'心情+5，绩效-8，人脉-5'},
+    ]
+  },
+  {
+    id:'team_dinner', title:'🍻 团队聚餐', prob:0.08,
+    desc:'老板说今晚团建吃饭，顺便聊聊Q3规划。去还是不去？',
+    choices:[
+      {text:'积极参与，多喝两杯', fx:{social:20,mood:10,energy:-20}, fxDesc:'人脉+20，心情+10，体力-20'},
+      {text:'借故推辞，早点回家', fx:{energy:15,mood:5,social:-10}, fxDesc:'体力+15，心情+5，人脉-10'},
+    ]
+  },
+  {
+    id:'salary_day', title:'💰 发工资了！', prob:0.06,
+    desc:'薪资到账，短信提示的叮声是打工人最美的声音。',
+    choices:[
+      {text:'存起来，继续奋斗', fx:{money:3000,mood:20}, fxDesc:'存款+3000，心情+20'},
+      {text:'犒劳自己，买点好东西', fx:{money:1500,mood:35}, fxDesc:'存款+1500，心情+35'},
+    ]
+  },
+  {
+    id:'hr_talk', title:'👩‍💼 HR约谈', prob:0.07,
+    desc:'HR突然邀请你"聊聊职业规划"，语气神秘，你有点不安。',
+    choices:[
+      {text:'坦诚沟通，说说想法', fx:{mood:-5,social:15,perf:8}, fxDesc:'心情-5，人脉+15，绩效+8'},
+      {text:'打哈哈，含糊过去', fx:{mood:-10,perf:-5}, fxDesc:'心情-10，绩效-5'},
+    ]
+  },
+  {
+    id:'weekend_work', title:'📱 周末被拉工作群', prob:0.09,
+    desc:'好不容易周末，群消息却一直@你，说是有个紧急需求要周一上线。',
+    choices:[
+      {text:'开电脑处理，责任感爆棚', fx:{energy:-25,mood:-20,perf:18}, fxDesc:'体力-25，心情-20，绩效+18'},
+      {text:'假装没看见', fx:{mood:10,energy:10,perf:-12}, fxDesc:'心情+10，体力+10，绩效-12'},
+    ]
+  },
+];
+
+// ══════════════════════════════════════════════════════
+// 存档系统
+// ══════════════════════════════════════════════════════
+const SLOT_COUNT = 3;
+
+function getSaveSlots() {
+  const slots = [];
+  for (let i = 1; i <= SLOT_COUNT; i++) {
+    const raw = localStorage.getItem(`pmSave_slot${i}`);
+    if (raw) {
+      try { slots.push({ idx: i, data: JSON.parse(raw) }); }
+      catch(e) { slots.push({ idx: i, data: null }); }
+    } else {
+      slots.push({ idx: i, data: null });
+    }
+  }
+  return slots;
+}
+
+function saveToSlot(slotIdx) {
+  const snapshot = JSON.parse(JSON.stringify(STATE));
+  snapshot._savedAt = Date.now();
+  localStorage.setItem(`pmSave_slot${slotIdx}`, JSON.stringify(snapshot));
+  STATE.currentSlot = slotIdx;
+}
+
+function loadFromSlot(slotIdx) {
+  const raw = localStorage.getItem(`pmSave_slot${slotIdx}`);
+  if (!raw) return false;
+  try {
+    const saved = JSON.parse(raw);
+    Object.assign(STATE, defaultState(), saved);
+    STATE.currentSlot = slotIdx;
+    return true;
+  } catch(e) { return false; }
+}
+
+function deleteSlot(slotIdx) {
+  localStorage.removeItem(`pmSave_slot${slotIdx}`);
+}
+
+function slotMetaText(data) {
+  if (!data) return '暂无记录';
+  const cls = CLASSES[data.classId];
+  const clsName = cls ? cls.name : '未知职业';
+  const d = new Date(data._savedAt || 0);
+  const timeStr = `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+  return `${data.playerName||'打工人'} · ${clsName} · 第${data.day}天 · ${timeStr}`;
+}
+
+// ══════════════════════════════════════════════════════
+// 游戏状态
+// ══════════════════════════════════════════════════════
+function defaultState() {
+  return {
+    playerName: '打工人', classId: 'pm',
+    day: 1, quarter: 1, phase: 0,
+    energy: 75, mood: 70, focus: 75, perf: 60, social: 50,
+    money: 0, tenure: 0, actionDone: false,
+    currentSlot: null, level: 0,
+  };
+}
+let STATE = defaultState();
+let pendingSlot = null;
+let pendingMode = 'load';
+let selectedClass = null;
+let _currentEvent = null;
+
+const PHASE_NAMES = ['上午','下午','傍晚'];
+const LEVELS = [
+  {min:0,  name:'初级打工人'},
+  {min:10, name:'资深打工人'},
+  {min:30, name:'老油条'},
+  {min:60, name:'社畜精英'},
+  {min:90, name:'职场老鸟'},
+];
+function getLevel(day) {
+  for (let i = LEVELS.length-1; i >= 0; i--) {
+    if (day >= LEVELS[i].min) return { lv: i+1, name: LEVELS[i].name };
+  }
+  return { lv:1, name:'初级打工人' };
+}
+
+// ══════════════════════════════════════════════════════
+// 屏幕切换
+// ══════════════════════════════════════════════════════
+function showScreen(name) {
+  ['startScreen','classScreen','saveSlotScreen','gameScreen'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  const el = document.getElementById(name + 'Screen');
+  if (el) el.style.display = 'flex';
+  if (name === 'start') refreshStartScreen();
+}
+
+function refreshStartScreen() {
+  const slots = getSaveSlots();
+  slots.forEach(s => {
+    const nameEl = document.getElementById(`slot${s.idx}Name`);
+    const metaEl = document.getElementById(`slot${s.idx}Meta`);
+    if (s.data) {
+      nameEl.textContent = slotMetaText(s.data).split('·')[0].trim();
+      metaEl.textContent = slotMetaText(s.data);
+    } else {
+      nameEl.textContent = '— 空存档 —';
+      metaEl.textContent = '暂无记录';
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// 职业选择
+// ══════════════════════════════════════════════════════
+function showClassScreen(targetSlot) {
+  pendingSlot = targetSlot; // -1=新游戏选槽，否则写入指定槽
+  selectedClass = null;
+  document.getElementById('confirmClassBtn').disabled = true;
+  renderClassGrid();
+  showScreen('class');
+}
+
+function renderClassGrid() {
+  const grid = document.getElementById('classGrid');
+  grid.innerHTML = Object.values(CLASSES).map(c => `
+    <div class="class-card" id="cls_${c.id}" onclick="selectClass('${c.id}')">
+      <div class="class-emoji">${c.emoji}</div>
+      <div class="class-name">${c.name}</div>
+      <div class="class-desc">${c.desc}</div>
+      <div class="class-tags">${c.tags.map(t=>`<span class="class-tag ${t.cls}">${t.t}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+function selectClass(id) {
+  selectedClass = id;
+  document.querySelectorAll('.class-card').forEach(el => el.classList.remove('selected'));
+  document.getElementById('cls_'+id).classList.add('selected');
+  document.getElementById('confirmClassBtn').disabled = false;
+}
+
+// ══════════════════════════════════════════════════════
+// 新游戏
+// ══════════════════════════════════════════════════════
+function startNewGame() {
+  if (!selectedClass) return;
+  const cls = CLASSES[selectedClass];
+  const nameInput = document.getElementById('playerNameInput').value.trim();
+  const playerName = nameInput || cls.emoji + cls.name;
+
+  STATE = defaultState();
+  STATE.classId = selectedClass;
+  STATE.playerName = playerName;
+  Object.assign(STATE, cls.initStats);
+  // 职业加成
+  Object.entries(cls.bonus).forEach(([k,v]) => { if(STATE[k]!==undefined) STATE[k] = Math.min(100, STATE[k]+v); });
+
+  // 如果 pendingSlot=-1，先选槽
+  if (pendingSlot === -1) {
+    showSaveSlots('new');
+  } else {
+    if (pendingSlot > 0) saveToSlot(pendingSlot);
+    enterGame();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// 存档槽管理
+// ══════════════════════════════════════════════════════
+function showSaveSlots(mode) {
+  pendingMode = mode;
+  const title = {load:'读取存档', manage:'管理存档', new:'选择存档位置'}[mode] || '存档';
+  document.getElementById('saveSlotTitle').textContent = title;
+  renderSaveSlotList(mode);
+  showScreen('saveSlot');
+}
+
+function renderSaveSlotList(mode) {
+  const slots = getSaveSlots();
+  const list = document.getElementById('saveSlotList');
+  list.innerHTML = slots.map(s => {
+    const hasData = !!s.data;
+    if (mode === 'load' || mode === 'manage') {
+      return `
+        <div class="save-slot ${hasData?'':'empty'}">
+          <div class="slot-num">${s.idx}</div>
+          <div class="slot-info">
+            <div class="slot-name">${hasData ? (s.data.playerName||'打工人') : '— 空存档 —'}</div>
+            <div class="slot-meta">${hasData ? slotMetaText(s.data) : '暂无记录'}</div>
+          </div>
+          <div class="slot-actions">
+            ${hasData ? `<button class="slot-btn load" onclick="doLoadSlot(${s.idx})">读取</button>` : ''}
+            ${hasData ? `<button class="slot-btn del" onclick="doDeleteSlot(${s.idx})">删除</button>` : ''}
+            ${!hasData && mode==='manage' ? `<span class="slot-empty-text">空</span>` : ''}
+          </div>
+        </div>`;
+    } else { // new: 选择写入槽
+      return `
+        <div class="save-slot" onclick="doNewGameToSlot(${s.idx})" style="cursor:pointer">
+          <div class="slot-num">${s.idx}</div>
+          <div class="slot-info">
+            <div class="slot-name">${hasData ? (s.data.playerName||'打工人') : '— 空槽位 —'}</div>
+            <div class="slot-meta">${hasData ? slotMetaText(s.data)+'（将被覆盖）' : '点击开始新游戏'}</div>
+          </div>
+        </div>`;
+    }
+  }).join('');
+}
+
+function doLoadSlot(idx) {
+  if (loadFromSlot(idx)) {
+    enterGame();
+    addNarrative(`读取存档 #${idx}，欢迎回来，继续苟吧。`, 'good');
+  } else {
+    alert('存档读取失败');
+  }
+}
+
+function doDeleteSlot(idx) {
+  if (confirm(`确定删除存档 #${idx}？此操作不可恢复。`)) {
+    deleteSlot(idx);
+    renderSaveSlotList(pendingMode);
+    refreshStartScreen();
+  }
+}
+
+function doNewGameToSlot(idx) {
+  pendingSlot = idx;
+  saveToSlot(idx);
+  enterGame();
+}
+
+// ══════════════════════════════════════════════════════
+// 进入游戏主界面
+// ══════════════════════════════════════════════════════
+function enterGame() {
+  showScreen('game');
+  document.getElementById('narrativePanel').innerHTML = `<div class="narrative-line system">── 游戏开始 ──</div>`;
+  const cls = CLASSES[STATE.classId];
+  addNarrative(`你是一名${cls.name}，${cls.desc}`, 'system');
+  addNarrative(`加油，${STATE.playerName}！`, 'good');
+  updateUI();
+  renderActions();
+  document.getElementById('nextPhaseBtn').disabled = true;
+  document.getElementById('nextPhaseBtn2').disabled = true;
+  document.getElementById('gameOver').classList.remove('show');
+}
+
+// ══════════════════════════════════════════════════════
+// UI更新
+// ══════════════════════════════════════════════════════
+function cap(v){ return Math.max(0, Math.min(100, v)); }
+
+function updateUI() {
+  const S = STATE;
+  const cls = CLASSES[S.classId] || CLASSES.pm;
+  const lv = getLevel(S.day);
+
+  document.getElementById('playerNameDisplay').textContent = S.playerName;
+  document.getElementById('dayDisplay').textContent = S.day;
+  document.getElementById('quarterDisplay').textContent = S.quarter;
+  document.getElementById('moneyDisplay').textContent = S.money;
+  document.getElementById('tenureDisplay').textContent = S.tenure;
+  document.getElementById('levelDisplay').textContent = lv.name;
+  document.getElementById('levelBadge').textContent = `Lv.${lv.lv}`;
+
+  const badge = document.getElementById('classBadge');
+  badge.textContent = cls.emoji + cls.name;
+  badge.style.background = cls.bgColor;
+  badge.style.border = `1px solid ${cls.color}`;
+  badge.style.color = cls.color;
+
+  ['energy','mood','focus','perf','social'].forEach(k => {
+    const v = cap(S[k]);
+    document.getElementById('bar'+k.charAt(0).toUpperCase()+k.slice(1)).style.width = v+'%';
+    document.getElementById('val'+k.charAt(0).toUpperCase()+k.slice(1)).textContent = v;
+  });
+
+  // 时段点
+  PHASE_NAMES.forEach((_,i) => {
+    const dot = document.getElementById('dot'+i);
+    dot.className = 'phase-dot' + (i < S.phase ? ' done' : i === S.phase ? ' active' : '');
+  });
+  document.getElementById('phaseLabel').textContent = PHASE_NAMES[S.phase] || '休息';
+}
+
+// ══════════════════════════════════════════════════════
+// 行动渲染
+// ══════════════════════════════════════════════════════
+function fxStr(cost, gain) {
+  const parts = [];
+  const all = Object.assign({}, cost, gain);
+  const labels = {energy:'体力',mood:'心情',focus:'专注',perf:'绩效',social:'人脉',money:'存款'};
+  Object.entries(all).forEach(([k,v]) => {
+    if (v === 0) return;
+    const sign = v > 0 ? '+' : '';
+    const cls = v > 0 ? 'up' : 'down';
+    parts.push(`<span class="${cls}">${labels[k]||k}${sign}${v}</span>`);
+  });
+  return parts.join(' ');
+}
+
+function mergeEffect(cost, gain) {
+  const out = {};
+  [cost, gain].forEach(obj => {
+    Object.entries(obj).forEach(([k,v]) => { out[k] = (out[k]||0) + v; });
+  });
+  return out;
+}
+
+function renderActions() {
+  const cls = CLASSES[STATE.classId] || CLASSES.pm;
+  const allActions = [...COMMON_ACTIONS, ...cls.specialActions.map(a => ({...a, isSpecial:true}))];
+  const grid = document.getElementById('actionsGrid');
+  grid.innerHTML = allActions.map(a => {
+    const cost = a.cost || {};
+    const gain = a.gain || {};
+    const disabled = STATE.actionDone ? 'disabled' : '';
+    const specialCls = a.isSpecial ? ' special' : '';
+    const badge = a.isSpecial ? `<span class="class-only">${cls.emoji}</span>` : '';
+    const fx = fxStr(cost, gain);
+    return `<button class="action-btn${specialCls}" ${disabled} onclick="doAction('${a.id}')" title="${a.desc}">
+      ${badge}
+      <span class="action-name">${a.emoji} ${a.name}</span>
+      <span class="action-fx">${fx}</span>
+    </button>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// 执行行动
+// ══════════════════════════════════════════════════════
+function doAction(id) {
+  const cls = CLASSES[STATE.classId] || CLASSES.pm;
+  const allActions = [...COMMON_ACTIONS, ...cls.specialActions];
+  const action = allActions.find(a => a.id === id);
+  if (!action) return;
+
+  const fx = mergeEffect(action.cost || {}, action.gain || {});
+  Object.entries(fx).forEach(([k,v]) => {
+    if (k === 'money') STATE.money = Math.max(0, STATE.money + v);
+    else if (STATE[k] !== undefined) STATE[k] = cap(STATE[k] + v);
+  });
+
+  const fxDesc = Object.entries(fx).map(([k,v])=>{
+    const labels = {energy:'体力',mood:'心情',focus:'专注',perf:'绩效',social:'人脉',money:'存款'};
+    return v!==0 ? `${labels[k]||k}${v>0?'+':''}${v}` : null;
+  }).filter(Boolean).join('，');
+
+  addNarrative(`【${action.emoji}${action.name}】${action.desc}`, 'good');
+  addNarrative(`效果：${fxDesc}`, STATE.perf < 30 ? 'bad' : 'system');
+
+  STATE.actionDone = true;
+  updateUI();
+  renderActions();
+
+  document.getElementById('nextPhaseBtn').disabled = false;
+  document.getElementById('nextPhaseBtn2').disabled = false;
+
+  // 随机事件检测
+  maybeFireEvent();
+  checkGameOver();
+}
+
+// ══════════════════════════════════════════════════════
+// 下一时段
+// ══════════════════════════════════════════════════════
+function nextPhase() {
+  STATE.phase++;
+  STATE.actionDone = false;
+
+  if (STATE.phase >= 3) {
+    // 一天结束
+    STATE.phase = 0;
+    STATE.day++;
+    STATE.tenure++;
+    STATE.quarter = Math.ceil(STATE.day / 90);
+
+    // 自然恢复
+    STATE.energy = cap(STATE.energy - 10 + 20);
+    STATE.mood   = cap(STATE.mood + 5);
+    STATE.focus  = cap(STATE.focus - 5);
+
+    addNarrative(`──── 第 ${STATE.day} 天开始 ────`, 'system');
+
+    // 日常随机收入
+    const dailyPay = 80 + Math.floor(STATE.perf * 1.5) + Math.floor(Math.random()*50);
+    STATE.money += dailyPay;
+    addNarrative(`今日薪资结算：+${dailyPay} 元（绩效加成）`, 'good');
+
+    // 自动存档
+    if (STATE.currentSlot) {
+      saveToSlot(STATE.currentSlot);
+      document.getElementById('saveHint').textContent = '自动存档 ✓';
+      setTimeout(()=>{ document.getElementById('saveHint').textContent=''; }, 2000);
+    }
+  }
+
+  document.getElementById('nextPhaseBtn').disabled = true;
+  document.getElementById('nextPhaseBtn2').disabled = true;
+  updateUI();
+  renderActions();
+  checkGameOver();
+}
+
+// ══════════════════════════════════════════════════════
+// 随机事件
+// ══════════════════════════════════════════════════════
+function maybeFireEvent() {
+  const roll = Math.random();
+  let cumProb = 0;
+  for (const ev of EVENTS) {
+    cumProb += ev.prob;
+    if (roll < cumProb) {
+      showEvent(ev);
+      return;
+    }
+  }
+}
+
+function showEvent(ev) {
+  _currentEvent = ev;
+  document.getElementById('eventTitle').textContent = ev.title;
+  document.getElementById('eventDesc').textContent = ev.desc;
+  const choicesEl = document.getElementById('eventChoices');
+  choicesEl.innerHTML = '';
+  ev.choices.forEach((ch, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'event-choice';
+    const textDiv = document.createElement('div');
+    textDiv.textContent = ch.text;
+    const fxDiv = document.createElement('div');
+    fxDiv.className = 'event-fx';
+    fxDiv.textContent = ch.fxDesc;
+    btn.appendChild(textDiv);
+    btn.appendChild(fxDiv);
+    btn.addEventListener('click', function() { resolveEvent(i); });
+    choicesEl.appendChild(btn);
+  });
+  document.getElementById('eventModal').classList.add('show');
+}
+
+function resolveEvent(idx) {
+  document.getElementById('eventModal').classList.remove('show');
+  if (!_currentEvent) return;
+  const choice = _currentEvent.choices[idx];
+  if (!choice) return;
+  const fx = choice.fx;
+  Object.entries(fx).forEach(([k,v]) => {
+    if (k === 'money') STATE.money = Math.max(0, STATE.money + v);
+    else if (STATE[k] !== undefined) STATE[k] = cap(STATE[k] + v);
+  });
+  addNarrative(`📌 突发事件：选择了"${choice.text}"`, 'warn');
+  addNarrative(`结果：${choice.fxDesc}`, 'system');
+  _currentEvent = null;
+  updateUI();
+  checkGameOver();
+}
+
+// ══════════════════════════════════════════════════════
+// 游戏结束检测
+// ══════════════════════════════════════════════════════
+function checkGameOver() {
+  let over = false, title = '', msg = '';
+
+  if (STATE.energy <= 0) {
+    over = true; title = '😵 过劳倒下了';
+    msg = `坚持了 ${STATE.day} 天，体力耗尽，终于倒在了工位上。\n存款剩余 ${STATE.money} 元，职场生涯暂告一段落。`;
+  } else if (STATE.mood <= 0) {
+    over = true; title = '😞 心态崩了';
+    msg = `工作 ${STATE.day} 天后，你的心情降到了谷底，决定裸辞疗伤。\n这段经历让你更了解自己。`;
+  } else if (STATE.perf <= 0) {
+    over = true; title = '📉 被优化了';
+    msg = `绩效连续垫底，HR约谈后发来了"优化"通知。\n在职 ${STATE.day} 天，存款 ${STATE.money} 元，下一站再出发。`;
+  } else if (STATE.day > 365) {
+    over = true; title = '🎉 一年整！';
+    msg = `恭喜！坚持工作整整一年！\n最终存款：${STATE.money} 元，绩效：${STATE.perf}，人脉：${STATE.social}。\n你已成为真正的职场老兵！`;
+  }
+
+  if (over) {
+    document.getElementById('gameOverTitle').textContent = title;
+    document.getElementById('gameOverMsg').textContent = msg;
+    document.getElementById('gameOver').classList.add('show');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// 叙事
+// ══════════════════════════════════════════════════════
+function addNarrative(text, type='') {
+  const panel = document.getElementById('narrativePanel');
+  const div = document.createElement('div');
+  div.className = 'narrative-line ' + type;
+  div.textContent = text;
+  panel.appendChild(div);
+  panel.scrollTop = panel.scrollHeight;
+}
+
+// ══════════════════════════════════════════════════════
+// 手动存档 / 重来
+// ══════════════════════════════════════════════════════
+function manualSave() {
+  if (!STATE.currentSlot) {
+    showSaveSlots('new');
+    return;
+  }
+  saveToSlot(STATE.currentSlot);
+  document.getElementById('saveHint').textContent = `存档 #${STATE.currentSlot} 已保存 ✓`;
+  setTimeout(()=>{ document.getElementById('saveHint').textContent=''; }, 2000);
+}
+
+function restartGame() {
+  document.getElementById('gameOver').classList.remove('show');
+  showClassScreen(-1);
+}
+
+// ══════════════════════════════════════════════════════
+// 初始化
+// ══════════════════════════════════════════════════════
+(function init() {
+  showScreen('start');
+})();
+</script>
 </body>
 </html>
