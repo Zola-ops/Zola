@@ -904,9 +904,11 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
   <div class="okr-box">
     <h3>📋 季度 OKR Review</h3>
     <div class="okr-summary" id="okrSummary"></div>
-    <div style="font-size:0.82rem;color:#888">本季度 OKR 完成情况如何？（诚实评估，影响绩效考核）</div>
-    <div class="okr-grade-row" id="okrGradeRow"></div>
-    <button class="confirm-btn" id="okrConfirmBtn" onclick="confirmOKR()" disabled>提交 OKR →</button>
+    <!-- 老板评语区 -->
+    <div id="okrBossComment" style="background:#111;border:1px solid #3a2a00;border-radius:10px;padding:14px 16px;font-size:0.82rem;color:#ccc;line-height:1.7"></div>
+    <!-- 评级结果 -->
+    <div id="okrGradeResult" style="text-align:center;padding:12px 0"></div>
+    <button class="confirm-btn" id="okrConfirmBtn" onclick="confirmOKR()">好的，收到 →</button>
   </div>
 </div>
 
@@ -1473,6 +1475,14 @@ function defaultState() {
     lastOKRScore: 0,
     options: 0,
     adaptDays: 0,
+    // 季度行为计数器（OKR评级用）
+    qWorkCount: 0,      // 工作类行动次数（含加班）
+    qOvertimeCount: 0,  // 主动加班次数
+    q1on1Count: 0,      // 和老板1on1次数
+    qSlackCount: 0,     // 摸鱼次数
+    qLeaveCount: 0,     // 请假次数（病假+在家休息）
+    qRestCount: 0,      // 偷懒/纯休息次数（不含正常吃饭）
+    qSocialCount: 0,    // 社交行动次数（聊天/团建）
     // ── Phase 3 ──
     // 银行系统
     bankDeposit: 0,
@@ -1790,6 +1800,14 @@ function enterGame() {
   if (!STATE.bankDepositRate) STATE.bankDepositRate = 0.0015;
   if (!STATE.activeBuffs) STATE.activeBuffs = [];
   if (!STATE.vestingSchedule) STATE.vestingSchedule = [];
+  // 季度行为计数器兼容
+  if (STATE.qWorkCount    === undefined) STATE.qWorkCount    = 0;
+  if (STATE.qOvertimeCount=== undefined) STATE.qOvertimeCount= 0;
+  if (STATE.q1on1Count    === undefined) STATE.q1on1Count    = 0;
+  if (STATE.qSlackCount   === undefined) STATE.qSlackCount   = 0;
+  if (STATE.qLeaveCount   === undefined) STATE.qLeaveCount   = 0;
+  if (STATE.qRestCount    === undefined) STATE.qRestCount    = 0;
+  if (STATE.qSocialCount  === undefined) STATE.qSocialCount  = 0;
   initStocks();
 
   updateUI();
@@ -2062,6 +2080,21 @@ function doAction(id) {
     STATE.quarterPerfCount++;
   }
 
+  // ── 季度行为埋点 ──
+  if (action.isWork) STATE.qWorkCount++;
+  if (id === 'overtime')    STATE.qOvertimeCount++;
+  if (id === '1on1_boss')   STATE.q1on1Count++;
+  if (id === 'slack_off')   STATE.qSlackCount++;
+  if (id === 'sick_leave' || id === 'rest_home') STATE.qLeaveCount++;
+  if (id === 'nap')         STATE.qRestCount++;
+  if (id === 'team_chat')   STATE.qSocialCount++;
+  // 职业专属社交行动也计入
+  const cls2 = CLASSES[STATE.classId];
+  if (cls2 && cls2.specialActions) {
+    const sa = cls2.specialActions.find(a => a.id === id);
+    if (sa && (sa.gain && sa.gain.social)) STATE.qSocialCount++;
+  }
+
   const labels = {energy:'体力',mood:'心情',focus:'专注',perf:'绩效',social:'人脉',money:'存款',health:'健康'};
   const fxDesc = Object.entries(fx).map(([k,v])=>{
     return v!==0 ? `${labels[k]||k}${v>0?'+':''}${v}` : null;
@@ -2189,44 +2222,145 @@ function calcHealthDecay() {
 }
 
 // ══════════════════════════════════════════════════════
-// OKR Review 系统
+// OKR Review 系统（老板行为评级）
 // ══════════════════════════════════════════════════════
-function showOKRModal() {
-  _selectedOKRGrade = null;
-  document.getElementById('okrConfirmBtn').disabled = true;
 
-  // 本季度表现摘要
-  const avgPerf = STATE.quarterPerfCount > 0
-    ? Math.round(STATE.quarterPerfSum / STATE.quarterPerfCount)
-    : STATE.perf;
+// 根据本季度行为自动计算OKR评级
+function calcOKRGrade() {
+  const w = STATE.qWorkCount;        // 工作次数
+  const ot = STATE.qOvertimeCount;   // 加班次数
+  const on1 = STATE.q1on1Count;      // 1on1次数
+  const slack = STATE.qSlackCount;   // 摸鱼次数
+  const leave = STATE.qLeaveCount;   // 请假次数
+  const rest = STATE.qRestCount;     // 偷懒次数
+  const social = STATE.qSocialCount; // 社交次数
+  const perf = STATE.perf;           // 当前绩效
+  const totalActions = w + slack + (rest||0) + leave; // 总行动数（粗估）
+
+  // 计分系统（基础分50分）
+  let score = 50;
+
+  // ── 加分项 ──
+  score += Math.min(w * 2, 20);         // 工作次数，最多+20
+  score += Math.min(ot * 3, 12);        // 主动加班，最多+12
+  score += Math.min(on1 * 4, 16);       // 1on1，老板最看重，最多+16
+  score += Math.min(social * 1.5, 8);   // 社交，辅助项
+  score += Math.min((perf - 30) * 0.3, 15); // 绩效加成
+
+  // ── 扣分项 ──
+  score -= Math.min(slack * 4, 24);     // 摸鱼，每次-4，最多-24
+  score -= Math.min(leave * 5, 20);     // 请假，每次-5，最多-20
+  score -= Math.min(rest * 2, 10);      // 偷懒
+  if (on1 === 0) score -= 10;           // 一次1on1没做：-10（老板不认识你）
+  if (w < 3)    score -= 15;           // 工作次数过少：严重扣分
+  if (slack > leave + w) score -= 10;  // 摸鱼次数超过工作：老板发现了
+
+  // ── 硬性惩罚 ──
+  if (perf <= 0) score = Math.min(score, 25);  // 绩效为0封顶D
+
+  score = Math.max(0, Math.min(100, Math.round(score)));
+
+  if (score >= 85) return 'S';
+  if (score >= 70) return 'A';
+  if (score >= 50) return 'B';
+  if (score >= 30) return 'C';
+  return 'D';
+}
+
+// 生成老板点评语
+function genBossComment(grade) {
+  const w  = STATE.qWorkCount;
+  const ot = STATE.qOvertimeCount;
+  const on1 = STATE.q1on1Count;
+  const slack = STATE.qSlackCount;
+  const leave = STATE.qLeaveCount;
+  const rest = STATE.qRestCount;
+
+  const lines = [];
+
+  // 观察行为，生成有针对性的评语
+  if (on1 === 0) {
+    lines.push('整个季度没来找我做过一次1on1，我都不知道你在做什么……');
+  } else if (on1 >= 3) {
+    lines.push(`这个季度你主动1on1了${on1}次，很好，我们对齐得很充分。`);
+  } else {
+    lines.push(`1on1做了${on1}次，还可以，下个季度可以更主动一些。`);
+  }
+
+  if (slack >= 5) {
+    lines.push(`我注意到你有${slack}次在工位上刷手机……你以为我没看见？`);
+  } else if (slack >= 2) {
+    lines.push(`偶尔摸个鱼没关系，但${slack}次有点多了，注意一下。`);
+  }
+
+  if (leave >= 3) {
+    lines.push(`这个季度你请了${leave}次假，工作连贯性受到了影响。`);
+  } else if (leave >= 1) {
+    lines.push(`请了${leave}次假，注意别太频繁。`);
+  }
+
+  if (ot >= 3) {
+    lines.push(`加班${ot}次，很努力，但别把自己搞垮了。`);
+  } else if (ot === 0 && w < 5) {
+    lines.push('这个季度感觉你工作投入不够，产出也一般。');
+  }
+
+  if (w >= 8) {
+    lines.push(`工作推进了${w}次，执行力很强。`);
+  } else if (w < 3) {
+    lines.push(`工作推进次数只有${w}次，是遇到什么阻碍了吗？`);
+  }
+
+  // 等级总结语
+  const closings = {
+    S: '综合来看，你这个季度的表现超出了我的预期，继续保持！',
+    A: '总体来说这个季度完成得不错，有几个亮点值得肯定。',
+    B: '这个季度基本达标，但还有提升空间，下个季度加油。',
+    C: '坦白说这个季度让我有点失望，希望你认真反思一下。',
+    D: '这个季度表现差强人意，如果下个季度没有明显改善，我们可能需要认真谈谈了。',
+  };
+  lines.push(closings[grade]);
+
+  return lines.map(l => `<p style="margin:4px 0">— ${l}</p>`).join('');
+}
+
+function showOKRModal() {
   const quarter = Math.ceil((STATE.day - 1) / WEEKS_PER_QUARTER);
 
+  // 自动计算评级
+  const gradeId = calcOKRGrade();
+  const gradeData = OKR_GRADES.find(g => g.id === gradeId);
+  _selectedOKRGrade = gradeId;
+
+  // 摘要
   const summaryEl = document.getElementById('okrSummary');
   summaryEl.innerHTML = `
     <div class="okr-summary-row">季度 <span>Q${quarter}</span></div>
-    <div class="okr-summary-row">当前绩效 <span>${cap(STATE.perf)}</span></div>
-    <div class="okr-summary-row">本季度绩效积累 <span>+${STATE.quarterPerfSum}</span></div>
-    <div class="okr-summary-row">当前职级 <span>${GRADES[STATE.gradeIdx].id}</span></div>
-    <div class="okr-summary-row">健康状态 <span style="color:${STATE.health<40?'#ff6688':'#88ee88'}">${STATE.health < 40 ? '亚健康' : '正常'}</span></div>
+    <div class="okr-summary-row">当前绩效 <span>${STATE.perf}</span></div>
+    <div class="okr-summary-row">本季工作行动 <span>${STATE.qWorkCount} 次</span></div>
+    <div class="okr-summary-row">1on1次数 <span style="color:${STATE.q1on1Count===0?'#ff6688':'#88ee88'}">${STATE.q1on1Count} 次${STATE.q1on1Count===0?' ⚠️':''}</span></div>
+    <div class="okr-summary-row">摸鱼次数 <span style="color:${STATE.qSlackCount>=3?'#ff6688':'#888'}">${STATE.qSlackCount} 次${STATE.qSlackCount>=3?' 👀':''}</span></div>
+    <div class="okr-summary-row">请假次数 <span>${STATE.qLeaveCount} 次</span></div>
   `;
 
-  // 渲染等级选择
-  const gradeRow = document.getElementById('okrGradeRow');
-  gradeRow.innerHTML = OKR_GRADES.map(g => `
-    <div class="okr-grade-btn okr-grade-${g.id.toLowerCase()}" onclick="selectOKRGrade('${g.id}')">
-      <div class="grade-label">${g.label}</div>
-      <div class="grade-desc">${g.desc}</div>
-    </div>
-  `).join('');
+  // 老板点评
+  document.getElementById('okrBossComment').innerHTML =
+    `<div style="font-size:0.72rem;color:#888;margin-bottom:8px">📢 老板说：</div>` + genBossComment(gradeId);
+
+  // 评级展示
+  const gradeColors = {S:'#ff9966',A:'#88ee88',B:'#66bbff',C:'#f0c040',D:'#ee8888'};
+  document.getElementById('okrGradeResult').innerHTML = `
+    <div style="font-size:0.78rem;color:#888;margin-bottom:6px">本季度 OKR 评级</div>
+    <div style="font-size:2.4rem;font-weight:bold;color:${gradeColors[gradeId]}">${gradeId}</div>
+    <div style="font-size:0.75rem;color:#666;margin-top:4px">${gradeData.desc.replace('\n',' · ')}</div>
+  `;
 
   document.getElementById('okrModal').classList.add('show');
 }
 
 function selectOKRGrade(id) {
+  // 保留兼容，实际不再调用
   _selectedOKRGrade = id;
-  document.querySelectorAll('.okr-grade-btn').forEach(el => el.classList.remove('selected'));
-  document.querySelector(`.okr-grade-${id.toLowerCase()}`).classList.add('selected');
-  document.getElementById('okrConfirmBtn').disabled = false;
 }
 
 function confirmOKR() {
@@ -2241,24 +2375,32 @@ function confirmOKR() {
     grade: _selectedOKRGrade,
     score: gradeData.reviewScore,
     perfAtTime: STATE.perf,
+    behaviors: {
+      work: STATE.qWorkCount, overtime: STATE.qOvertimeCount,
+      on1: STATE.q1on1Count, slack: STATE.qSlackCount,
+      leave: STATE.qLeaveCount
+    }
   });
 
   // 应用OKR效果
   STATE.perf = cap(STATE.perf + gradeData.perfBonus);
   STATE.mood = cap(STATE.mood + gradeData.moodBonus);
 
-  // 重置季度统计
+  // 重置季度统计（行为计数器一并清零）
   STATE.quarterPerfSum = 0;
   STATE.quarterPerfCount = 0;
+  STATE.qWorkCount = 0; STATE.qOvertimeCount = 0;
+  STATE.q1on1Count = 0; STATE.qSlackCount = 0;
+  STATE.qLeaveCount = 0; STATE.qRestCount = 0;
+  STATE.qSocialCount = 0;
   STATE.pendingOKR = false;
 
-  addNarrative(`📋 Q${quarter} OKR Review 完成：评级 ${_selectedOKRGrade}`, gradeData.reviewScore >= 2 ? 'good' : 'bad');
+  addNarrative(`📋 Q${quarter} OKR Review 完成：老板评级 ${_selectedOKRGrade}`, gradeData.reviewScore >= 2 ? 'good' : 'bad');
   addNarrative(`绩效${gradeData.perfBonus >= 0 ? '+' : ''}${gradeData.perfBonus}，心情${gradeData.moodBonus >= 0 ? '+' : ''}${gradeData.moodBonus}`, 'system');
 
   updateUI();
   checkGameOver();
 
-  // 如果同时有绩效考核待处理
   if (STATE.pendingReview) {
     setTimeout(() => showReviewModal(), 400);
   }
