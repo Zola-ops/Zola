@@ -536,6 +536,46 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
 .shop-item-price { font-size: 0.72rem; color: #f0c040; }
 .shop-item-desc { font-size: 0.68rem; color: #666; line-height: 1.4; }
 .shop-item-fx { font-size: 0.65rem; color: #88ee88; }
+
+/* ══ 抽奖系统 ══ */
+.lottery-section { margin-top: 18px; border-top: 1px solid #2a2a2a; padding-top: 14px; }
+.lottery-title { font-size: 0.82rem; color: #f0c040; margin-bottom: 10px; font-weight: bold; }
+.lottery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.lottery-card {
+  border-radius: 10px; padding: 12px 10px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  transition: all 0.15s; text-align: center; border: 1px solid transparent;
+}
+.lottery-card:hover:not(.disabled) { transform: translateY(-2px); filter: brightness(1.15); }
+.lottery-card.disabled { opacity: 0.4; cursor: not-allowed; }
+.lottery-card.tier-common { background: #1e2a1a; border-color: #3a5a2a; }
+.lottery-card.tier-elite  { background: #1a1e2a; border-color: #2a4a8a; }
+.lottery-card.tier-legend { background: #2a1a1a; border-color: #8a2a2a; }
+.lottery-card-icon  { font-size: 1.6rem; }
+.lottery-card-name  { font-size: 0.78rem; font-weight: bold; color: #ddd; }
+.lottery-card-price { font-size: 0.7rem; color: #f0c040; }
+.lottery-card-desc  { font-size: 0.62rem; color: #666; line-height: 1.3; }
+/* 抽奖结果弹窗 */
+.lottery-result-overlay {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.92); align-items: center; justify-content: center;
+}
+.lottery-result-overlay.show { display: flex; }
+.lottery-result-box {
+  background: #1a1a1a; border: 2px solid #f0c040;
+  border-radius: 16px; padding: 30px 28px; max-width: 320px; width: 90%;
+  text-align: center; animation: lotteryPop 0.35s ease;
+}
+@keyframes lotteryPop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.lottery-result-icon  { font-size: 3rem; margin-bottom: 8px; }
+.lottery-result-rarity { font-size: 0.72rem; margin-bottom: 4px; }
+.lottery-result-name  { font-size: 1.1rem; font-weight: bold; color: #f0c040; margin-bottom: 6px; }
+.lottery-result-desc  { font-size: 0.78rem; color: #aaa; margin-bottom: 16px; line-height: 1.5; }
+.lottery-result-close { padding: 8px 24px; border-radius: 6px; background: #333; border: 1px solid #555; color: #ddd; cursor: pointer; font-size: 0.85rem; }
 .buff-list { margin-top: 10px; display: flex; flex-direction: column; gap: 5px; }
 .buff-tag {
   display: flex; justify-content: space-between; align-items: center;
@@ -914,6 +954,12 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
         </div>
         <div class="shop-grid" id="shopGrid"></div>
         <div class="buff-list" id="buffList" style="margin-top:10px"></div>
+
+        <!-- 抽奖区 -->
+        <div class="lottery-section">
+          <div class="lottery-title">🎰 打工人抽奖机</div>
+          <div class="lottery-grid" id="lotteryGrid"></div>
+        </div>
       </div>
     </div>
 
@@ -1051,14 +1097,33 @@ const SHOP_ITEMS = [
   { id:'energy_drink',   name:'功能饮料',   emoji:'⚡', price:175,  category:'food',    effect:{energy:15},              desc:'红牛加持，短暂续命' },
   { id:'good_meal',      name:'高档外卖',   emoji:'🍣', price:560,  category:'food',    effect:{energy:20,mood:20},      desc:'精致打工人必备，心情+体力双收' },
   { id:'meal_prep',      name:'健康便当',   emoji:'🥗', price:350,  category:'food',    effect:{energy:15,health:5},     desc:'自制低卡便当，健康加持' },
-  { id:'vitamin',        name:'维生素套餐', emoji:'💊', price:840, category:'medicine',effect:{health:10},              buffDays:1, buffEffect:{health:2}, desc:'每日补充，持续1周每周健康+2' },
+  { id:'vitamin',        name:'维生素套餐', emoji:'💊', price:840,  category:'medicine',effect:{health:10},              buffDays:1, buffEffect:{health:2}, desc:'每日补充，持续1周每周健康+2' },
   { id:'painkiller',     name:'止痛药',     emoji:'🩹', price:210,  category:'medicine',effect:{health:8,mood:5},        desc:'头痛感冒应急，治标不治本' },
   { id:'melatonin',      name:'褪黑素',     emoji:'🌙', price:420,  category:'medicine',effect:{energy:10,mood:8},       buffDays:1, buffEffect:{energy:3}, desc:'改善睡眠，持续1周体力+3' },
-  // 耐用品（buff持续多周）
-  { id:'standing_desk',  name:'升降桌',     emoji:'🖥️', price:5600, category:'durable', buffDays:4,  buffEffect:{perf:2,health:1}, desc:'站立办公，持续4周绩效+2、健康+1', oneTime:true },
-  { id:'ergonomic_chair',name:'人体工学椅', emoji:'🪑', price:4200, category:'durable', buffDays:8,  buffEffect:{health:2,mood:1},  desc:'腰不再酸了，持续8周健康+2、心情+1', oneTime:true },
-  { id:'noise_cancel',   name:'降噪耳机',   emoji:'🎧', price:2800, category:'durable', buffDays:13, buffEffect:{focus:2},          desc:'隔绝噪音，持续13周专注+2', oneTime:true },
-  { id:'coffee_machine', name:'咖啡机',     emoji:'☕', price:2100, category:'durable', buffDays:4,  buffEffect:{energy:5},         desc:'自备咖啡机，持续4周体力+5', oneTime:true },
+
+  // 耐用品 —— 日常档（2k~5k）
+  { id:'phone_stand',    name:'手机支架',   emoji:'📱', price:1400,  category:'durable', buffDays:4,  buffEffect:{mood:1},             desc:'再也不用举着手机开会，持续4周心情+1', oneTime:true },
+  { id:'mech_keyboard',  name:'机械键盘',   emoji:'⌨️', price:2100,  category:'durable', buffDays:13, buffEffect:{focus:2,perf:1},     desc:'段落轴哒哒哒，持续13周专注+2、绩效+1', oneTime:true },
+  { id:'blue_light',     name:'防蓝光眼镜', emoji:'👓', price:2800,  category:'durable', buffDays:13, buffEffect:{health:1,energy:2},  desc:'熬夜保护眼睛，持续13周健康+1、体力+2', oneTime:true },
+  { id:'coffee_machine', name:'咖啡机',     emoji:'☕', price:2100,  category:'durable', buffDays:4,  buffEffect:{energy:5},           desc:'自备咖啡机，持续4周体力+5', oneTime:true },
+
+  // 耐用品 —— 进阶档（5k~3万）
+  { id:'standing_desk',  name:'升降桌',     emoji:'🖥️', price:5600,  category:'durable', buffDays:4,  buffEffect:{perf:2,health:1},   desc:'站立办公，持续4周绩效+2、健康+1', oneTime:true },
+  { id:'ergonomic_chair',name:'人体工学椅', emoji:'🪑', price:4200,  category:'durable', buffDays:8,  buffEffect:{health:2,mood:1},   desc:'腰不再酸了，持续8周健康+2、心情+1', oneTime:true },
+  { id:'noise_cancel',   name:'降噪耳机',   emoji:'🎧', price:2800,  category:'durable', buffDays:13, buffEffect:{focus:2},           desc:'隔绝噪音，持续13周专注+2', oneTime:true },
+  { id:'monitor_4k',     name:'4K显示器',   emoji:'🖥️', price:14000, category:'durable', buffDays:26, buffEffect:{perf:3,focus:2},    desc:'眼界大开，持续26周绩效+3、专注+2', oneTime:true },
+  { id:'massage_pad',    name:'按摩坐垫',   emoji:'💆', price:8400,  category:'durable', buffDays:13, buffEffect:{health:3,mood:2},   desc:'久坐神器，持续13周健康+3、心情+2', oneTime:true },
+  { id:'air_purifier',   name:'空气净化器', emoji:'💨', price:7000,  category:'durable', buffDays:26, buffEffect:{health:2,energy:1}, desc:'PM2.5滚出公司，持续26周健康+2、体力+1', oneTime:true },
+
+  // 耐用品 —— 土豪档（5万~25万）
+  { id:'macbook_pro',    name:'MacBook Pro',emoji:'💻', price:56000, category:'durable', buffDays:52, buffEffect:{perf:5,focus:3},    desc:'程序员顶配，持续52周绩效+5、专注+3，还能卖二手', oneTime:true },
+  { id:'massage_chair',  name:'豪华按摩椅', emoji:'🛋️', price:42000, category:'durable', buffDays:26, buffEffect:{health:5,mood:4},   desc:'躺着上班，持续26周健康+5、心情+4', oneTime:true },
+  { id:'standing_tread', name:'跑步走步机', emoji:'🏃', price:35000, category:'durable', buffDays:26, buffEffect:{health:5,energy:3}, desc:'边走边工作，持续26周健康+5、体力+3', oneTime:true },
+
+  // 耐用品 —— 人生成就档（50万+）
+  { id:'tesla_model3',   name:'特斯拉Model3',emoji:'🚗', price:280000,category:'durable', buffDays:52, buffEffect:{mood:8,social:5},   desc:'打工人买到了特斯拉，上班路上无比拉风，持续52周心情+8、人脉+5', oneTime:true },
+  { id:'cyberpunk_room', name:'赛博朋克工作室',emoji:'🎮',price:420000,category:'durable',buffDays:52,buffEffect:{perf:8,focus:5,mood:5},desc:'四屏电竞+RGB轰炸，持续52周绩效+8、专注+5、心情+5', oneTime:true },
+  { id:'penthouse',      name:'顶楼复式豪宅',emoji:'🏢', price:2800000,category:'durable',buffDays:52,buffEffect:{mood:10,social:8,health:3},desc:'凌晨三点俯瞰全城霓虹，打工还有意义吗？持续52周心情+10、人脉+8、健康+3', oneTime:true },
 ];
 
 // ══════════════════════════════════════════════════════
@@ -2679,6 +2744,138 @@ function renderBankPanel() {
 }
 
 // ══════════════════════════════════════════════════════
+// 抽奖系统
+// ══════════════════════════════════════════════════════
+const LOTTERY_TIERS = [
+  {
+    id: 'common', name: '摸鱼抽奖', emoji: '🎰',
+    price: 700, tier: 'tier-common',
+    desc: '¥700/次，随机就完事了，可能赚可能亏',
+    pool: [
+      // 烂奖（概率高）
+      { w:20, rarity:'💩 烂透了', icon:'🍞', name:'发霉面包', desc:'抽到一个发霉的老面包，系统表示这是随机的。能量+5', fx:{energy:5} },
+      { w:18, rarity:'😔 亏了', icon:'🕳️', name:'什么都没有', desc:'你盯着空气，空气没有回应你。心情-5', fx:{mood:-5} },
+      { w:15, rarity:'😐 普通', icon:'☕', name:'随机咖啡券', desc:'一张咖啡优惠券，虽然店已经倒闭了。能量+12', fx:{energy:12} },
+      { w:15, rarity:'😐 普通', icon:'🧦', name:'程序员祝福袜', desc:'"永不踩坑"字样袜子，心情神奇地好了一点。心情+10', fx:{mood:10} },
+      // 一般奖
+      { w:12, rarity:'🌟 还行', icon:'🍣', name:'高档外卖券', desc:'这顿饭终于体面了。体力+20、心情+20', fx:{energy:20,mood:20} },
+      { w:8,  rarity:'🌟 还行', icon:'💊', name:'维生素礼包', desc:'健康生活从抽奖开始。健康+15', fx:{health:15} },
+      { w:6,  rarity:'✨ 不错', icon:'💰', name:'意外奖金', desc:'财务搞错了多打了一笔钱，先装兜里再说。存款+3500', fx:{money:3500} },
+      // 好奖
+      { w:4,  rarity:'💎 稀有', icon:'🎧', name:'降噪耳机一副', desc:'真的降噪耳机！专注+8、心情+5', fx:{focus:8,mood:5} },
+      { w:1.5,rarity:'🏆 史诗', icon:'💻', name:'顶配键鼠套装', desc:'手感好到飞起，本周绩效暴涨。绩效+15、专注+8', fx:{perf:15,focus:8} },
+      // 极品奖（非常低概率）
+      { w:0.5,rarity:'👑 传说', icon:'💎', name:'神秘红包', desc:'你人品爆发！存款+35000', fx:{money:35000} },
+    ]
+  },
+  {
+    id: 'elite', name: '精英抽奖', emoji: '💎',
+    price: 7000, tier: 'tier-elite',
+    desc: '¥7000/次，精英专属，高概率出好货',
+    pool: [
+      // 安慰奖
+      { w:15, rarity:'😔 安慰', icon:'🔋', name:'能量棒礼盒', desc:'至少不是完全没有。体力+25、健康+10', fx:{energy:25,health:10} },
+      { w:12, rarity:'😐 普通', icon:'💆', name:'SPA体验券', desc:'全身放松，回来继续卷。心情+20、健康+15', fx:{mood:20,health:15} },
+      // 正经奖
+      { w:18, rarity:'🌟 还行', icon:'💰', name:'季度奖金', desc:'意外入账一笔。存款+14000', fx:{money:14000} },
+      { w:15, rarity:'✨ 不错', icon:'📊', name:'绩效暴击', desc:'老板突然发现了你的价值。绩效+20、人脉+10', fx:{perf:20,social:10} },
+      { w:12, rarity:'✨ 不错', icon:'🖥️', name:'4K显示器', desc:'眼界打开了，从今天起不一样。绩效+8、专注+5', fx:{perf:8,focus:5} },
+      // 好奖
+      { w:10, rarity:'💎 稀有', icon:'🎓', name:'高端培训课', desc:'花大钱学了真东西。绩效+15、专注+12、人脉+8', fx:{perf:15,focus:12,social:8} },
+      { w:8,  rarity:'💎 稀有', icon:'💰', name:'大额奖金', desc:'存款到账，心跳加速。存款+42000', fx:{money:42000} },
+      { w:6,  rarity:'🏆 史诗', icon:'🏋️', name:'私教健身年卡', desc:'身体是革命的本钱。健康+20、体力+15、心情+10', fx:{health:20,energy:15,mood:10} },
+      { w:3,  rarity:'🏆 史诗', icon:'✈️', name:'商务舱机票', desc:'出差头等舱，格局打开了。体力+30、心情+25、人脉+15', fx:{energy:30,mood:25,social:15} },
+      { w:1,  rarity:'👑 传说', icon:'💰', name:'天降横财', desc:'宇宙选择了你。存款+140000', fx:{money:140000} },
+    ]
+  },
+  {
+    id: 'legend', name: '传说抽奖', emoji: '👑',
+    price: 35000, tier: 'tier-legend',
+    desc: '¥35000/次，传说级，出货率保证不错',
+    pool: [
+      // 保底（不会亏）
+      { w:20, rarity:'✨ 普通', icon:'💰', name:'现金返还', desc:'没抽到好东西，平台给你退了一半。存款+17500', fx:{money:17500} },
+      { w:15, rarity:'💎 稀有', icon:'🧘', name:'身心重置', desc:'彻底放空，重新出发。体力+40、心情+35、健康+25', fx:{energy:40,mood:35,health:25} },
+      // 好奖
+      { w:18, rarity:'💎 稀有', icon:'💰', name:'年终大奖', desc:'这一年值了。存款+70000', fx:{money:70000} },
+      { w:12, rarity:'💎 稀有', icon:'📈', name:'全属性强化', desc:'命运之力涌入全身。绩效+20、专注+15、人脉+12、健康+10', fx:{perf:20,focus:15,social:12,health:10} },
+      { w:10, rarity:'🏆 史诗', icon:'🏖️', name:'豪华度假套餐', desc:'7天5晚全包，身心灵彻底充电。体力满值、心情满值、健康+30', fx:{energy:100,mood:100,health:30} },
+      { w:8,  rarity:'🏆 史诗', icon:'💰', name:'神秘大额红包', desc:'谁发的不重要，钱到位了。存款+210000', fx:{money:210000} },
+      // 传说奖
+      { w:5,  rarity:'👑 传说', icon:'🚗', name:'超跑体验券', desc:'开了一天保时捷，绩效和人脉双双暴涨（可能是错觉）。绩效+30、人脉+20、心情+30', fx:{perf:30,social:20,mood:30} },
+      { w:3,  rarity:'👑 传说', icon:'💰', name:'财富密码', desc:'某个神秘信封里的数字让你手抖了一会儿。存款+560000', fx:{money:560000} },
+      // 神话（概率极低）
+      { w:0.8,rarity:'🌈 神话', icon:'🏆', name:'打工人终极礼包', desc:'全属性拉满！绩效+50、专注+30、人脉+30、健康+50、体力满、心情满', fx:{perf:50,focus:30,social:30,health:50,energy:100,mood:100} },
+      { w:0.2,rarity:'🌈 神话', icon:'💎', name:'宇宙级奖励', desc:'谁说打工没未来？你直接拿到了人生的答案。存款+2800000', fx:{money:2800000} },
+    ]
+  }
+];
+
+function renderLotteryGrid() {
+  const grid = document.getElementById('lotteryGrid');
+  if (!grid) return;
+  grid.innerHTML = LOTTERY_TIERS.map(tier => {
+    const canAfford = STATE.money >= tier.price;
+    return `
+    <div class="lottery-card ${tier.tier}${canAfford?'':' disabled'}" onclick="${canAfford?`doLottery('${tier.id}')`:''}" title="${canAfford?'':'余额不足'}">
+      <div class="lottery-card-icon">${tier.emoji}</div>
+      <div class="lottery-card-name">${tier.name}</div>
+      <div class="lottery-card-price">¥${tier.price.toLocaleString()}/次</div>
+      <div class="lottery-card-desc">${tier.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+function doLottery(tierId) {
+  const tier = LOTTERY_TIERS.find(t => t.id === tierId);
+  if (!tier) return;
+  if (STATE.money < tier.price) { addNarrative('💸 余额不足，抽不了！', 'bad'); return; }
+  STATE.money -= tier.price;
+
+  // 加权随机
+  const pool = tier.pool;
+  const totalW = pool.reduce((s, p) => s + p.w, 0);
+  let r = Math.random() * totalW;
+  let prize = pool[pool.length - 1];
+  for (const p of pool) {
+    r -= p.w;
+    if (r <= 0) { prize = p; break; }
+  }
+
+  // 应用效果
+  const fxLines = [];
+  const labels = {energy:'体力',mood:'心情',focus:'专注',perf:'绩效',social:'人脉',money:'存款',health:'健康'};
+  if (prize.fx) {
+    Object.entries(prize.fx).forEach(([k, v]) => {
+      if (k === 'money') STATE.money += v;
+      else STATE[k] = cap(STATE[k] + v);
+      fxLines.push(`${labels[k]||k}${v>0?'+':''}${v}`);
+    });
+  }
+
+  // 显示结果弹窗
+  document.getElementById('lotteryResultIcon').textContent = prize.icon;
+  document.getElementById('lotteryResultRarity').textContent = prize.rarity;
+  document.getElementById('lotteryResultRarity').style.color =
+    prize.rarity.includes('神话') ? '#ff88ff' :
+    prize.rarity.includes('传说') ? '#f0c040' :
+    prize.rarity.includes('史诗') ? '#cc88ff' :
+    prize.rarity.includes('稀有') ? '#66bbff' :
+    prize.rarity.includes('不错') ? '#88ee88' : '#888';
+  document.getElementById('lotteryResultName').textContent = prize.name;
+  document.getElementById('lotteryResultDesc').textContent = prize.desc;
+  document.getElementById('lotteryResultOverlay').classList.add('show');
+
+  addNarrative(`🎰 ${tier.name}：抽到【${prize.rarity} ${prize.name}】${fxLines.length?'· '+fxLines.join('，'):''}`, 'special');
+  updateUI();
+  updateP3UI();
+}
+
+function closeLotteryResult() {
+  document.getElementById('lotteryResultOverlay').classList.remove('show');
+}
+
+// ══════════════════════════════════════════════════════
 // Phase 3：商城系统
 // ══════════════════════════════════════════════════════
 let _shopCategory = 'all';
@@ -2702,7 +2899,7 @@ function renderShopGrid() {
       fxParts.push(`${{energy:'体力',mood:'心情',focus:'专注',perf:'绩效',health:'健康'}[k]||k}+${v}`);
     });
     if (item.buffEffect) Object.entries(item.buffEffect).forEach(([k,v]) => {
-      fxParts.push(`每天${{energy:'体力',mood:'心情',focus:'专注',perf:'绩效',health:'健康'}[k]||k}+${v}×${item.buffDays}天`);
+      fxParts.push(`每周${{energy:'体力',mood:'心情',focus:'专注',perf:'绩效',health:'健康'}[k]||k}+${v}×${item.buffDays}周`);
     });
     return `
     <div class="shop-item${disabled?' disabled':''}" onclick="${disabled?'':'buyShopItem(\''+item.id+'\')'}">
@@ -2717,6 +2914,8 @@ function renderShopGrid() {
 
   // Buff列表
   renderBuffList();
+  // 抽奖
+  renderLotteryGrid();
 }
 
 function renderBuffList() {
@@ -2729,7 +2928,7 @@ function renderBuffList() {
   buffList.innerHTML = '<div style="font-size:0.72rem;color:#666;margin-bottom:4px">生效中的 Buff：</div>' +
     STATE.activeBuffs.map(b => {
       const fxDesc = Object.entries(b.effect).map(([k,v]) => `${k}+${v}`).join(' ');
-      return `<div class="buff-tag"><span class="buff-tag-name">${b.emoji} ${b.name}</span><span class="buff-tag-days">${fxDesc}/天 · 剩余${b.daysLeft}天</span></div>`;
+      return `<div class="buff-tag"><span class="buff-tag-name">${b.emoji} ${b.name}</span><span class="buff-tag-days">${fxDesc}/周 · 剩余${b.daysLeft}周</span></div>`;
     }).join('');
 }
 
@@ -2760,7 +2959,7 @@ function buyShopItem(itemId) {
 
   const fxDesc = item.effect ? Object.entries(item.effect).map(([k,v])=>`${k}+${v}`).join('，') : '';
   addNarrative(`🛒 购买【${item.emoji}${item.name}】¥${item.price}${fxDesc?'，'+fxDesc:''}`, 'good');
-  if (item.buffDays) addNarrative(`✨ Buff已激活，持续 ${item.buffDays} 天`, 'special');
+  if (item.buffDays) addNarrative(`✨ Buff已激活，持续 ${item.buffDays} 周`, 'special');
 
   updateUI();
   updateP3UI();
@@ -3037,5 +3236,17 @@ function restartGame() {
   showScreen('start');
 })();
 </script>
+
+<!-- 抽奖结果弹窗 -->
+<div class="lottery-result-overlay" id="lotteryResultOverlay">
+  <div class="lottery-result-box">
+    <div class="lottery-result-icon" id="lotteryResultIcon">🎁</div>
+    <div class="lottery-result-rarity" id="lotteryResultRarity"></div>
+    <div class="lottery-result-name" id="lotteryResultName"></div>
+    <div class="lottery-result-desc" id="lotteryResultDesc"></div>
+    <button class="lottery-result-close" onclick="closeLotteryResult()">好耶，收下了</button>
+  </div>
+</div>
+
 </body>
 </html>
