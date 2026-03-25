@@ -1286,23 +1286,23 @@ const CLASSES = {
 // ══════════════════════════════════════════════════════
 const COMMON_ACTIONS = [
   // 工作类：消耗体力+心情，提绩效
-  { id:'work_hard',   name:'专心工作',  emoji:'💻', cost:{energy:-20,mood:-5},  gain:{perf:18,money:560},   desc:'老实干活，不求有功但求无过', isWork:true },
-  { id:'overtime',    name:'主动加班',  emoji:'🌙', cost:{energy:-30,mood:-15}, gain:{perf:25,money:1050},  desc:'卷是卷了，但工资也多了点', isWork:true },
+  { id:'work_hard',   name:'专心工作',  emoji:'💻', cost:{energy:-20,mood:-5},  gain:{perf:18,money:56},    desc:'老实干活，不求有功但求无过', isWork:true },
+  { id:'overtime',    name:'主动加班',  emoji:'🌙', cost:{energy:-30,mood:-15}, gain:{perf:25,money:105},   desc:'卷是卷了，但工资也多了点', isWork:true },
   { id:'learn_skill', name:'自我提升',  emoji:'📚', cost:{energy:-15,mood:-5},  gain:{focus:12,perf:10},   desc:'利用工作时间学点新东西，提升自己', isWork:true },
   { id:'1on1_boss',   name:'和老板1on1',emoji:'👔', cost:{energy:-12,mood:-8},  gain:{perf:12,social:15},  desc:'汇报工作，刷刷存在感，有时候有惊喜', isWork:true },
   // 休息类：体力回复
-  { id:'coffee',      name:'喝杯咖啡',  emoji:'☕', cost:{money:-126},          gain:{energy:20,focus:15}, desc:'工位旁的咖啡机，打工人续命神器' },
+  { id:'coffee',      name:'喝杯咖啡',  emoji:'☕', cost:{money:-13},           gain:{energy:20,focus:15}, desc:'工位旁的咖啡机，打工人续命神器' },
   { id:'nap',         name:'偷偷小睡',  emoji:'😴', cost:{},                    gain:{energy:25,mood:5},   desc:'午休趴一会儿，体力悄悄回来了' },
   { id:'sick_leave',  name:'请病假',    emoji:'🤒', cost:{perf:-15},            gain:{energy:40,mood:20},  desc:'真假病假全凭良心，但确实休息到了' },
   // 吃饭：花钱回体力
-  { id:'lunch',       name:'好好吃饭',  emoji:'🍱', cost:{money:-280},          gain:{mood:20,energy:25},  desc:'点个好饭，精神都为之一振' },
+  { id:'lunch',       name:'好好吃饭',  emoji:'🍱', cost:{money:-28},           gain:{mood:20,energy:25},  desc:'点个好饭，精神都为之一振' },
   // 摸鱼/聊天：体力不变，心情提升，绩效降低
   { id:'slack_off',   name:'摸鱼划水',  emoji:'🐟', cost:{perf:-10},            gain:{mood:15},            desc:'刷刷手机，舒服是舒服，但绩效在悄悄溜走' },
   { id:'team_chat',   name:'和同事聊天',emoji:'💬', cost:{perf:-5,focus:-8},    gain:{mood:18,social:10},  desc:'闲扯几句，心情好多了，但活还没干' },
   // 医疗类：花钱回健康
-  { id:'clinic',      name:'去诊所',    emoji:'🏥', cost:{money:-560,energy:-10},gain:{health:25},          desc:'挂个普通号，排队两小时，健康值回一些', isHealth:true },
-  { id:'hospital',    name:'去医院',    emoji:'🏨', cost:{money:-2100,energy:-5},gain:{health:50,mood:10},  desc:'住院半天，专科检查，大幅恢复健康值', isHealth:true },
-  { id:'rest_home',   name:'在家休息',  emoji:'🛋️', cost:{perf:-8,money:-140},   gain:{health:15,energy:30,mood:10}, desc:'请假在家养病，慢慢恢复', isHealth:true },
+  { id:'clinic',      name:'去诊所',    emoji:'🏥', cost:{money:-56,energy:-10}, gain:{health:25},          desc:'挂个普通号，排队两小时，健康值回一些', isHealth:true },
+  { id:'hospital',    name:'去医院',    emoji:'🏨', cost:{money:-210,energy:-5}, gain:{health:50,mood:10},  desc:'住院半天，专科检查，大幅恢复健康值', isHealth:true },
+  { id:'rest_home',   name:'在家休息',  emoji:'🛋️', cost:{perf:-8,money:-14},    gain:{health:15,energy:30,mood:10}, desc:'请假在家养病，慢慢恢复', isHealth:true },
 ];
 
 // ══════════════════════════════════════════════════════
@@ -1322,7 +1322,7 @@ const EVENTS = [
     desc:'周会上老板专门点名表扬了你的工作，全组都鼓掌了。',
     choices:[
       {text:'谦虚感谢', fx:{mood:20,social:10,perf:8}, fxDesc:'心情+20，人脉+10，绩效+8'},
-      {text:'顺势提加薪', fx:{mood:15,money:3500,perf:-5}, fxDesc:'存款+3500，心情+15，绩效-5'},
+      {text:'顺势提加薪', fx:{mood:15,money:350,perf:-5}, fxDesc:'存款+350，心情+15，绩效-5'},
     ]
   },
   {
@@ -1353,8 +1353,8 @@ const EVENTS = [
     id:'salary_day', title:'💰 发工资了！', prob:0.05,
     desc:'薪资到账，短信提示的叮声是打工人最美的声音。',
     choices:[
-      {text:'存起来，继续奋斗', fx:{money:21000,mood:20}, fxDesc:'存款+21000，心情+20'},
-      {text:'犒劳自己，买点好东西', fx:{money:10500,mood:35}, fxDesc:'存款+10500，心情+35'},
+      {text:'存起来，继续奋斗', fx:{money:2100,mood:20}, fxDesc:'存款+2100，心情+20'},
+      {text:'犒劳自己，买点好东西', fx:{money:1050,mood:35}, fxDesc:'存款+1050，心情+35'},
     ]
   },
   {
@@ -1830,7 +1830,7 @@ function calcDailySalary() {  // 保留函数名兼容，实际返回周薪
 function calcWeeklySalary() {
   const co = COMPANIES[STATE.companyId] || COMPANIES.byteuniverse;
   const grade = GRADES[STATE.gradeIdx] || GRADES[0];
-  const base = 5600 + Math.floor(STATE.perf * 84);  // 周薪基数≈原日薪×7：绩效满100约14000/周
+  const base = 560 + Math.floor(STATE.perf * 8);  // 周薪基数：绩效满100约1360/周
   const eduBonus = STATE.eduSalaryBonus || 1.0;
   return Math.floor(base * co.salaryMult * grade.salaryMult * eduBonus);
 }
@@ -2891,8 +2891,8 @@ function renderBankPanel() {
 const LOTTERY_TIERS = [
   {
     id: 'common', name: '摸鱼抽奖', emoji: '🎰',
-    price: 700, tier: 'tier-common',
-    desc: '¥700/次，随机就完事了，可能赚可能亏',
+    price: 70, tier: 'tier-common',
+    desc: '¥70/次，随机就完事了，可能赚可能亏',
     pool: [
       // 烂奖（概率高）
       { w:20, rarity:'💩 烂透了', icon:'🍞', name:'发霉面包', desc:'抽到一个发霉的老面包，系统表示这是随机的。能量+5', fx:{energy:5} },
@@ -2902,53 +2902,53 @@ const LOTTERY_TIERS = [
       // 一般奖
       { w:12, rarity:'🌟 还行', icon:'🍣', name:'高档外卖券', desc:'这顿饭终于体面了。体力+20、心情+20', fx:{energy:20,mood:20} },
       { w:8,  rarity:'🌟 还行', icon:'💊', name:'维生素礼包', desc:'健康生活从抽奖开始。健康+15', fx:{health:15} },
-      { w:6,  rarity:'✨ 不错', icon:'💰', name:'意外奖金', desc:'财务搞错了多打了一笔钱，先装兜里再说。存款+3500', fx:{money:3500} },
+      { w:6,  rarity:'✨ 不错', icon:'💰', name:'意外奖金', desc:'财务搞错了多打了一笔钱，先装兜里再说。存款+350', fx:{money:350} },
       // 好奖
       { w:4,  rarity:'💎 稀有', icon:'🎧', name:'降噪耳机一副', desc:'真的降噪耳机！专注+8、心情+5', fx:{focus:8,mood:5} },
       { w:1.5,rarity:'🏆 史诗', icon:'💻', name:'顶配键鼠套装', desc:'手感好到飞起，本周绩效暴涨。绩效+15、专注+8', fx:{perf:15,focus:8} },
       // 极品奖（非常低概率）
-      { w:0.5,rarity:'👑 传说', icon:'💎', name:'神秘红包', desc:'你人品爆发！存款+35000', fx:{money:35000} },
+      { w:0.5,rarity:'👑 传说', icon:'💎', name:'神秘红包', desc:'你人品爆发！存款+3500', fx:{money:3500} },
     ]
   },
   {
     id: 'elite', name: '精英抽奖', emoji: '💎',
-    price: 7000, tier: 'tier-elite',
-    desc: '¥7000/次，精英专属，高概率出好货',
+    price: 700, tier: 'tier-elite',
+    desc: '¥700/次，精英专属，高概率出好货',
     pool: [
       // 安慰奖
       { w:15, rarity:'😔 安慰', icon:'🔋', name:'能量棒礼盒', desc:'至少不是完全没有。体力+25、健康+10', fx:{energy:25,health:10} },
       { w:12, rarity:'😐 普通', icon:'💆', name:'SPA体验券', desc:'全身放松，回来继续卷。心情+20、健康+15', fx:{mood:20,health:15} },
       // 正经奖
-      { w:18, rarity:'🌟 还行', icon:'💰', name:'季度奖金', desc:'意外入账一笔。存款+14000', fx:{money:14000} },
+      { w:18, rarity:'🌟 还行', icon:'💰', name:'季度奖金', desc:'意外入账一笔。存款+1400', fx:{money:1400} },
       { w:15, rarity:'✨ 不错', icon:'📊', name:'绩效暴击', desc:'老板突然发现了你的价值。绩效+20、人脉+10', fx:{perf:20,social:10} },
       { w:12, rarity:'✨ 不错', icon:'🖥️', name:'4K显示器', desc:'眼界打开了，从今天起不一样。绩效+8、专注+5', fx:{perf:8,focus:5} },
       // 好奖
       { w:10, rarity:'💎 稀有', icon:'🎓', name:'高端培训课', desc:'花大钱学了真东西。绩效+15、专注+12、人脉+8', fx:{perf:15,focus:12,social:8} },
-      { w:8,  rarity:'💎 稀有', icon:'💰', name:'大额奖金', desc:'存款到账，心跳加速。存款+42000', fx:{money:42000} },
+      { w:8,  rarity:'💎 稀有', icon:'💰', name:'大额奖金', desc:'存款到账，心跳加速。存款+4200', fx:{money:4200} },
       { w:6,  rarity:'🏆 史诗', icon:'🏋️', name:'私教健身年卡', desc:'身体是革命的本钱。健康+20、体力+15、心情+10', fx:{health:20,energy:15,mood:10} },
       { w:3,  rarity:'🏆 史诗', icon:'✈️', name:'商务舱机票', desc:'出差头等舱，格局打开了。体力+30、心情+25、人脉+15', fx:{energy:30,mood:25,social:15} },
-      { w:1,  rarity:'👑 传说', icon:'💰', name:'天降横财', desc:'宇宙选择了你。存款+140000', fx:{money:140000} },
+      { w:1,  rarity:'👑 传说', icon:'💰', name:'天降横财', desc:'宇宙选择了你。存款+14000', fx:{money:14000} },
     ]
   },
   {
     id: 'legend', name: '传说抽奖', emoji: '👑',
-    price: 35000, tier: 'tier-legend',
-    desc: '¥35000/次，传说级，出货率保证不错',
+    price: 3500, tier: 'tier-legend',
+    desc: '¥3500/次，传说级，出货率保证不错',
     pool: [
       // 保底（不会亏）
-      { w:20, rarity:'✨ 普通', icon:'💰', name:'现金返还', desc:'没抽到好东西，平台给你退了一半。存款+17500', fx:{money:17500} },
+      { w:20, rarity:'✨ 普通', icon:'💰', name:'现金返还', desc:'没抽到好东西，平台给你退了一半。存款+1750', fx:{money:1750} },
       { w:15, rarity:'💎 稀有', icon:'🧘', name:'身心重置', desc:'彻底放空，重新出发。体力+40、心情+35、健康+25', fx:{energy:40,mood:35,health:25} },
       // 好奖
-      { w:18, rarity:'💎 稀有', icon:'💰', name:'年终大奖', desc:'这一年值了。存款+70000', fx:{money:70000} },
+      { w:18, rarity:'💎 稀有', icon:'💰', name:'年终大奖', desc:'这一年值了。存款+7000', fx:{money:7000} },
       { w:12, rarity:'💎 稀有', icon:'📈', name:'全属性强化', desc:'命运之力涌入全身。绩效+20、专注+15、人脉+12、健康+10', fx:{perf:20,focus:15,social:12,health:10} },
       { w:10, rarity:'🏆 史诗', icon:'🏖️', name:'豪华度假套餐', desc:'7天5晚全包，身心灵彻底充电。体力满值、心情满值、健康+30', fx:{energy:100,mood:100,health:30} },
-      { w:8,  rarity:'🏆 史诗', icon:'💰', name:'神秘大额红包', desc:'谁发的不重要，钱到位了。存款+210000', fx:{money:210000} },
+      { w:8,  rarity:'🏆 史诗', icon:'💰', name:'神秘大额红包', desc:'谁发的不重要，钱到位了。存款+21000', fx:{money:21000} },
       // 传说奖
       { w:5,  rarity:'👑 传说', icon:'🚗', name:'超跑体验券', desc:'开了一天保时捷，绩效和人脉双双暴涨（可能是错觉）。绩效+30、人脉+20、心情+30', fx:{perf:30,social:20,mood:30} },
-      { w:3,  rarity:'👑 传说', icon:'💰', name:'财富密码', desc:'某个神秘信封里的数字让你手抖了一会儿。存款+560000', fx:{money:560000} },
+      { w:3,  rarity:'👑 传说', icon:'💰', name:'财富密码', desc:'某个神秘信封里的数字让你手抖了一会儿。存款+56000', fx:{money:56000} },
       // 神话（概率极低）
       { w:0.8,rarity:'🌈 神话', icon:'🏆', name:'打工人终极礼包', desc:'全属性拉满！绩效+50、专注+30、人脉+30、健康+50、体力满、心情满', fx:{perf:50,focus:30,social:30,health:50,energy:100,mood:100} },
-      { w:0.2,rarity:'🌈 神话', icon:'💎', name:'宇宙级奖励', desc:'谁说打工没未来？你直接拿到了人生的答案。存款+2800000', fx:{money:2800000} },
+      { w:0.2,rarity:'🌈 神话', icon:'💎', name:'宇宙级奖励', desc:'谁说打工没未来？你直接拿到了人生的答案。存款+280000', fx:{money:280000} },
     ]
   }
 ];
