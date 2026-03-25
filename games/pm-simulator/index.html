@@ -568,6 +568,11 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
 .bank-btn:hover { background: #2a2a2a; color: #fff; }
 .bank-btn.confirm { border-color: #88ee88; color: #88ee88; }
 .bank-btn.warn { border-color: #ee8888; color: #ee8888; }
+.loan-term-btn {
+  padding: 5px 10px; border-radius: 5px; border: 1px solid #333;
+  cursor: pointer; font-size: 0.7rem; background: #1a1a1a; color: #666; transition: all 0.15s;
+}
+.loan-term-btn.active { border-color: #f0c040; color: #f0c040; background: rgba(240,192,64,0.08); }
 
 /* ══ 股市 ══ */
 .stock-panel { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 18px; }
@@ -731,7 +736,7 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
     <div class="grade-ladder" id="gradeLadder"></div>
     <div class="company-bar-salary" style="display:flex;gap:16px;margin-left:auto;align-items:center">
       <span id="ageDisplay" style="color:#aaa;font-size:0.78rem">年龄：<span style="color:#66bbff;font-weight:bold">22</span>岁</span>
-      <span>日薪：<span id="salaryDisplay">0</span> 元</span>
+      <span>周薪：<span id="salaryDisplay">0</span> 元</span>
     </div>
   </div>
 
@@ -749,7 +754,7 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
         <span class="class-badge" id="classBadge"></span>
         <span class="level-badge" id="levelBadge">Lv.1</span>
       </div>
-      <div class="day-info">第 <span id="dayDisplay">1</span> 天 · Q<span id="quarterDisplay">1</span></div>
+      <div class="day-info">第 <span id="dayDisplay">1</span> 周 · Q<span id="quarterDisplay">1</span></div>
     </div>
     <div class="stats-grid">
       <div class="stat-item">
@@ -785,7 +790,7 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
     </div>
     <div class="money-row">
       <div>💰 存款：<span id="moneyDisplay">0</span> 元</div>
-      <div>📅 工龄：<span id="tenureDisplay">0</span> 天</div>
+      <div>📅 工龄：<span id="tenureDisplay">0</span> 周</div>
       <div>🏅 <span id="levelDisplay">初级打工人</span></div>
       <div id="optionDisplay" style="display:none">📈 期权：<span id="optionVal">0</span> 份</div>
     </div>
@@ -793,7 +798,7 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
     <div class="okr-bar">
       <div class="okr-bar-label">Q<span id="okrQuarter">1</span> OKR</div>
       <div class="okr-progress-bg"><div class="okr-progress-fill" id="okrProgressFill" style="width:0%"></div></div>
-      <div class="okr-bar-right" id="okrDaysLeft">距Review还有90天</div>
+      <div class="okr-bar-right" id="okrDaysLeft">距Review还有13周</div>
     </div>
   </div>
 
@@ -932,13 +937,25 @@ h1 { font-size: 1.3rem; color: #fff; margin-bottom: 4px; letter-spacing: 2px; }
           <div class="bank-card">
             <h4>💳 贷款账户</h4>
             <div class="bank-amount" id="bankLoanDisplay" style="color:#ee8888">¥0</div>
-            <div class="bank-rate" id="loanRateDisplay">日利率 0.08%（年化约30%）</div>
             <div id="loanInfo" style="font-size:0.72rem;color:#666">暂无贷款</div>
-            <div class="bank-input-row">
-              <input type="number" class="bank-input" id="loanInput" placeholder="贷款金额" min="500">
-              <button class="bank-btn confirm" onclick="doLoan()">申请贷款</button>
+            <div id="loanApplySection">
+              <div style="font-size:0.72rem;color:#888;margin:6px 0">可贷额度：<span id="loanLimitDisplay" style="color:#f0c040">¥0</span>（月薪×5）</div>
+              <div class="bank-input-row">
+                <input type="number" class="bank-input" id="loanInput" placeholder="贷款金额" min="500" oninput="updateLoanPreview()">
+              </div>
+              <div style="font-size:0.72rem;color:#888;margin:4px 0">还款期限：</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+                <button class="loan-term-btn active" data-term="3" onclick="selectLoanTerm(3)">3年 年利率6%</button>
+                <button class="loan-term-btn" data-term="5" onclick="selectLoanTerm(5)">5年 年利率8%</button>
+                <button class="loan-term-btn" data-term="10" onclick="selectLoanTerm(10)">10年 年利率10%</button>
+              </div>
+              <div style="font-size:0.68rem;color:#555;margin-bottom:6px" id="loanPreview"></div>
+              <button class="bank-btn confirm" style="width:100%" onclick="doLoan()">申请贷款</button>
             </div>
-            <button class="bank-btn warn" style="width:100%" onclick="doRepayLoan()">还款（全部）</button>
+            <div id="loanRepaySection" style="display:none">
+              <div style="font-size:0.72rem;color:#888;margin:6px 0" id="loanWeeklyInfo"></div>
+              <button class="bank-btn warn" style="width:100%;margin-top:6px" onclick="doRepayLoan()">提前还款（全部）</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1356,27 +1373,34 @@ function slotMetaText(data) {
   const d = new Date(data._savedAt || 0);
   const timeStr = `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
   const grade = GRADES[data.gradeIdx||0];
-  return `${data.playerName||'打工人'} · ${clsName} · ${co.name||''} · ${grade?grade.id:'P4'} · 第${data.day}天 · ${timeStr}`;
+  return `${data.playerName||'打工人'} · ${clsName} · ${co.name||''} · ${grade?grade.id:'P4'} · 第${data.day}周 · ${timeStr}`;
 }
 
 // ══════════════════════════════════════════════════════
 // 游戏状态
 // ══════════════════════════════════════════════════════
+// 时间单位说明：STATE.day 实际代表"周数"，每次行动推进1周
+// 13周=1季度，26周=半年，52周=1年
+// 年龄：startAge + floor(day/52)
+const WEEKS_PER_QUARTER = 13;  // 每季度13周
+const WEEKS_PER_HALF   = 26;   // 半年26周
+const WEEKS_PER_YEAR   = 52;   // 每年52周
+
 function defaultState() {
   return {
     playerName: '打工人', classId: 'pm', companyId: 'byteuniverse',
     eduId: 'bachelor',   // 学历
     startAge: 22,        // 入职年龄
-    day: 1, quarter: 1, phase: 0,
-    energy: 75, mood: 70, focus: 75, perf: 60, social: 50, health: 100,
+    day: 1, quarter: 1, phase: 0,  // day = 周数
+    energy: 75, mood: 70, focus: 75, perf: 0, social: 50, health: 100,
     money: 0, tenure: 0, actionDone: false,
     currentSlot: null, level: 0,
     // 职级系统
     gradeIdx: 0,
     // 年龄危机状态
-    ageRiskTriggered30: false,  // 30岁危机是否已触发
-    ageRiskTriggered35: false,  // 35岁危机是否已触发
-    layoffRisk: 0,              // 裁员风险累积值（35岁后逐渐积累）
+    ageRiskTriggered30: false,
+    ageRiskTriggered35: false,
+    layoffRisk: 0,
     // OKR & 考核系统
     okrHistory: [], reviewHistory: [],
     pendingOKR: false, pendingReview: false,
@@ -1387,10 +1411,13 @@ function defaultState() {
     // ── Phase 3 ──
     // 银行系统
     bankDeposit: 0,
-    bankLoan: 0,
-    bankLoanDays: 0,
-    bankDepositRate: 0.0003,
-    bankLoanRate: 0.0008,
+    bankLoan: 0,           // 贷款余额（含利息）
+    bankLoanPrincipal: 0,  // 原始本金
+    bankLoanWeeks: 0,      // 贷款总期限（周）
+    bankLoanWeeksLeft: 0,  // 剩余还款周数
+    bankLoanWeeklyRate: 0, // 周利率
+    bankDepositRate: 0.0015, // 周利率（约年化8%）
+    bankLoanRate: 0.0008,    // 兼容旧存档
     // 股市系统
     stocks: {},
     stockPrices: {},
@@ -1573,26 +1600,26 @@ function startNewGame() {
   STATE.playerName = playerName;
   Object.assign(STATE, cls.initStats);
   STATE.health = 100;
+  STATE.perf = 0;  // 绩效从0开始，需要实际工作积累
   // 学历加成
   STATE.gradeIdx = edu.initGradeIdx;
-  STATE.perf = cap(STATE.perf + edu.initPerfBonus);
-  STATE.eduSalaryBonus = edu.salaryBonus; // 学历薪资加成
+  STATE.eduSalaryBonus = edu.salaryBonus;
   // 职业加成
-  Object.entries(cls.bonus).forEach(([k,v]) => { if(STATE[k]!==undefined) STATE[k] = Math.min(100, STATE[k]+v); });
+  Object.entries(cls.bonus).forEach(([k,v]) => { if(STATE[k]!==undefined && k!=='perf') STATE[k] = Math.min(100, STATE[k]+v); });
   // 公司初始体力修正
   STATE.energy = cap(STATE.energy + co.initEnergy);
   // Phase 3 初始化
   STATE.options = 0;
   STATE.bankDeposit = 0;
-  STATE.bankLoan = 0;
-  STATE.bankLoanDays = 0;
+  STATE.bankLoan = 0; STATE.bankLoanPrincipal = 0;
+  STATE.bankLoanWeeks = 0; STATE.bankLoanWeeksLeft = 0; STATE.bankLoanWeeklyRate = 0;
   STATE.stocks = {};
   STATE.stockPrices = {};
   STATE.stockHistory = {};
   STATE.inventory = {};
   STATE.activeBuffs = [];
   STATE.vestingSchedule = [];
-  STATE.adaptDays = 3;
+  STATE.adaptDays = 2;  // 适应期2周
   STATE.ageRiskTriggered30 = false;
   STATE.ageRiskTriggered35 = false;
   STATE.layoffRisk = 0;
@@ -1692,11 +1719,13 @@ function enterGame() {
   if (STATE.ageRiskTriggered30 === undefined) STATE.ageRiskTriggered30 = false;
   if (STATE.ageRiskTriggered35 === undefined) STATE.ageRiskTriggered35 = false;
   if (STATE.layoffRisk === undefined) STATE.layoffRisk = 0;
-  initStocks();
-  if (!STATE.bankDepositRate) STATE.bankDepositRate = 0.0003;
-  if (!STATE.bankLoanRate) STATE.bankLoanRate = 0.0008;
+  if (STATE.bankLoanWeeksLeft === undefined) STATE.bankLoanWeeksLeft = STATE.bankLoanDays || 0;
+  if (STATE.bankLoanWeeklyRate === undefined) STATE.bankLoanWeeklyRate = 0.002;
+  if (STATE.bankLoanWeeklyPayment === undefined) STATE.bankLoanWeeklyPayment = 0;
+  if (!STATE.bankDepositRate) STATE.bankDepositRate = 0.0015;
   if (!STATE.activeBuffs) STATE.activeBuffs = [];
   if (!STATE.vestingSchedule) STATE.vestingSchedule = [];
+  initStocks();
 
   updateUI();
   updateP3UI();
@@ -1711,18 +1740,27 @@ function enterGame() {
 // ══════════════════════════════════════════════════════
 function cap(v){ return Math.max(0, Math.min(100, v)); }
 
-function calcDailySalary() {
+function calcDailySalary() {  // 保留函数名兼容，实际返回周薪
+  return calcWeeklySalary();
+}
+
+function calcWeeklySalary() {
   const co = COMPANIES[STATE.companyId] || COMPANIES.byteuniverse;
   const grade = GRADES[STATE.gradeIdx] || GRADES[0];
-  const base = 80 + Math.floor(STATE.perf * 1.5);
+  const base = 800 + Math.floor(STATE.perf * 12);   // 周薪基数：绩效满100约为2000/周
   const eduBonus = STATE.eduSalaryBonus || 1.0;
   return Math.floor(base * co.salaryMult * grade.salaryMult * eduBonus);
 }
 
-// 获取当前年龄（实岁）
+// 月薪（周薪×4，用于贷款额度计算）
+function calcMonthlySalary() {
+  return calcWeeklySalary() * 4;
+}
+
+// 获取当前年龄（实岁）—— 每52周+1岁
 function getAge() {
   const startAge = STATE.startAge || 22;
-  return startAge + Math.floor(STATE.day / 365);
+  return startAge + Math.floor(STATE.day / WEEKS_PER_YEAR);
 }
 
 function updateUI() {
@@ -1793,13 +1831,13 @@ function updateUI() {
   });
   document.getElementById('phaseLabel').textContent = PHASE_NAMES[S.phase] || '休息';
 
-  // OKR进度
-  const daysIntoQuarter = ((S.day - 1) % 90) + 1;
-  const progress = Math.min(100, (daysIntoQuarter / 90) * 100);
+  // OKR进度（13周一季）
+  const weeksIntoQuarter = ((S.day - 1) % WEEKS_PER_QUARTER) + 1;
+  const progress = Math.min(100, (weeksIntoQuarter / WEEKS_PER_QUARTER) * 100);
   document.getElementById('okrProgressFill').style.width = progress + '%';
   document.getElementById('okrQuarter').textContent = S.quarter;
-  const daysLeft = 90 - daysIntoQuarter;
-  document.getElementById('okrDaysLeft').textContent = daysLeft > 0 ? `距Review还有${daysLeft}天` : 'Review时间到！';
+  const weeksLeft = WEEKS_PER_QUARTER - weeksIntoQuarter;
+  document.getElementById('okrDaysLeft').textContent = weeksLeft > 0 ? `距Review还有${weeksLeft}周` : 'Review时间到！';
 
   // 健康告警横幅
   const banner = document.getElementById('healthBanner');
@@ -1994,34 +2032,32 @@ function nextPhase() {
 
   if (STATE.phase >= 3) {
     STATE.phase = 0;
-    STATE.day++;
+    STATE.day++;   // day 现在代表"周数"
     STATE.tenure++;
-    STATE.quarter = Math.ceil(STATE.day / 90);
+    STATE.quarter = Math.ceil(STATE.day / WEEKS_PER_QUARTER);
 
     // 适应期倒计时
     if (STATE.adaptDays > 0) STATE.adaptDays--;
 
-    // 自然恢复（每天）
-    STATE.energy = cap(STATE.energy - 10 + 20);
-    STATE.mood   = cap(STATE.mood + 3);
-    STATE.focus  = cap(STATE.focus - 5);
-    // 健康自然衰减（工作压力）
+    // 每周自然恢复（比原来每天幅度大，因为代表一整周）
+    STATE.energy = cap(STATE.energy - 12 + 22);  // 净+10
+    STATE.mood   = cap(STATE.mood + 4);
+    STATE.focus  = cap(STATE.focus - 6);
     const healthDecay = calcHealthDecay();
     STATE.health = cap(STATE.health - healthDecay);
 
-    addNarrative(`──── 第 ${STATE.day} 天开始 ────`, 'system');
+    addNarrative(`──── 第 ${STATE.day} 周开始 ────`, 'system');
 
-    // 日常薪资结算
-    const dailyPay = calcDailySalary();
-    STATE.money += dailyPay;
-    addNarrative(`今日薪资：+${dailyPay} 元`, 'good');
+    // 周薪结算
+    const weeklyPay = calcWeeklySalary();
+    STATE.money += weeklyPay;
+    addNarrative(`本周薪资：+${weeklyPay} 元`, 'good');
 
-    // 健康衰减提示
     if (healthDecay > 0) {
-      addNarrative(`😮‍💨 今日健康-${healthDecay}（工作压力/疲劳）`, STATE.health < 40 ? 'health' : 'system');
+      addNarrative(`😮‍💨 本周健康-${healthDecay}（工作压力/疲劳）`, STATE.health < 40 ? 'health' : 'system');
     }
 
-    // Phase 3 每日 tick
+    // Phase 3 每周 tick
     tickStocks();
     tickBank();
     tickBuffs();
@@ -2031,13 +2067,13 @@ function nextPhase() {
     // 年龄风险检测
     checkAgeRisk();
 
-    // OKR Review 触发（每季度末：第90、180、270、360天）
-    if (STATE.day % 90 === 1 && STATE.day > 1) {
+    // OKR Review 触发（每13周末：第13、26、39、52周）
+    if (STATE.day % WEEKS_PER_QUARTER === 1 && STATE.day > 1) {
       STATE.pendingOKR = true;
     }
 
-    // 绩效考核触发（每半年：第181、361天）
-    if (STATE.day % 180 === 1 && STATE.day > 1) {
+    // 绩效考核触发（每26周：第27、53周）
+    if (STATE.day % WEEKS_PER_HALF === 1 && STATE.day > 1) {
       STATE.pendingReview = true;
     }
 
@@ -2098,7 +2134,7 @@ function showOKRModal() {
   const avgPerf = STATE.quarterPerfCount > 0
     ? Math.round(STATE.quarterPerfSum / STATE.quarterPerfCount)
     : STATE.perf;
-  const quarter = Math.ceil((STATE.day - 1) / 90);
+  const quarter = Math.ceil((STATE.day - 1) / WEEKS_PER_QUARTER);
 
   const summaryEl = document.getElementById('okrSummary');
   summaryEl.innerHTML = `
@@ -2133,7 +2169,7 @@ function confirmOKR() {
   document.getElementById('okrModal').classList.remove('show');
 
   const gradeData = OKR_GRADES.find(g => g.id === _selectedOKRGrade);
-  const quarter = Math.ceil((STATE.day - 1) / 90);
+  const quarter = Math.ceil((STATE.day - 1) / WEEKS_PER_QUARTER);
 
   STATE.okrHistory.push({
     quarter: quarter,
@@ -2167,7 +2203,7 @@ function confirmOKR() {
 // 绩效考核系统
 // ══════════════════════════════════════════════════════
 function showReviewModal() {
-  const halfYear = Math.ceil(STATE.day / 180);
+  const halfYear = Math.ceil(STATE.day / WEEKS_PER_HALF);
 
   // 综合最近两次OKR评分
   const recentOKR = STATE.okrHistory.slice(-2);
@@ -2204,7 +2240,7 @@ function showReviewModal() {
   // 年终奖计算（半年考核时同步发）
   const co = COMPANIES[STATE.companyId] || COMPANIES.byteuniverse;
   const grade = GRADES[STATE.gradeIdx] || GRADES[0];
-  const monthSalary = calcDailySalary() * 30;
+  const monthSalary = calcMonthlySalary();
   const bonus = Math.floor(monthSalary * bonusMult * co.salaryMult);
 
   // 升降职判断
@@ -2233,7 +2269,7 @@ function showReviewModal() {
 
   const detailEl = document.getElementById('reviewDetail');
   detailEl.innerHTML = `
-    <div class="review-detail-row">考核期 <span>第 ${(halfYear-1)*180+1}-${halfYear*180} 天</span></div>
+    <div class="review-detail-row">考核期 <span>第 ${(halfYear-1)*WEEKS_PER_HALF+1}-${halfYear*WEEKS_PER_HALF} 周</span></div>
     <div class="review-detail-row">OKR综合得分 <span>${avgScore.toFixed(1)} / 4.0</span></div>
     <div class="review-detail-row">当前绩效值 <span>${STATE.perf}</span></div>
     <div class="review-detail-row">综合评分 <span>${combinedScore.toFixed(2)}</span></div>
@@ -2510,16 +2546,64 @@ function doWithdraw() {
   updateP3UI(); updateUI();
 }
 
+// 当前选择的贷款期限（年）
+let _selectedLoanTerm = 3;
+
+function selectLoanTerm(years) {
+  _selectedLoanTerm = years;
+  document.querySelectorAll('.loan-term-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.term) === years);
+  });
+  updateLoanPreview();
+}
+
+function updateLoanPreview() {
+  const previewEl = document.getElementById('loanPreview');
+  if (!previewEl) return;
+  const amount = Math.floor(parseFloat(document.getElementById('loanInput')?.value) || 0);
+  if (amount <= 0) { previewEl.textContent = ''; return; }
+  const rate = getLoanRate(_selectedLoanTerm);
+  const weeks = _selectedLoanTerm * WEEKS_PER_YEAR;
+  const weeklyPayment = Math.ceil(calcLoanWeeklyPayment(amount, rate, weeks));
+  const totalPay = weeklyPayment * weeks;
+  previewEl.textContent = `每周还款 ¥${weeklyPayment} · 共${weeks}周 · 总还款 ¥${totalPay}`;
+}
+
+// 年利率 → 周利率
+function getLoanRate(years) {
+  const annualRates = {3: 0.06, 5: 0.08, 10: 0.10};
+  const annual = annualRates[years] || 0.06;
+  return annual / WEEKS_PER_YEAR;  // 周利率
+}
+
+// 等额还款计算每周还款额（固定周付）
+function calcLoanWeeklyPayment(principal, weeklyRate, totalWeeks) {
+  if (weeklyRate === 0) return principal / totalWeeks;
+  return principal * weeklyRate * Math.pow(1 + weeklyRate, totalWeeks)
+         / (Math.pow(1 + weeklyRate, totalWeeks) - 1);
+}
+
 function doLoan() {
   const input = document.getElementById('loanInput');
   const amount = Math.floor(parseFloat(input.value) || 0);
+  const maxLoan = calcMonthlySalary() * 5;
   if (amount < 500) { addNarrative('贷款最低 ¥500', 'bad'); return; }
+  if (amount > maxLoan) { addNarrative(`超出可贷额度！最多可贷 ¥${maxLoan}（月薪×5）`, 'bad'); return; }
   if (STATE.bankLoan > 0) { addNarrative('还有未还清的贷款，请先还款', 'bad'); return; }
+
+  const weeks = _selectedLoanTerm * WEEKS_PER_YEAR;
+  const weeklyRate = getLoanRate(_selectedLoanTerm);
+  const weeklyPayment = Math.ceil(calcLoanWeeklyPayment(amount, weeklyRate, weeks));
+
+  STATE.bankLoanPrincipal = amount;
   STATE.bankLoan = amount;
-  STATE.bankLoanDays = Math.floor(amount / 100) + 30; // 还款期限
+  STATE.bankLoanWeeks = weeks;
+  STATE.bankLoanWeeksLeft = weeks;
+  STATE.bankLoanWeeklyRate = weeklyRate;
+  STATE.bankLoanWeeklyPayment = weeklyPayment;
   STATE.money += amount;
   input.value = '';
-  addNarrative(`💳 贷款 ¥${amount} 到账，需在 ${STATE.bankLoanDays} 天内还清`, 'warn');
+  addNarrative(`💳 贷款 ¥${amount} 到账，${_selectedLoanTerm}年期，每周还款 ¥${weeklyPayment}`, 'warn');
   updateP3UI(); updateUI();
 }
 
@@ -2527,42 +2611,44 @@ function doRepayLoan() {
   if (STATE.bankLoan <= 0) { addNarrative('没有未还的贷款', 'system'); return; }
   if (STATE.money < STATE.bankLoan) { addNarrative(`余额不足，还需 ¥${STATE.bankLoan}`, 'bad'); return; }
   STATE.money -= STATE.bankLoan;
-  addNarrative(`✅ 已还清贷款 ¥${STATE.bankLoan}`, 'good');
-  STATE.bankLoan = 0;
-  STATE.bankLoanDays = 0;
+  addNarrative(`✅ 已提前还清贷款 ¥${STATE.bankLoan}`, 'good');
+  STATE.bankLoan = 0; STATE.bankLoanPrincipal = 0;
+  STATE.bankLoanWeeks = 0; STATE.bankLoanWeeksLeft = 0;
+  STATE.bankLoanWeeklyRate = 0; STATE.bankLoanWeeklyPayment = 0;
   updateP3UI(); updateUI();
 }
 
 function tickBank() {
-  // 存款生息
+  // 存款生息（每周）
   if (STATE.bankDeposit > 0) {
-    const interest = Math.floor(STATE.bankDeposit * STATE.bankDepositRate);
+    const rate = STATE.bankDepositRate || 0.0015;
+    const interest = Math.floor(STATE.bankDeposit * rate);
     if (interest > 0) {
       STATE.bankDeposit += interest;
-      // 每7天通知一次
-      if (STATE.day % 7 === 0) {
+      if (STATE.day % 4 === 0) {
         addNarrative(`🏦 银行利息到账 +¥${interest}（存款共 ¥${STATE.bankDeposit}）`, 'good');
       }
     }
   }
-  // 贷款利息
-  if (STATE.bankLoan > 0) {
-    const interest = Math.ceil(STATE.bankLoan * STATE.bankLoanRate);
-    STATE.bankLoan += interest;
-    STATE.bankLoanDays--;
-    if (STATE.bankLoanDays <= 0) {
-      // 逾期：强制扣款或影响心情
-      if (STATE.money >= STATE.bankLoan) {
-        STATE.money -= STATE.bankLoan;
-        addNarrative(`⚠️ 贷款到期自动还款 ¥${STATE.bankLoan}`, 'warn');
+  // 贷款等额周还款
+  if (STATE.bankLoan > 0 && STATE.bankLoanWeeksLeft > 0) {
+    const payment = STATE.bankLoanWeeklyPayment || Math.ceil(STATE.bankLoan / Math.max(1, STATE.bankLoanWeeksLeft));
+    STATE.bankLoanWeeksLeft--;
+    if (STATE.money >= payment) {
+      STATE.money -= payment;
+      const interest = Math.floor(STATE.bankLoan * (STATE.bankLoanWeeklyRate || 0));
+      STATE.bankLoan = Math.max(0, STATE.bankLoan + interest - payment);
+      if (STATE.bankLoan <= 0) {
         STATE.bankLoan = 0;
-      } else {
-        // 没钱还：心情大降，绩效受损
-        STATE.mood = cap(STATE.mood - 20);
-        STATE.perf = cap(STATE.perf - 10);
-        addNarrative(`🚨 贷款逾期！信用受损，心情-20，绩效-10`, 'bad');
-        STATE.bankLoanDays = 10; // 再给10天
+        addNarrative(`✅ 贷款已全部还清！`, 'good');
+      } else if (STATE.day % 4 === 0) {
+        addNarrative(`💳 贷款还款 -¥${payment}（剩余${STATE.bankLoanWeeksLeft}周 · 余额¥${Math.floor(STATE.bankLoan)}）`, 'system');
       }
+    } else {
+      STATE.mood = cap(STATE.mood - 15);
+      STATE.perf = cap(STATE.perf - 8);
+      addNarrative(`🚨 贷款逾期未还！信用受损，心情-15，绩效-8`, 'bad');
+      STATE.bankLoanWeeksLeft += 2;
     }
   }
 }
@@ -2571,12 +2657,24 @@ function renderBankPanel() {
   const depEl = document.getElementById('bankDepositDisplay');
   const loanEl = document.getElementById('bankLoanDisplay');
   const loanInfo = document.getElementById('loanInfo');
-  if (depEl) depEl.textContent = `¥${STATE.bankDeposit.toLocaleString()}`;
-  if (loanEl) loanEl.textContent = `¥${STATE.bankLoan.toLocaleString()}`;
+  const loanLimitEl = document.getElementById('loanLimitDisplay');
+  const loanApply = document.getElementById('loanApplySection');
+  const loanRepay = document.getElementById('loanRepaySection');
+  const loanWeeklyInfo = document.getElementById('loanWeeklyInfo');
+
+  if (depEl) depEl.textContent = `¥${Math.floor(STATE.bankDeposit).toLocaleString()}`;
+  if (loanEl) loanEl.textContent = `¥${Math.floor(STATE.bankLoan).toLocaleString()}`;
+  if (loanLimitEl) loanLimitEl.textContent = `¥${calcMonthlySalary() * 5}`;
+
+  const hasLoan = STATE.bankLoan > 0;
+  if (loanApply) loanApply.style.display = hasLoan ? 'none' : 'block';
+  if (loanRepay) loanRepay.style.display = hasLoan ? 'block' : 'none';
+
   if (loanInfo) {
-    loanInfo.textContent = STATE.bankLoan > 0
-      ? `贷款余额 ¥${STATE.bankLoan}，剩余 ${STATE.bankLoanDays} 天`
-      : '暂无贷款';
+    loanInfo.textContent = hasLoan ? `贷款余额 ¥${Math.floor(STATE.bankLoan)}，剩余 ${STATE.bankLoanWeeksLeft} 周` : '暂无贷款';
+  }
+  if (loanWeeklyInfo && hasLoan) {
+    loanWeeklyInfo.textContent = `每周还款 ¥${STATE.bankLoanWeeklyPayment || 0}，剩余 ${STATE.bankLoanWeeksLeft} 周`;
   }
 }
 
@@ -2694,7 +2792,7 @@ function grantOptions(amount) {
     total: amount,
     vested: 0,
     strikePrice: strikePrice,
-    vestPeriod: 180, // 每180天归属25%
+    vestPeriod: WEEKS_PER_HALF, // 每26周归属25%
   });
   STATE.optionStrikePrice = strikePrice;
   addNarrative(`🔑 获得期权 ${amount} 份，行权价 ¥${strikePrice.toFixed(2)}`, 'special');
@@ -2807,20 +2905,20 @@ function checkGameOver() {
 
   if (STATE.health <= 0) {
     over = true; title = '🏥 健康崩溃';
-    msg = `坚持了 ${STATE.day} 天，健康值彻底耗尽，住进了ICU。\n存款剩余 ${STATE.money} 元，期权 ${STATE.options} 份。\n身体是革命的本钱，这次真的倒下了。`;
+    msg = `坚持了 ${STATE.day} 周，健康值彻底耗尽，住进了ICU。\n存款剩余 ${STATE.money} 元，期权 ${STATE.options} 份。\n身体是革命的本钱，这次真的倒下了。`;
   } else if (STATE.energy <= 0) {
     over = true; title = '😵 过劳倒下了';
-    msg = `坚持了 ${STATE.day} 天，体力耗尽，终于倒在了工位上。\n存款剩余 ${STATE.money} 元，最终职级 ${grade.id}。`;
+    msg = `坚持了 ${STATE.day} 周，体力耗尽，终于倒在了工位上。\n存款剩余 ${STATE.money} 元，最终职级 ${grade.id}。`;
   } else if (STATE.mood <= 0) {
     over = true; title = '😞 心态崩了';
-    msg = `工作 ${STATE.day} 天后，心情降到谷底，决定裸辞疗伤。\n存款 ${STATE.money} 元，职级 ${grade.id}，期权 ${STATE.options} 份。`;
-  } else if (STATE.perf <= 0) {
+    msg = `工作 ${STATE.day} 周后，心情降到谷底，决定裸辞疗伤。\n存款 ${STATE.money} 元，职级 ${grade.id}，期权 ${STATE.options} 份。`;
+  } else if (STATE.perf <= 0 && STATE.day > 5) {
     over = true; title = '📉 被优化了';
-    msg = `绩效连续垫底，HR约谈后发来了"优化"通知。\n在职 ${STATE.day} 天，存款 ${STATE.money} 元，职级 ${grade.id}。\n下一站再出发。`;
+    msg = `绩效连续垫底，HR约谈后发来了"优化"通知。\n在职 ${STATE.day} 周，存款 ${STATE.money} 元，职级 ${grade.id}。\n下一站再出发。`;
   } else if (STATE.layoffRisk >= 100) {
     over = true; title = '✂️ 35岁裁员';
-    msg = `${age} 岁，职级 ${grade.id}，你成为了"优化名单"上的一员。\n公司以"组织架构调整"为由，给了你 N+1。\n存款 ${STATE.money} 元，工作了 ${STATE.day} 天。\n下次记得：35岁之前要爬到管理层。`;
-  } else if (STATE.day > 365) {
+    msg = `${age} 岁，职级 ${grade.id}，你成为了"优化名单"上的一员。\n公司以"组织架构调整"为由，给了你 N+1。\n存款 ${STATE.money} 元，工作了 ${STATE.day} 周。\n下次记得：35岁之前要爬到管理层。`;
+  } else if (STATE.day > WEEKS_PER_YEAR) {
     over = true; title = '🎉 坚持一年！';
     const bonusStr = STATE.options > 0 ? `，期权 ${STATE.options} 份` : '';
     const ageStr = `，当年 ${age} 岁`;
@@ -2866,17 +2964,17 @@ function checkAgeRisk() {
     addNarrative(`📅 你已经 ${age} 岁了，距离"互联网35岁墙"只剩5年……`, 'warn');
   }
 
-  // 35岁墙：未到P8（gradeIdx < 4），每季度积累裁员风险
+  // 35岁墙：未到P8（gradeIdx < 4），每周积累裁员风险
   if (age >= 35 && STATE.gradeIdx < 4) {
     if (!STATE.ageRiskTriggered35) {
       STATE.ageRiskTriggered35 = true;
       addNarrative(`🚨 35岁到了！你当前 ${grade.id}，未达管理层，裁员风险开始积累！`, 'bad');
     }
-    // 每天积累裁员风险（越低职级积累越快）
-    const riskPerDay = (4 - STATE.gradeIdx) * 0.3; // P4:1.2/天 P5:0.9/天 P6:0.6/天 P7:0.3/天
-    STATE.layoffRisk = Math.min(100, (STATE.layoffRisk || 0) + riskPerDay);
-    // 每7天提醒一次
-    if (STATE.day % 7 === 0 && STATE.layoffRisk > 0) {
+    // 每周积累裁员风险（越低职级积累越快，约2年内触发裁员）
+    const riskPerWeek = (4 - STATE.gradeIdx) * 1.2; // P4:4.8%/周≈21周 P5:3.6% P6:2.4% P7:1.2%/周≈83周
+    STATE.layoffRisk = Math.min(100, (STATE.layoffRisk || 0) + riskPerWeek);
+    // 每4周提醒一次
+    if (STATE.day % 4 === 0 && STATE.layoffRisk > 0) {
       const riskLevel = STATE.layoffRisk >= 80 ? 'bad' : STATE.layoffRisk >= 50 ? 'warn' : 'system';
       addNarrative(`⚠️ 裁员风险：${STATE.layoffRisk.toFixed(0)}% — ${grade.id}，${age}岁`, riskLevel);
     }
