@@ -1048,17 +1048,17 @@ const STOCKS = {
 // ══════════════════════════════════════════════════════
 const SHOP_ITEMS = [
   // 食品饮料
-  { id:'energy_drink',   name:'功能饮料',   emoji:'⚡', price:25,  category:'food',    effect:{energy:15},              desc:'红牛加持，短暂续命' },
-  { id:'good_meal',      name:'高档外卖',   emoji:'🍣', price:80,  category:'food',    effect:{energy:20,mood:20},      desc:'精致打工人必备，心情+体力双收' },
-  { id:'meal_prep',      name:'健康便当',   emoji:'🥗', price:50,  category:'food',    effect:{energy:15,health:5},     desc:'自制低卡便当，健康加持' },
-  { id:'vitamin',        name:'维生素套餐', emoji:'💊', price:120, category:'medicine',effect:{health:10},              buffDays:7, buffEffect:{health:2}, desc:'每日补充，持续7天每天健康+2' },
-  { id:'painkiller',     name:'止痛药',     emoji:'🩹', price:30,  category:'medicine',effect:{health:8,mood:5},        desc:'头痛感冒应急，治标不治本' },
-  { id:'melatonin',      name:'褪黑素',     emoji:'🌙', price:60,  category:'medicine',effect:{energy:10,mood:8},       buffDays:3, buffEffect:{energy:3}, desc:'改善睡眠，持续3天体力+3' },
-  // 耐用品（buff持续多天）
-  { id:'standing_desk',  name:'升降桌',     emoji:'🖥️', price:800, category:'durable', buffDays:30, buffEffect:{perf:2,health:1}, desc:'站立办公，持续30天绩效+2、健康+1', oneTime:true },
-  { id:'ergonomic_chair',name:'人体工学椅', emoji:'🪑', price:600, category:'durable', buffDays:60, buffEffect:{health:2,mood:1},  desc:'腰不再酸了，持续60天健康+2、心情+1', oneTime:true },
-  { id:'noise_cancel',   name:'降噪耳机',   emoji:'🎧', price:400, category:'durable', buffDays:90, buffEffect:{focus:2},          desc:'隔绝噪音，持续90天专注+2', oneTime:true },
-  { id:'coffee_machine', name:'咖啡机',     emoji:'☕', price:300, category:'durable', buffDays:30, buffEffect:{energy:5},         desc:'自备咖啡机，持续30天体力+5', oneTime:true },
+  { id:'energy_drink',   name:'功能饮料',   emoji:'⚡', price:175,  category:'food',    effect:{energy:15},              desc:'红牛加持，短暂续命' },
+  { id:'good_meal',      name:'高档外卖',   emoji:'🍣', price:560,  category:'food',    effect:{energy:20,mood:20},      desc:'精致打工人必备，心情+体力双收' },
+  { id:'meal_prep',      name:'健康便当',   emoji:'🥗', price:350,  category:'food',    effect:{energy:15,health:5},     desc:'自制低卡便当，健康加持' },
+  { id:'vitamin',        name:'维生素套餐', emoji:'💊', price:840, category:'medicine',effect:{health:10},              buffDays:1, buffEffect:{health:2}, desc:'每日补充，持续1周每周健康+2' },
+  { id:'painkiller',     name:'止痛药',     emoji:'🩹', price:210,  category:'medicine',effect:{health:8,mood:5},        desc:'头痛感冒应急，治标不治本' },
+  { id:'melatonin',      name:'褪黑素',     emoji:'🌙', price:420,  category:'medicine',effect:{energy:10,mood:8},       buffDays:1, buffEffect:{energy:3}, desc:'改善睡眠，持续1周体力+3' },
+  // 耐用品（buff持续多周）
+  { id:'standing_desk',  name:'升降桌',     emoji:'🖥️', price:5600, category:'durable', buffDays:4,  buffEffect:{perf:2,health:1}, desc:'站立办公，持续4周绩效+2、健康+1', oneTime:true },
+  { id:'ergonomic_chair',name:'人体工学椅', emoji:'🪑', price:4200, category:'durable', buffDays:8,  buffEffect:{health:2,mood:1},  desc:'腰不再酸了，持续8周健康+2、心情+1', oneTime:true },
+  { id:'noise_cancel',   name:'降噪耳机',   emoji:'🎧', price:2800, category:'durable', buffDays:13, buffEffect:{focus:2},          desc:'隔绝噪音，持续13周专注+2', oneTime:true },
+  { id:'coffee_machine', name:'咖啡机',     emoji:'☕', price:2100, category:'durable', buffDays:4,  buffEffect:{energy:5},         desc:'自备咖啡机，持续4周体力+5', oneTime:true },
 ];
 
 // ══════════════════════════════════════════════════════
@@ -1219,23 +1219,23 @@ const CLASSES = {
 // ══════════════════════════════════════════════════════
 const COMMON_ACTIONS = [
   // 工作类：消耗体力+心情，提绩效
-  { id:'work_hard',   name:'专心工作',  emoji:'💻', cost:{energy:-20,mood:-5},  gain:{perf:18,money:80},   desc:'老实干活，不求有功但求无过', isWork:true },
-  { id:'overtime',    name:'主动加班',  emoji:'🌙', cost:{energy:-30,mood:-15}, gain:{perf:25,money:150},  desc:'卷是卷了，但工资也多了点', isWork:true },
+  { id:'work_hard',   name:'专心工作',  emoji:'💻', cost:{energy:-20,mood:-5},  gain:{perf:18,money:560},   desc:'老实干活，不求有功但求无过', isWork:true },
+  { id:'overtime',    name:'主动加班',  emoji:'🌙', cost:{energy:-30,mood:-15}, gain:{perf:25,money:1050},  desc:'卷是卷了，但工资也多了点', isWork:true },
   { id:'learn_skill', name:'自我提升',  emoji:'📚', cost:{energy:-15,mood:-5},  gain:{focus:12,perf:10},   desc:'利用工作时间学点新东西，提升自己', isWork:true },
   { id:'1on1_boss',   name:'和老板1on1',emoji:'👔', cost:{energy:-12,mood:-8},  gain:{perf:12,social:15},  desc:'汇报工作，刷刷存在感，有时候有惊喜', isWork:true },
   // 休息类：体力回复
-  { id:'coffee',      name:'喝杯咖啡',  emoji:'☕', cost:{money:-18},           gain:{energy:20,focus:15}, desc:'工位旁的咖啡机，打工人续命神器' },
+  { id:'coffee',      name:'喝杯咖啡',  emoji:'☕', cost:{money:-126},          gain:{energy:20,focus:15}, desc:'工位旁的咖啡机，打工人续命神器' },
   { id:'nap',         name:'偷偷小睡',  emoji:'😴', cost:{},                    gain:{energy:25,mood:5},   desc:'午休趴一会儿，体力悄悄回来了' },
   { id:'sick_leave',  name:'请病假',    emoji:'🤒', cost:{perf:-15},            gain:{energy:40,mood:20},  desc:'真假病假全凭良心，但确实休息到了' },
   // 吃饭：花钱回体力
-  { id:'lunch',       name:'好好吃饭',  emoji:'🍱', cost:{money:-40},           gain:{mood:20,energy:25},  desc:'点个好饭，精神都为之一振' },
+  { id:'lunch',       name:'好好吃饭',  emoji:'🍱', cost:{money:-280},          gain:{mood:20,energy:25},  desc:'点个好饭，精神都为之一振' },
   // 摸鱼/聊天：体力不变，心情提升，绩效降低
   { id:'slack_off',   name:'摸鱼划水',  emoji:'🐟', cost:{perf:-10},            gain:{mood:15},            desc:'刷刷手机，舒服是舒服，但绩效在悄悄溜走' },
   { id:'team_chat',   name:'和同事聊天',emoji:'💬', cost:{perf:-5,focus:-8},    gain:{mood:18,social:10},  desc:'闲扯几句，心情好多了，但活还没干' },
   // 医疗类：花钱回健康
-  { id:'clinic',      name:'去诊所',    emoji:'🏥', cost:{money:-80,energy:-10},gain:{health:25},          desc:'挂个普通号，排队两小时，健康值回一些', isHealth:true },
-  { id:'hospital',    name:'去医院',    emoji:'🏨', cost:{money:-300,energy:-5},gain:{health:50,mood:10},  desc:'住院半天，专科检查，大幅恢复健康值', isHealth:true },
-  { id:'rest_home',   name:'在家休息',  emoji:'🛋️', cost:{perf:-8,money:-20},   gain:{health:15,energy:30,mood:10}, desc:'请假在家养病，慢慢恢复', isHealth:true },
+  { id:'clinic',      name:'去诊所',    emoji:'🏥', cost:{money:-560,energy:-10},gain:{health:25},          desc:'挂个普通号，排队两小时，健康值回一些', isHealth:true },
+  { id:'hospital',    name:'去医院',    emoji:'🏨', cost:{money:-2100,energy:-5},gain:{health:50,mood:10},  desc:'住院半天，专科检查，大幅恢复健康值', isHealth:true },
+  { id:'rest_home',   name:'在家休息',  emoji:'🛋️', cost:{perf:-8,money:-140},   gain:{health:15,energy:30,mood:10}, desc:'请假在家养病，慢慢恢复', isHealth:true },
 ];
 
 // ══════════════════════════════════════════════════════
@@ -1255,7 +1255,7 @@ const EVENTS = [
     desc:'周会上老板专门点名表扬了你的工作，全组都鼓掌了。',
     choices:[
       {text:'谦虚感谢', fx:{mood:20,social:10,perf:8}, fxDesc:'心情+20，人脉+10，绩效+8'},
-      {text:'顺势提加薪', fx:{mood:15,money:500,perf:-5}, fxDesc:'存款+500，心情+15，绩效-5'},
+      {text:'顺势提加薪', fx:{mood:15,money:3500,perf:-5}, fxDesc:'存款+3500，心情+15，绩效-5'},
     ]
   },
   {
@@ -1286,8 +1286,8 @@ const EVENTS = [
     id:'salary_day', title:'💰 发工资了！', prob:0.05,
     desc:'薪资到账，短信提示的叮声是打工人最美的声音。',
     choices:[
-      {text:'存起来，继续奋斗', fx:{money:3000,mood:20}, fxDesc:'存款+3000，心情+20'},
-      {text:'犒劳自己，买点好东西', fx:{money:1500,mood:35}, fxDesc:'存款+1500，心情+35'},
+      {text:'存起来，继续奋斗', fx:{money:21000,mood:20}, fxDesc:'存款+21000，心情+20'},
+      {text:'犒劳自己，买点好东西', fx:{money:10500,mood:35}, fxDesc:'存款+10500，心情+35'},
     ]
   },
   {
@@ -1747,7 +1747,7 @@ function calcDailySalary() {  // 保留函数名兼容，实际返回周薪
 function calcWeeklySalary() {
   const co = COMPANIES[STATE.companyId] || COMPANIES.byteuniverse;
   const grade = GRADES[STATE.gradeIdx] || GRADES[0];
-  const base = 800 + Math.floor(STATE.perf * 12);   // 周薪基数：绩效满100约为2000/周
+  const base = 5600 + Math.floor(STATE.perf * 84);  // 周薪基数≈原日薪×7：绩效满100约14000/周
   const eduBonus = STATE.eduSalaryBonus || 1.0;
   return Math.floor(base * co.salaryMult * grade.salaryMult * eduBonus);
 }
