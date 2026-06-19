@@ -1,0 +1,54 @@
+# 敏感文件 - 切勿提交
+*.json
+*_keys.*
+*key*.txt
+*secret*
+*.log
+
+# 解密后的数据库
+*.db
+*.sqlite
+*.sqlite3
+decrypted/
+*.bak
+
+# 导出的聊天记录（隐私）
+*.csv
+*.txt
+*_messages.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+Thumbs.db
