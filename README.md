@@ -26,4 +26,19 @@ Zola，哈尼族，ENFJ，现任某互联网公司AI产品经理。
 5.求职辅导/简历修改：Star法则拆解，针对经历的追问。
 6.策划案/商业BP：brainstorm，系统性竞品分析、可执行的营销策略、商业思维和ROI意识
 
-# 微信/QQ聊天记录批量蒸馏skill（WIP）
+# 微信/QQ聊天记录批量蒸馏工具包
+
+📦 **[persona-distiller](./persona-distiller/README.md)** — 端到端流程：从原始聊天记录到 AI 人设 Skill
+
+**三步完成人设蒸馏**：
+1. **提取聊天记录**：自动扫描并解密本地微信/QQ 数据（密钥本机独有，需在目标机器重新执行）
+2. **语言特征分析**：统计分析口头禅、句式、标点、中英混用比例等 8 个维度
+3. **生成人设 MD**：自动输出人设 Skill 模板，手动补充知识图谱后即可使用
+
+**快速上手（已有 CSV）**：
+```bash
+python persona-distiller/scripts/analyze_speech.py --input all_messages.csv --output speech_report.txt
+python persona-distiller/scripts/distill_persona.py --report speech_report.txt --output persona_skill.md
+```
+
+详细文档见 [persona-distiller/README.md](./persona-distiller/README.md)
